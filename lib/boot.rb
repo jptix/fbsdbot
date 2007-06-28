@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'IRC'
 require 'yaml'
+require File.dirname(__FILE__) + '/modules.rb'
 
 # check for config file
 config_file = File.dirname(__FILE__) + '/../bin/towlie.conf'

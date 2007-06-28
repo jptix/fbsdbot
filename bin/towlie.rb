@@ -6,7 +6,7 @@ require File.dirname(__FILE__) + '/../lib/boot.rb'
 
 	bot = IRC.new(@config['nick'], @config['host'], @config['port'], "can you say marclar?")
 	IRCEvent.add_callback('nicknameinuse') {|event|
-		bot.ch_nick "x7vf3k"
+		bot.ch_nick = IRC::NickObfusicator.run(bot.nick)
 	}
 	IRCEvent.add_callback('endofmotd') { |event| bot.add_channel('#bot-test.no') }
   #IRCEvent.add_callback('join') {|event| bot.send_message( event.channel, "Hello #{event.from}" ) }
