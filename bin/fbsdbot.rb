@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env ruby -KU
 
 require File.dirname(__FILE__) + '/../lib/boot.rb'
 
