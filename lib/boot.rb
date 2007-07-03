@@ -20,3 +20,11 @@ unless File.exists?( config_file )
 end
 
 @config = YAML.load( File.open(config_file) )
+
+
+db_file = File.dirname(__FILE__) + '/fbsdbot.db'
+
+ActiveRecord::Base.establish_connection({
+  :adapter => 'sqlite3',
+  :filename => db_file,
+})
