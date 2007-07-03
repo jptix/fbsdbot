@@ -1,6 +1,8 @@
+
+require 'yaml'
 require 'rubygems'
 require 'IRC'
-require 'yaml'
+require 'active_record'
 require File.dirname(__FILE__) + '/modules.rb'
 
 # check for config file

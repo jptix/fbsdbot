@@ -1,4 +1,4 @@
-module IRC
+module IRCHelpers
 	class NickObfusicator
 		def NickObfusicator.run( old_nick )
 			# find stuff to replace
