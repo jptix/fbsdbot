@@ -5,6 +5,7 @@ require 'IRC'
 require 'active_record'
 require File.dirname(__FILE__) + '/models.rb'
 require File.dirname(__FILE__) + '/modules.rb'
+require File.dirname(__FILE__) + '/pluginbase.rb'
 
 # check for config file 
 # FIXME: should use OptionParser or similar in the future
@@ -19,8 +20,9 @@ unless File.exists?( config_file )
    exit 1
 end
 
-@config = YAML.load( File.open(config_file) )
 
+@config = YAML.load( File.open(config_file) )
+puts "Loaded config"
 
 db_file = File.dirname(__FILE__) + '/fbsdbot.db'
 

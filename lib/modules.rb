@@ -32,3 +32,27 @@ class FBSDBot
 		@bot.send_message("#bot-test.no", event.inspect)	
 	end
 end
+
+# namespace for plugins
+module Plugins
+end
+
+def load_plugin(name, bot)
+   begin
+      n = name.downcase
+      Plugins.module_eval { load("../plugins/#{n}.rb") }
+
+      if (klass = self.class.const_get(n.capitalize))
+         plugin = klass.instantiate(bot)
+         puts "Plugin '#{plugin.name.capitalize}' loaded."
+      else
+         puts "Error loading plugin '#{n.capitalize}':"
+         puts "Couldn't locate plugin class. \n Check casing of file and class names (no TitleCase or camelCase allowed)."
+      end
+   rescue Exception => e
+      puts "Error loading core plugin '#{n.capitalize}':"
+      puts e.message
+      puts e.backtrace.join("\n")
+   end
+
+end

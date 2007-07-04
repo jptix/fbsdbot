@@ -4,3 +4,5 @@ port: 6667
 channels:
     - "#freebsd.no"
     - "#bot-test.no"
+plugins:
+    - google
