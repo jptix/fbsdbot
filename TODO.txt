@@ -1,0 +1,6 @@
+TODO list
+
+* Make the bot host a DRb-object that will store users' now playing info       
+  in the user database, and distribute a script that updates the database.
+
+* Make bot FiSH ( http://fish.sekure.us ) -Compatible so users can use bot securely.

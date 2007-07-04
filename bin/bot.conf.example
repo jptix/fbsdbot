@@ -4,6 +4,6 @@ port: 6667
 channels:
   - "#bot-test.no"
 plugins:
-  - google
   - now_playing
   - user_priv
+  - web

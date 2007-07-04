@@ -1,8 +1,14 @@
+# UTF-8
+$KCODE = 'u'
+require 'jcode'
+
 require 'digest/sha1'
+require 'pp'
 require 'yaml'
 require 'rubygems'
 require 'IRC'
 require 'active_record'
+require 'htmlentities'
 require File.dirname(__FILE__) + '/models.rb'
 require File.dirname(__FILE__) + '/modules.rb'
 require File.dirname(__FILE__) + '/pluginbase.rb'

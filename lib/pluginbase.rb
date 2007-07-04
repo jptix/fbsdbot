@@ -1,14 +1,19 @@
-require 'pp'
+
 
 ## SYMBOLS
 "event_public".to_sym
 "event_private".to_sym
 
+class DuplcatePluginNameError < StandardError
+end
+
 class PluginBase
+   
    def initialize(bot)
       @bot = bot
       @plugin_commands = {}
       register_commands
+      
    end
 
    def PluginBase.instantiate(bot)
@@ -23,6 +28,10 @@ class PluginBase
       self.class.instance_methods(false).each do |name|
          if name =~ /^cmd_(.+)$/
             register_command($1, name)
+         elsif name =~ /^hook_pubmsg$/
+            $hooks_pubmsg << method(name.to_sym)
+         elsif name =~ /^hook_privmsg$/
+            $hooks_privmsg << method(name.to_sym)
          end
       end
    end
@@ -33,7 +42,7 @@ class PluginBase
          @plugin_commands[name] = cmd
          $commands[name] = cmd
       else
-         raise "PluginConflict - command '#{name}' already exists."
+         raise DuplcatePluginNameError, "PluginConflict - command '#{name}' already exists."
       end
    end
 
