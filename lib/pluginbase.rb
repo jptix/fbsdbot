@@ -1,3 +1,4 @@
+require 'pp'
 
 class PluginBase
    def initialize(bot)
@@ -33,7 +34,13 @@ class PluginBase
    end
    
    def reply(event, msg)
-    @bot.send_message(event.channel, event.from + ': ' + msg)
+
+    if event.channel == bot.nick
+     @bot.send_message(event.from, msg)
+    else
+     @bot.send_message(event.channel, event.from + ': ' + msg)
+    
+    end
    end
 
 end
