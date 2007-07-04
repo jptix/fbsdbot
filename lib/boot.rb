@@ -1,4 +1,4 @@
-
+require 'digest/sha1'
 require 'yaml'
 require 'rubygems'
 require 'IRC'
