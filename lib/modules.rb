@@ -24,3 +24,11 @@ module IRCHelpers
 	end
 end
 
+class FBSDBot
+	def initialize(bot_obj)
+		@bot = bot_obj
+	end
+	def handle_privmsg(event)
+		@bot.send_message("#bot-test.no", event.inspect)	
+	end
+end
