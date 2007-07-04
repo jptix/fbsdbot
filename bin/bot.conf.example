@@ -1,3 +1,6 @@
 nick: WorkBond
 host: irc.homelien.no
 port: 6667
+channels:
+    - "#freebsd.no"
+    - "#bot-test.no"
