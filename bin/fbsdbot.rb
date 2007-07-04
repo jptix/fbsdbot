@@ -10,6 +10,8 @@
 	$commands = {}
 	$start_time = Time.now
 	$command_count = 0
+  $hooks_pubmsg = []
+  $hooks_privmsg = []
 	handler = FBSDBot.new(bot)
 
 	IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( IRCHelpers::NickObfusicator.run(bot.nick) ) }
@@ -24,7 +26,6 @@
 	
 	IRCEvent.add_callback('privmsg') do |event| 
 
-
 			if event.message =~ /^!.+/ or event.channel == bot.nick
 			  line = event.message.sub(/^!/, '').split
 			  unless $commands[line.first].nil?
@@ -32,6 +33,14 @@
 			    $commands[line.shift][1].call(event, line.join(' '))
 			  end
 			end
+			
+			if event.channel == bot.nick
+			  call_hooks(event, :privmsg)
+			else
+			  call_hooks(event, :pubmsg)
+      end
+			
+			
 	end
 
   bot.connect

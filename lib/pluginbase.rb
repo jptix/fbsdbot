@@ -21,6 +21,10 @@ class PluginBase
       self.class.instance_methods(false).each do |name|
          if name =~ /^cmd_(.+)$/
             register_command($1, name)
+         elsif name =~ /^hook_pubmsg$/
+            $hooks_pubmsg << method(name.to_sym)
+         elsif name =~ /^hook_privmsg$/
+            $hooks_privmsg << method(name.to_sym)
          end
       end
    end
