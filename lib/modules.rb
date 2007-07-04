@@ -40,7 +40,7 @@ end
 def load_plugin(name, bot)
    begin
       n = name.downcase
-      Plugins.module_eval { load("../plugins/#{n}.rb") }
+      Plugins.module_eval { load(File.dirname(__FILE__) + "/../plugins/#{n}.rb") }
 
       if (klass = self.class.const_get(n.capitalize))
          plugin = klass.instantiate(bot)

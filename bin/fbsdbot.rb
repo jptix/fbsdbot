@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby -KU
-puts "Starting bot"
-require File.dirname(__FILE__) + '/../lib/boot.rb'
+  require File.dirname(__FILE__) + '/../lib/boot.rb'
   $stdout.sync = true
+
   print "Connecting to #{@config['host']}:#{@config['port']}.."
+
 	bot = IRC.new(@config['nick'], @config['host'], @config['port'], "can you say marclar?")
 	FBSDBot.new(bot)
 	
