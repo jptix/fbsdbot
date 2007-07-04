@@ -1,3 +1,4 @@
 gem install ruby-irc
 gem install sqlite3-ruby
 gem install activerecord
+gem install htmlentities

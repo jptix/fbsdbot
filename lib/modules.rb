@@ -79,6 +79,11 @@ def load_plugin(name, bot, path = nil)
 
 end
 
+require 'htmlentities'
+$htmlentities = HTMLEntities.new
+class String; def decode_entities; return $htmlentities.decode(self); end; end
+
+
 def call_hooks(event, type)
   case type
   when :pubmsg

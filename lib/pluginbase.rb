@@ -1,12 +1,16 @@
+
+
 ## SYMBOLS
 "event_public".to_sym
 "event_private".to_sym
 
 class PluginBase
+   
    def initialize(bot)
       @bot = bot
       @plugin_commands = {}
       register_commands
+      
    end
 
    def PluginBase.instantiate(bot)
