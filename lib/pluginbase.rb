@@ -35,11 +35,10 @@ class PluginBase
    
    def reply(event, msg)
 
-    if event.channel == bot.nick
+    if event.channel == @bot.nick
      @bot.send_message(event.from, msg)
     else
      @bot.send_message(event.channel, event.from + ': ' + msg)
-    
     end
    end
 
