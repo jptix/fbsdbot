@@ -16,7 +16,7 @@ require File.dirname(__FILE__) + '/pluginbase.rb'
 # check for config file 
 # FIXME: should use OptionParser or similar in the future
 if ARGV.size > 0
-   config_file = File.dirname(__FILE__) + "/../bin/#{ARGV[0]}"
+   config_file = File.expand_path(ARGF.file.path) 
 else
    config_file = File.dirname(__FILE__) + '/../bin/bot.conf'
 end
