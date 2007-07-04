@@ -2,7 +2,6 @@
 	require File.dirname(__FILE__) + '/../lib/boot.rb'
   $stdout.sync = true
 
->>>>>>> master:bin/fbsdbot.rb
   print "Connecting to #{@config['host']}:#{@config['port']}.."
 
 	bot = IRC.new(@config['nick'], @config['host'], @config['port'], "can you say marclar?")
