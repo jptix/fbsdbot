@@ -5,7 +5,7 @@
 
   print "Connecting to #{@config['host']}:#{@config['port']}.."
 
-	bot = IRC.new(@config['nick'], @config['host'], @config['port'], "can you say marclar?")
+	bot = IRC.new(@config['nick'], @config['host'], @config['port'], ( @config['ircname'].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']) )
 	
 	# global maps
 	$commands = {}
