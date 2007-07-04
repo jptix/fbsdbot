@@ -1,12 +1,13 @@
 require 'net/http'
 require 'cgi'
 
-
+# ========================================
+# = Plugin for various web functionality =
+# ========================================
 class Web < PluginBase
 
    def cmd_google(event, line)
 
-      # Argument checks.
       if !line or line.empty?
          reply(event, 'USAGE: google <search string>')
          return
@@ -33,7 +34,7 @@ class Web < PluginBase
    def cmd_wp(event, line)
 
       if !line or line.empty?
-         reply(event, 'USAGE: define <search string>')
+         reply(event, 'USAGE: wp <search string>')
          return
       end
 

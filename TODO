@@ -1,4 +1,4 @@
-TODO list
+TODO:
 
 * Make the bot host a DRb-object that will store users' now playing info       
   in the user database, and distribute a script that updates the database.
@@ -10,3 +10,8 @@ TODO list
 * Add !seen functionality
 
 * Add !ports (freebsd-doc and ports indexed)
+
+* !man should use local man pages for performance boost
+
+DONE:
+
