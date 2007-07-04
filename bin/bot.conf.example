@@ -5,4 +5,4 @@ channels:
     - "#freebsd.no"
     - "#bot-test.no"
 plugins:
-    - google
+    - web
