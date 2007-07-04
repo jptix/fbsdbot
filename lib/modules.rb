@@ -78,3 +78,14 @@ def load_plugin(name, bot, path = nil)
    end
 
 end
+
+def call_hooks(event, type)
+  case type
+  when :pubmsg
+    $hooks_pubmsg.each { |hook| hook.call(event, event.message) }
+  when :privmsg
+    $hooks_privmsg.each { |hook| hook.call(event, event.message) }
+  end
+  
+  
+end
