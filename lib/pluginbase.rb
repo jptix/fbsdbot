@@ -37,6 +37,10 @@ class PluginBase
       end
    end
 
+   def op(channel,nick)
+	   @bot.op(channel,nick)
+	 end
+
    def reply(event, msg)
 
     if event.channel == @bot.nick
