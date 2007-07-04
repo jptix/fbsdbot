@@ -4,7 +4,7 @@ require 'net/http'
 class Google < PluginBase
      
    def cmd_test(event, line)
-      reply (event, "Yes, it works!")
+      reply(event, "Yes, it works!")
    end
    
    def cmd_google(event, line)

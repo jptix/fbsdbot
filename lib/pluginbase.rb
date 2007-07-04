@@ -1,5 +1,9 @@
 require 'pp'
 
+## SYMBOLS
+"event_public".to_sym
+"event_private".to_sym
+
 class PluginBase
    def initialize(bot)
       @bot = bot
@@ -32,7 +36,7 @@ class PluginBase
          raise "PluginConflict - command '#{name}' already exists."
       end
    end
-   
+
    def reply(event, msg)
 
      @bot.send_message(event.channel, event.from + ': ' + msg)
