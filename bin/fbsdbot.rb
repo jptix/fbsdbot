@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 
 	require File.dirname(__FILE__) + '/../lib/boot.rb'
   $stdout.sync = true
