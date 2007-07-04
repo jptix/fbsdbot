@@ -16,6 +16,22 @@ class User_priv < PluginBase
 		end
 	end
 
+  def cmd_add(event,line)
+		return if line.nil? or line.empty?
+
+	end
+
+  def cmd_pass(event,line)
+		return if line.nil? or line.empty?
+
+		reply(event, hash(line))
+	end
+
+	private
+	def hash(new_pass)
+		Digest::SHA1.hexdigest(new_pass)
+	end
+
 	private 
 	def authorize(user,pass)
 		return true if user.passwd == Digest::SHA1.hexdigest(pass)
