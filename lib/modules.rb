@@ -42,14 +42,27 @@ class FBSDBot
 	end
 end
 
+def seconds_to_s(seconds)
+   s = seconds % 60
+   m = (seconds /= 60) % 60
+   h = (seconds /= 60) % 24
+   d = (seconds /= 24)
+   out = []
+   out << "#{d}d" if d > 0
+   out << "#{h}h" if h > 0
+   out << "#{m}m" if m > 0
+   out << "#{s}s" if s > 0
+   out.length > 0 ? out.join(' ') : '0s'
+end
+
 # namespace for plugins
 module Plugins
 end
 
-def load_plugin(name, bot)
+def load_plugin(name, bot, path = nil)
    begin
       n = name.downcase
-      Plugins.module_eval { load(File.dirname(__FILE__) + "/../plugins/#{n}.rb") }
+      Plugins.module_eval { load path || (File.dirname(__FILE__) + "/../plugins/#{n}.rb") }
 
       if (klass = self.class.const_get(n.capitalize))
          plugin = klass.instantiate(bot)
