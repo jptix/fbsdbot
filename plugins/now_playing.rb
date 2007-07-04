@@ -6,7 +6,7 @@ class Now_playing < PluginBase
 			bitrate =  `#{at} --current-song-bitrate-kbps`
 			answer = "Mr_Bond is playing: #{song} [#{bitrate}Kb/s]"
 			unless event.from == "Mr_Bond"
-				answer = "#{event.nick}'s music is to gay to mention here!"
+				answer = "#{event.from}'s music is to gay to mention here!"
 			end
 			reply(event,answer)
 	 end
