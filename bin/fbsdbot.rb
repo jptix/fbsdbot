@@ -21,13 +21,10 @@
 	
 	IRCEvent.add_callback('privmsg') do |event| 
 
-	     # only handle pubmsgs here ( channel equals my nick if this is a PRIVMSG )
-      puts "event = #{event.inspect}" #    <-- DEBUG
-			if event.message =~ /^!(.+)/
-			  line = $1.split
-			  puts "line = #{line.inspect}" #    <-- DEBUG
+
+			if event.message =~ /^!.+/ or event.channel == bot.nick
+			  line = event.message.sub(/^!/, '').split
 			  unless $commands[line.first].nil?
-			    puts "line.first = #{line.first.inspect}" #    <-- DEBUG
 			    $commands[line.shift][1].call(event, line.join(' '))
 			  end
 			end
