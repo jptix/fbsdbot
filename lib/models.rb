@@ -1,7 +1,7 @@
-class Users < ActiveRecord::Base
+class User < ActiveRecord::Base
 	has_many :hosts
 end
 
-class Hosts < Users
-
+class Host < User
+	set_table_name :hosts
 end

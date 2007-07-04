@@ -27,9 +27,18 @@ end
 class FBSDBot
 	def initialize(bot_obj)
 		@bot = bot_obj
+		@exp = {
+			:auth => '^!auth (\S+)'
+		}
 	end
 	def handle_privmsg(event)
-		@bot.send_message("#bot-test.no", event.inspect)	
+		@exp.each do |key,val|
+			@bot.send_message(event.channel, "#{key} - #{val}") 
+		end
+	end
+
+	def auth
+		@bot.send_message(event.channel,"reached auth method!")
 	end
 end
 
