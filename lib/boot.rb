@@ -1,3 +1,5 @@
+puts "Starting bot..."
+
 # UTF-8
 $KCODE = 'u'
 require 'jcode'
@@ -16,7 +18,7 @@ require File.dirname(__FILE__) + '/pluginbase.rb'
 # check for config file 
 # FIXME: should use OptionParser or similar in the future
 if ARGV.size > 0
-   config_file = File.dirname(__FILE__) + "/../bin/#{ARGV[0]}"
+   config_file = File.expand_path(ARGF.file.path) 
 else
    config_file = File.dirname(__FILE__) + '/../bin/bot.conf'
 end
@@ -30,9 +32,7 @@ end
 @config = YAML.load( File.open(config_file) )
 puts "Loaded config"
 
-db_file = File.dirname(__FILE__) + '/fbsdbot.db'
-
 ActiveRecord::Base.establish_connection({
   :adapter => 'sqlite3',
-  :dbfile => db_file,
+  :dbfile => File.dirname(__FILE__) + '/fbsdbot.db',
 })
