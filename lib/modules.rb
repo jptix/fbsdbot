@@ -57,9 +57,8 @@ end
 
 # namespace for plugins
 module Plugins
-end
 
-def load_plugin(name, bot, path = nil)
+def load(name, bot, path = nil)
    begin
       n = name.downcase
       Plugins.module_eval { load path || (File.dirname(__FILE__) + "/../plugins/#{n}.rb") }
@@ -77,4 +76,5 @@ def load_plugin(name, bot, path = nil)
       puts e.backtrace.join("\n")
    end
 
+end
 end

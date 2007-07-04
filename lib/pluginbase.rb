@@ -1,5 +1,3 @@
-require 'pp'
-
 ## SYMBOLS
 "event_public".to_sym
 "event_private".to_sym

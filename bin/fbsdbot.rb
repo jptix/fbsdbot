@@ -16,7 +16,7 @@
 	IRCEvent.add_callback('endofmotd') do |event|
   	puts "connected!"
   	load_plugin('corecommands', bot, (File.dirname(__FILE__) + "/../lib/corecommands.rb"))
-    @config['plugins'].each { |plugin| load_plugin(plugin, bot) }
+    @config['plugins'].each { |plugin| Plugins::load(plugin, bot) }
   	@config['channels'].each { |ch| bot.add_channel(ch); puts "Joined channel: #{ch}"}
 	end
 	$stdout.sync = false
