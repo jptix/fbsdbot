@@ -1,12 +1,18 @@
 #!/usr/bin/env ruby -KU
 
 require File.dirname(__FILE__) + '/../lib/boot.rb'
-
+  $stdout.sync = true
+  print "Connecting to #{@config['host']}:#{@config['port']}.."
 	bot = IRC.new(@config['nick'], @config['host'], @config['port'], "can you say marclar?")
-	IRCEvent.add_callback('nicknameinuse') {|event|
-		bot.ch_nick( IRCHelpers::NickObfusicator.run(bot.nick) )
-	}
-	IRCEvent.add_callback('endofmotd') { |event| bot.add_channel('#bot-test.no') }
+
+	IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( IRCHelpers::NickObfusicator.run(bot.nick) ) }
+	IRCEvent.add_callback('endofmotd') do |event|
+	 print "done!\n"
+	 @config['channels'].each { |ch| bot.add_channel(ch); puts "Joined channel: #{ch}"}
+	end
+	$stdout.sync = false
+	
+	
 	IRCEvent.add_callback('privmsg') do |event| 
 
 	     # only handle pubmsgs here ( channel equals my nick if this is a PRIVMSG )
@@ -14,6 +20,7 @@ require File.dirname(__FILE__) + '/../lib/boot.rb'
 		 	#bot.send_message( event.from, "event: #{event.inspect}") 
 		 	#bot.send_message( event.from, "bot: #{bot.inspect}")
 		 	if event.message == "!die"
+		 	  puts "Quitting!"
 				bot.send_quit()
 			end
 		 else
