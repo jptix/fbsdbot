@@ -1,4 +1,5 @@
 require 'net/http'
+require 'cgi'
 
 
 class Web < PluginBase
@@ -12,8 +13,7 @@ class Web < PluginBase
       end
 
       Net::HTTP.start('www.google.com') do |http|
-         search = line.gsub(/[^a-zA-Z0-9_\.\-]/) { |s| sprintf('%%%02x', s[0]) }
-         re = http.get("/search?ie=utf8&oe=utf8&q=#{search}", { 'User-Agent' => 'FBSDBot' })
+         re = http.get("/search?ie=utf8&oe=utf8&q=#{CGI.escape(line.strip)}", { 'User-Agent' => 'FBSDBot' })
          if re.code == '200'
             if re.body =~ /<a href="([^"]+)" class=l>(.+?)<\/a>/
                link = $1
@@ -38,8 +38,7 @@ class Web < PluginBase
       end
 
       Net::HTTP.start('www.google.com') do |http|
-         search = line.gsub(/[^a-zA-Z0-9_\.\-]/) { |s| sprintf('%%%02x', s[0]) }
-         re = http.get("/search?ie=utf8&oe=utf8&q=site%3Awikipedia.org+#{search}", { 'User-Agent' => 'FBSDBot' })
+         re = http.get("/search?ie=utf8&oe=utf8&q=site%3Awikipedia.org+#{CGI.escape(line.strip)}", { 'User-Agent' => 'FBSDBot' })
          if re.code == '200'
             if re.body =~ /<td class="j">(.+?)<br><span class=a>(.+?) -/
                desc, link = $1, $2
@@ -56,6 +55,31 @@ class Web < PluginBase
          end
       end
 
+   end
+   
+   def cmd_calc(event, line)
+
+     if !line or line.empty?
+        reply(event, 'USAGE: calc <expression>')
+        return
+     end
+
+     Net::HTTP.start('www.google.com') do |http|
+        search = line.gsub(/[^a-zA-Z0-9_\.\-]/) { |s| sprintf('%%%02x', s[0]) }
+        re = http.get("/search?ie=utf8&oe=utf8&q=#{search}", { 'User-Agent' => 'FBSDBot' })
+        if re.code == '200'
+           if re.body =~ /<div id=res>.+?<b>(.+?)<\/b>/
+              result = $1
+              result = result.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub("&#215;","x").gsub("<sup>","^").gsub("</sup>", "").gsub(/<.+?>/, '')
+              reply(event, result.decode_entities)
+           else
+              reply(event, "Not found.")
+           end
+        else
+           reply(event, "Google returned an error: #{re.code} #{re.message}")
+        end
+     end
+      
    end
 
 end
