@@ -4,6 +4,9 @@
 "event_public".to_sym
 "event_private".to_sym
 
+class DuplcatePluginNameError < StandardError
+end
+
 class PluginBase
    
    def initialize(bot)
@@ -39,7 +42,7 @@ class PluginBase
          @plugin_commands[name] = cmd
          $commands[name] = cmd
       else
-         raise "PluginConflict - command '#{name}' already exists."
+         raise DuplcatePluginNameError, "PluginConflict - command '#{name}' already exists."
       end
    end
 

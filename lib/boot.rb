@@ -1,3 +1,7 @@
+# UTF-8
+$KCODE = 'u'
+require 'jcode'
+
 require 'digest/sha1'
 require 'pp'
 require 'yaml'
