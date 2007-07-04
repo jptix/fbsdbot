@@ -30,9 +30,7 @@ end
 @config = YAML.load( File.open(config_file) )
 puts "Loaded config"
 
-db_file = File.dirname(__FILE__) + '/fbsdbot.db'
-
 ActiveRecord::Base.establish_connection({
   :adapter => 'sqlite3',
-  :dbfile => db_file,
+  :dbfile => File.dirname(__FILE__) + '/fbsdbot.db',
 })
