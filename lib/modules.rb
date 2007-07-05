@@ -81,12 +81,12 @@ module FBSDBot
               @respond_to = @channel
            end
         when :join
-           @nick        = event.from
-           @hostmask    = event.hostmask
-           @channel     = event.channel
-           @message     = nil
-           @type        = :join
-           @respond_to  = @channel
+          @nick        = event.from
+          @hostmask    = event.hostmask
+          @channel     = event.channel
+          @message     = nil
+          @type        = :join
+          @respond_to  = @channel
         when :part
           @nick         = event.from
           @hostmask     = event.stats[1]
@@ -102,6 +102,7 @@ module FBSDBot
           @type         = :quit
           @respond_to   = @channel
         end
+
 
 			end
 
