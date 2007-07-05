@@ -2,6 +2,8 @@
 
 	require File.dirname(__FILE__) + '/../lib/boot.rb'
 	require File.dirname(__FILE__) + '/../plugins/google2.rb'
+	require File.dirname(__FILE__) + '/../plugins/auth.rb'
+
   $stdout.sync = true
 	$bot = IRC.new(@config['nick'], @config['host'], @config['port'], ( @config['ircname'].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']) )
 	$auth = FBSDBot::Authentication.new
@@ -14,7 +16,7 @@
 	IRCEvent.add_callback('endofmotd') do |event|
   		puts "connected!"
 			puts "Loaded plugins: " 
-				pp FBSDBot::Plugin.registered_plugins
+				FBSDBot::Plugin.registered_plugins.each {|i,p| puts "  - #{i} (#{p.version} - by #{p.author}" }
   			@config['channels'].each do |ch| 
 						$bot.add_channel(ch)
 					  puts "Joined channel: #{ch}"
