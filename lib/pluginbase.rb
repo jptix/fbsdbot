@@ -1,9 +1,6 @@
 
 
 ## SYMBOLS
-"event_public".to_sym
-"event_private".to_sym
-
 class DuplcatePluginNameError < StandardError
 end
 
@@ -28,42 +25,40 @@ module FBSDBot
 		def is_authenticated?(event)
 			a = @authenticated[event.from.to_sym]
 			if a.nil?
-				@authenticated.delete(event.from.to_sym)
 				return false
-			elsif a.timed_out?
-				@authenticated.delete(event.from.to_sym)
-				return false				
 			elsif a.host_changed?(event.hostmask)
 				@authenticated.delete(event.from.to_sym)
 				return false
 			end
 			true
 		end
-		
-		private
-		def reload_users
-			User.find(:all, :include => :hosts)
+
+		def logout(event)
+			a = @authenticated[event.from.to_sym]
+			@authenticated.delete(event.from.to_sym) unless a.nil?
+			true
 		end
+
+		def mapuser(event)
+			@authenticated[event.from.to_sym]
+		end
+		
 	end
 	
 	private
 	class AuthenticatedUser
+		attr_reader :login_date, :event, :idle_since, :user
+
 		def initialize(event,u)
 			@event = event
 			@user = u
-			@idle_since = Time.now
+			@login_date = Time.now
 		end
+
 		def host_changed?(host)
 			host == @event.hostmask ? false : true
 		end
 		
-		def timed_out?
-			tn = Time.now
-			t = (tn - @idle_since) > 300 ? true : false# 5 minutes
-			return false unless t
-			@idle_since = tn
-			t
-		end
 	end
 	
 	module Helpers
