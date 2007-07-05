@@ -1,3 +1,7 @@
+# SYMBOLS
+"pubmsg".to_sym
+"privmsg".to_sym
+
 module FBSDBot
 
 	module PluginSugar
@@ -7,7 +11,7 @@ module FBSDBot
       	  define_method(name) do |*args| 
         	  case args.size
           	when 0: instance_variable_get("@#{name}")
-	          else    instance_variable_set("@#{name}", *args)
+	          else    instance_variable_set("@#{name}", [*args])
   	        end
     	    end
       	end
@@ -23,27 +27,26 @@ module FBSDBot
   end
 
   def self.define(name, &block)
+		@name = name
     p = new
     p.instance_eval(&block)
     Plugin.registered_plugins[name.to_sym] = p
   end
 
   extend PluginSugar
-  def_field :author, :version, :handles
+  def_field :author, :version 
 	end
 
-### this under PLUGIN_DIR/
+### this under plugins/
 	Plugin.define "foo" do
-  author "Daniel Bond"
-  version "0.0.1"
-	handles :privmsg
-
+	  author "Daniel Bond"
+  	version "0.0.1"
   
-  # stuff
-  def do_it(x)  # becomes a singleton method
-    x * 2
-		puts @bot.inspect
-  end
+  	# stuff
+  	def on_pubmsg_commands(event)  # becomes a singleton method
+			#puts bot.inspect
+			$bot.send_message(event.channel, "#{event.from}, I cannot tell you my commands yet :/")
+  	end
 	end
 
 end
