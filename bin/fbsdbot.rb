@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
-
+$: << File.dirname(__FILE__) + '/../plugins/'
 require File.dirname(__FILE__) + '/../lib/boot.rb'
 
 module FBSDBot
 
    class Bot
-      attr_accessor :commands, :hooks, :config, :irc
+      attr_accessor :commands, :hooks, :config, :irc, :auth
       attr_reader :threads, :command_count, :start_time
 
       def initialize(config)
@@ -65,6 +65,7 @@ module FBSDBot
       end
       
       def load_plugins
+        $: << 
         @config['plugins'].each { |p| require p }
       end
       
