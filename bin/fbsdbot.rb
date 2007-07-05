@@ -4,6 +4,7 @@ require File.dirname(__FILE__) + '/../lib/boot.rb'
 
 class Bot
   attr_accessor :commands, :hooks, :config
+  attr_reader :threads
   
   def initialize(config)
     @commands = {}
@@ -12,7 +13,6 @@ class Bot
     @config = config
     @start_time = Time.now
     @hooks = {:pubmsg => [], :privmsg => [], :join => [], :part => [], :quit => []}
-    
   end
   
   def run
@@ -20,19 +20,16 @@ class Bot
   	@irc = IRC.new(@config['nick'], @config['host'], @config['port'], ( @config['ircname'].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']) )
   	IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( FBSDBot::Helpers::NickObfusicator.run(bot.nick) ) }
   	IRCEvent.add_callback('endofmotd') do |event|
-    		puts "connected!"
+    		print ".connected!\n"
     		load_plugin('corecommands', @irc, (File.dirname(__FILE__) + "/../lib/corecommands.rb"))
       	@config['plugins'].each { |plugin| load_plugin(plugin, @irc) }
     		@config['channels'].each { |ch| @irc.add_channel(ch); puts "Joined channel: #{ch}"}
+    		pp @hooks     # DEBUG
   	end
-  	@irc.connect
-  	puts "CONNECTED"
   	IRCEvent.add_callback('join') { |event| call_hooks(event, :join) }
-  	
   	IRCEvent.add_callback('part') { |event| call_hooks(event, :part) }
   	IRCEvent.add_callback('quit') { |event| call_hooks(event, :quit) }
   	IRCEvent.add_callback('privmsg') do |event| 
-  	    puts event.message
   			if event.message =~ /^!.+/ or event.channel == @irc.nick
   			  line = event.message.sub(/^!/, '').split
   			  unless @commands[line.first].nil?
@@ -41,12 +38,13 @@ class Bot
   			  end
   			end
 
-  			if event.channel == bot.nick
+  			if event.channel == @irc.nick
   			  call_hooks(event, :privmsg)
   			else
   			  call_hooks(event, :pubmsg)
         end
   	end
+  	@irc.connect
   end
   
   module Plugins
@@ -79,7 +77,6 @@ end
 
 $bot = Bot.new($config)
 $bot.run
-
 
 
 

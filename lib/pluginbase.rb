@@ -123,7 +123,7 @@ class PluginBase
             register_command($1, name)
          elsif name =~ /^hook_(.+?)$/
             type = $1
-            $bot.hooks[type.to_sym]
+            $bot.hooks[type.to_sym] << method(name.to_sym)
          end
       end
    end
