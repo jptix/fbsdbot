@@ -19,7 +19,7 @@ class Web < PluginBase
             if re.body =~ /<a href="([^"]+)" class=l>(.+?)<\/a>/
                link = $1
                desc = $2.gsub('<b>', "\x02").gsub('</b>', "\x0f")
-               reply(event, "#{link} (#{desc})".decode_entities)
+               reply(event, CGI.unescapeHTML("#{link} (#{desc})"))
             elsif re.body =~ /did not match any documents/
                reply(event, 'Nothing found.')
             else
@@ -45,7 +45,7 @@ class Web < PluginBase
                desc, link = $1, $2
                desc = desc.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '')
                link = link.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '')
-               reply(event, desc.decode_entities + " ( " + link.gsub(%r[^(?!http://)], 'http://') + " )".decode_entities)
+               reply(event, CGI.unescapeHTML("#{desc} ( #{link.gsub(%r[^(?!http://)], 'http://')} )"))
             elsif re.body =~ /did not match any documents/
                reply(event, 'No definition found.')
             else
@@ -72,7 +72,7 @@ class Web < PluginBase
            if re.body =~ /<div id=res>.+?<b>(.+?)<\/b>/
               result = $1
               result = result.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub("&#215;","x").gsub("<sup>","^").gsub("</sup>", "").gsub(/<.+?>/, '')
-              reply(event, result.decode_entities)
+              reply(event, CGI.unescapeHTML(result))
            else
               reply(event, "Not found.")
            end

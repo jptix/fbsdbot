@@ -16,7 +16,6 @@ require 'optparse'
 require 'rubygems'
 require 'IRC'
 require 'active_record'
-require 'htmlentities'
 require my_path + '/models.rb'
 require my_path + '/modules.rb'
 require my_path + '/hooks.rb'
@@ -52,6 +51,8 @@ end
 
 @config = YAML.load( File.open(config_file) )
 puts "Loaded config"
+
+
 
 ActiveRecord::Base.establish_connection({
   :adapter => 'sqlite3',
