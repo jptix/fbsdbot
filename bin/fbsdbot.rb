@@ -45,6 +45,8 @@ module FBSDBot
                FBSDBot::Plugin.registered_plugins.each do |ident,p|
                   if p.respond_to?("on_msg_#{command}".to_sym)
                      p.send("on_msg_#{command}".to_sym, Action.new(@irc,@auth, event))
+									elsif p.respond_to?('on_msg')
+										 p.send("on_msg", Action.new(@irc,@auth, event))
                   end
                end
              end

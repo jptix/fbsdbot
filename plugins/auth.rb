@@ -15,7 +15,7 @@ FBSDBot::Plugin.define "AuthHandler" do
 	end
 
 	def on_msg_logout(a)
-		return a.reply "Not authenticated anyhowly?" 											unless a.auth?
+		return a.reply("Not authenticated anyhowly?") 											unless a.auth?
 		a.user.logout(a)
 		a.reply "User logged out"
 	end

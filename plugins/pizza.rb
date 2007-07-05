@@ -9,4 +9,8 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 	 a.reply("pizza confirmed at #{@time}") 
 	end
 
+	def on_msg(a)
+		a.reply("you said: '#{a.message}'")
+	end
+
 end 

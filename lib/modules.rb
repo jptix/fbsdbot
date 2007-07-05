@@ -71,8 +71,9 @@ module FBSDBot
 					when :privmsg
 						
 						@nick = event.from
-						@message = event.message.gsub(/!(\S+)(\s|)/,'') unless(event.message.nil?)
+						@message = event.message.gsub(/^(\S+)(\s|)/,'') unless(event.message.nil?)
 						@command = $1 																unless(@message.nil?)
+						@message = event.message
 						@hostmask = event.hostmask
 
 						# private / public?
