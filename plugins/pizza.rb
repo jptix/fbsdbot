@@ -1,7 +1,7 @@
 FBSDBot::Plugin.define "PizzaHighlight" do
 
 	author "Daniel Bond"
-	version "0.0.2"
+	version "0.0.3"
 
 
 	def on_msg_pizza(a)
@@ -17,6 +17,11 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 		if a.message.match(/(.+?) now/)
 			a.reply("#{$1.sub(/^!/,'')} confirmed at #{Time.now}")
 		end
+	end
+
+	def on_msg_reload(a)
+			a.reply("reloading")
+			sefl.caller.exit
 	end
 
 end 
