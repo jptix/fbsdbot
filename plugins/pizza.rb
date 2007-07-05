@@ -9,7 +9,7 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 	end
 
 	def on_msg(a)
-		if a.message.match(/(.+?) now/)
+		if a.message.match(/(.+?) now$/)
 			m = $1.sub(/^!/)
 			a.reply("#{$1} confirmed at #{Time.now}")
 		end
