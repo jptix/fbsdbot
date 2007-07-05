@@ -90,6 +90,8 @@ def call_hooks(event, type)
   when :privmsg
     $hooks_privmsg.each { |hook| hook.call(event, event.message) }
   end
-  
-  
+end
+
+def e_sh(str)
+	str.to_s.gsub(/(?=[^a-zA-Z0-9_.\/\-\x7F-\xFF\n])/, '\\').gsub(/\n/, "'\n'").sub(/^$/, "''")
 end
