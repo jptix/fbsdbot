@@ -48,8 +48,10 @@ unless File.exists?( config_file )
 end
 
 
-@config = YAML.load( File.open(config_file) )
+$config = YAML.load( File.open(config_file) )
 puts "Loaded config"
+
+
 
 ActiveRecord::Base.establish_connection({
   :adapter => 'sqlite3',
