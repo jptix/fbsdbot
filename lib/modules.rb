@@ -102,8 +102,6 @@ module FBSDBot
           @type         = :quit
           @respond_to   = @channel
         end
-
-
 			end
 
 			def auth?
@@ -119,7 +117,8 @@ module FBSDBot
 			end
 
 			def syntax(msg)
-				reply("Syntax: #{@command} #{msg}")
+				return reply("Syntax: #{@command} #{msg}") unless @command.nil?
+				reply("Syntax: #{msg}")
 			end
 			
 	 end
