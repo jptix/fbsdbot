@@ -14,7 +14,7 @@
     $hooks_pubmsg = []
     $hooks_privmsg = []
 
-	IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( IRCHelpers::NickObfusicator.run(bot.nick) ) }
+	IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( FBSDBot::Helpers::NickObfusicator.run(bot.nick) ) }
 	IRCEvent.add_callback('endofmotd') do |event|
   		puts "connected!"
   		load_plugin('corecommands', bot, (File.dirname(__FILE__) + "/../lib/corecommands.rb"))

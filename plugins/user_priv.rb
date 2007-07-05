@@ -1,40 +1,20 @@
-class User_priv < PluginBase
-	def cmd_op(event,line)
-		return if line.nil? or line.empty?
+class User_priv < PluginBase	
+	def cmd_auth(event,line)
+		l = line.split(' ')
+		return reply(event, "Parameters: <handle> <pass>") unless l.size == 2
 		
-		User.find(:all, :include => :hosts).each do |user|
-			user.hosts.each do |host|
-				m = Regexp.new(host.maskexp)
-				if m.match("#{event.from}!#{event.hostmask}") 
-					if authorize(user,line) # line == password
-						op(event.channel,event.from)
-					else
-						reply(event, "auth failed")
-					end
-				end
-			end
+		return reply(event, "You are allready authentiated!") if self.auth.is_authenticated?(event)
+		
+		if self.auth.authenticate(event, l[0],l[1])
+			reply(event, "Ok, you are now authenticated")
+		else
+			reply(event, "Yes, for the last time, you are a little monkey bwoy!")
 		end
+		
 	end
-
-  def cmd_add(event,line)
-		return if line.nil? or line.empty?
-
-	end
-
-  def cmd_pass(event,line)
-		return if line.nil? or line.empty?
-
-		reply(event, hash(line))
-	end
-
-	private
-	def hash(new_pass)
-		Digest::SHA1.hexdigest(new_pass)
-	end
-
-	private 
-	def authorize(user,pass)
-		return true if user.passwd == Digest::SHA1.hexdigest(pass)
-		false
+	
+	def cmd_securecall(event,line)
+		return reply(event, "You must be authenticated to use this function") unless self.auth.is_authenticated?(event)
+		reply(event, "You are special!")
 	end
 end
