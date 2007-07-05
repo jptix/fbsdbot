@@ -6,7 +6,6 @@ module FBSDBot
 		
 		def authenticate(action,handle,password)
 			u = User.find(:first, :include => [:hosts], :conditions => ['handle = ?',handle])
-			puts u.inspect
 			return false if u.nil?
 			
 			#got user, now check pw
@@ -42,10 +41,11 @@ module FBSDBot
 	
 	private
 	class AuthenticatedUser
-		attr_reader :login_date, :event, :idle_since, :user
+		attr :user
+		attr_reader :login_date, :action, :idle_since
 
 		def initialize(action,u)
-			@event = action
+			@action = action
 			@user = u
 			@login_date = Time.now
 		end
