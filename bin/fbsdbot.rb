@@ -50,8 +50,8 @@ module FBSDBot
                   end
                else # PRIVATE
                   FBSDBot::Plugin.registered_plugins.each do |ident,p|
-                     if p.respond_to?("on_pubmsg_#{command}".to_sym)
-                        p.send("on_pubmsg_#{command}".to_sym, event, line)
+                     if p.respond_to?("on_privmsg_#{command}".to_sym)
+                        p.send("on_privmsg_#{command}".to_sym, event, line)
                         # exit ?
                         # else plugin cant handle "def on_pubmsg_<command>(event, line)"
                      end
