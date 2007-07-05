@@ -49,7 +49,7 @@ unless File.exists?( config_file )
 end
 
 
-@config = YAML.load( File.open(config_file) )
+$config = YAML.load( File.open(config_file) )
 puts "Loaded config"
 
 
