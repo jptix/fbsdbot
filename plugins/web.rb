@@ -104,4 +104,5 @@ FBSDBot::Plugin.define("web") {
    def on_msg_wp(action) 
       action.reply @web.wp(action.message)
    end
+
 }
