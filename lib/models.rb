@@ -12,3 +12,11 @@ end
 class Host < User
 	set_table_name :hosts
 end
+
+class Channel < ActiveRecord::Base
+	set_table_name :channels
+end
+
+class Flag < ActiveRecord::Base
+	set_table_name :flags
+end
