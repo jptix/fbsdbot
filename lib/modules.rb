@@ -12,9 +12,6 @@ def seconds_to_s(seconds)
    out.length > 0 ? out.join(' ') : '0s'
 end
 
-$htmlentities = HTMLEntities.new
-class String; def decode_entities; return $htmlentities.decode(self); end; end
-
 def e_sh(str)
 	str.to_s.gsub(/(?=[^a-zA-Z0-9_.\/\-\x7F-\xFF\n])/, '\\').gsub(/\n/, "'\n'").sub(/^$/, "''")
 end
