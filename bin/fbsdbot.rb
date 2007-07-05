@@ -42,20 +42,12 @@ module FBSDBot
             if event.message =~ /^!.+/ or event.channel == @irc.nick
                line = event.message.sub(/^!/, '').split
                command = line.shift
-               if event.channel != @irc.nick
-                  FBSDBot::Plugin.registered_plugins.each do |ident,p|
-                     if p.respond_to?("on_pubmsg_#{command}".to_sym)
-                        p.send("on_pubmsg_#{command}".to_sym, Action.new(@irc,@auth, event))
-                     end
-                  end
-               else # PRIVATE
-                  FBSDBot::Plugin.registered_plugins.each do |ident,p|
-                     if p.respond_to?("on_privmsg_#{command}".to_sym)
-                        p.send("on_privmsg_#{command}".to_sym, Action.new( @irc,@auth, event ))
-                     end
+               FBSDBot::Plugin.registered_plugins.each do |ident,p|
+                  if p.respond_to?("on_msg_#{command}".to_sym)
+                     p.send("on_msg_#{command}".to_sym, Action.new(@irc,@auth, event))
                   end
                end
-            end
+             end
          end
          @irc.connect
       end
