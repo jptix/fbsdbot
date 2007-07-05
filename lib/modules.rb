@@ -65,6 +65,7 @@ module FBSDBot
 				@message = nil
 				@hostmask = nil
 				@command = nil 
+				@type = nil
 					
 				case event.event_type.to_sym
 					when :privmsg

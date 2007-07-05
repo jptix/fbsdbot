@@ -39,9 +39,9 @@ module FBSDBot
          
          # MESSAGES
          IRCEvent.add_callback('privmsg') do |event|
-            if event.message =~ /^!.+/ or event.channel == @irc.nick
-               line = event.message.sub(/^!/, '').split
-               command = line.shift
+            if event.message =~ /^(\S+)/ or event.channel == @irc.nick
+               command = event.message.sub(/^!/, '').split[0]
+							 return if command.nil?
                FBSDBot::Plugin.registered_plugins.each do |ident,p|
                   if p.respond_to?("on_msg_#{command}".to_sym)
                      p.send("on_msg_#{command}".to_sym, Action.new(@irc,@auth, event))

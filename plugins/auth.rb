@@ -3,20 +3,21 @@ FBSDBot::Plugin.define "AuthHandler" do
 	author "Daniel Bond"
 	version "0.0.2"
 
-	def on_privmsg_auth(a)
-		return a.reply("allready authenticated")	if a.auth?
+	def on_msg_auth(a)
+		return unless a.type == :privmsg
+		return a.reply "Allready authenticated, use !logout to log out" 	if( a.auth?)
 
-		if a.message.match(/^(\S+)\s(\S+)/)
-			user,pass = $1,$2 
-			return
-			if a.auth.authenticate(a,user,pass)
-				a.reply "authenticated"
-			else
-				a.reply "not authenticated"
-			end
-		else
-			a.reply(a.message)
-			a.syntax("<user> <pass>")
-		end
+		return a.syntax "<handle> <pass>" 																if( not a.message.match(/^(\S+)\s(\S+)/) )
+		handle,pass = $1,$2
+
+		return a.reply "authenticated!"  																	if( a.user.authenticate(a, handle, pass) )
+		a.reply "Not authenticated!"
 	end
+
+	def on_msg_logout(a)
+		return a.reply "Not authenticated anyhowly?" 											unless a.auth?
+		a.user.logout(a)
+		a.reply "User logged out"
+	end
+
 end 

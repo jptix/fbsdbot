@@ -13,7 +13,7 @@ module FBSDBot
 			return false unless u.check_password(password)
 			
 			# XXX: TODO, fix matching of hostmask against user, not just pass			
-			@authenticated[action.nick.to_sym] = AuthenticatedUser.new(a,u)
+			@authenticated[action.nick.to_sym] = AuthenticatedUser.new(action,u)
 			true
 		end
 		
