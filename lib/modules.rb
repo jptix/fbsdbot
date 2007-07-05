@@ -73,7 +73,7 @@ module FBSDBot
 						@nick = event.from
 						@message = event.message
 						unless event.message.nil?
-						  if command 
+						  if !command.nil? 
 						    @message = event.message.gsub(/!?#{command}/, '').strip
 						    @command = command
 						  else
@@ -108,7 +108,8 @@ module FBSDBot
 			end
 
 			def syntax(msg)
-				reply("Syntax: #{@command} #{msg}")
+				return reply("Syntax: #{@command} #{msg}") unless @command.nil?
+				reply("Syntax: #{msg}")
 			end
 			
 	 end
