@@ -6,4 +6,8 @@ FBSDBot::Plugin.define "google" do
 		$bot.send_message(event.channel, "google found no match")
 	end
 
+	def on_pubmsg_auth(event, line)
+		return $bot.send_message(event.channel, "Go away!") unless $auth.is_authenticated?(event)
+	end
+
 end
