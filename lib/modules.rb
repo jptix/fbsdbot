@@ -54,12 +54,12 @@ module FBSDBot
 
 	 class Action
 
-			attr_reader :user, :nick, :channel, :message, :hostmask, :type
+			attr_reader :auth, :nick, :channel, :message, :hostmask, :type
 			
 			def initialize(bot, auth, event, command = nil)
 				@event = event
 				@bot = bot
-				@user = auth
+				@auth = auth
 				@nick = nil
 				@channel = nil
 				@message = nil
@@ -71,6 +71,7 @@ module FBSDBot
 					when :privmsg
 						
 						@nick = event.from
+						@message = event.message
 						unless event.message.nil?
 						  if command 
 						    @message = event.message.gsub(/!?#{command}/, '').strip
@@ -95,7 +96,7 @@ module FBSDBot
 			end
 
 			def auth?
-					@user.is_authenticated?(self)
+					self.auth.is_authenticated?(self)
 			end
 
 			def reply(msg)
