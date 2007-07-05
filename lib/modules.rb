@@ -56,7 +56,7 @@ module FBSDBot
 
 			attr_reader :auth, :nick, :channel, :message, :hostmask, :type
 			
-			def initialize(bot,auth,event)
+			def initialize(bot, auth, event, command = nil)
 				@event = event
 				@bot = bot
 				@auth = auth
@@ -72,6 +72,15 @@ module FBSDBot
 						
 						@nick = event.from
 						@message = event.message
+						unless event.message.nil?
+						  if command 
+						    @message = event.message.gsub(/!?#{command}/, '').strip
+						    @command = command
+						  else
+						    @message = event.message
+						    @command = nil
+						  end
+  					end
 						@hostmask = event.hostmask
 
 						# private / public?
