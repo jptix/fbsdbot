@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 	require File.dirname(__FILE__) + '/../lib/boot.rb'
+	require File.dirname(__FILE__) + '/../plugins/google2.rb'
   $stdout.sync = true
 	$bot = IRC.new(@config['nick'], @config['host'], @config['port'], ( @config['ircname'].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']) )
 	
@@ -25,9 +26,9 @@
 				command = line.shift
 				FBSDBot::Plugin.registered_plugins.each do |ident,p|
 						if p.respond_to?("on_pubmsg_#{command}".to_sym)
-							p.send("on_pubmsg_#{command}".to_sym, event)
-						else
-							$bot.send_message(event.channel, "plugin #{ident} can't do 'on_pubmsg_#{command}'")
+							p.send("on_pubmsg_#{command}".to_sym, event, line)
+							# exit ? 
+						# else plugin cant handle "def on_pubmsg_<command>(event, line)"
 						end
 				end
 	end
