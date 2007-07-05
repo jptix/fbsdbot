@@ -129,6 +129,4 @@ FBSDBot::Plugin.define("freebsd") {
    def on_msg_doc(action)
       @freebsd.doc(action, action.message)
    end
-
-
 }
