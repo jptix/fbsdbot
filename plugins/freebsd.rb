@@ -41,6 +41,38 @@ class Freebsd < PluginBase
          reply event, "No manual entry for #{line}"
       end
    end
+   
+   def cmd_ports(event, line)
+     
+     if !line or line.empty?
+        reply(event, 'USAGE: ports <search string>')
+        return
+     end
+     
+     Net::HTTP.start('www.freshports.org') do |http|
+        re = http.get("/search.php?query=#{CGI.escape(line.strip)}&search=go&num=10&stype=name&method=match&deleted=excludedeleted&start=1&casesensitivity=caseinsensitive", { 'User-Agent' => 'FBSDBot' })
+        if re.code == '200'
+           ports = []
+           re.body.scan(/<BIG><B>(.+?)<\/B>.+?<code class="code">(.+?)<\/code>/m) { |match| ports << match  }
+           if ports.empty?
+              reply event, 'No ports found.'
+           else
+              ports.each_with_index do |port, index|
+                 if port[0] =~ /<a href="(.+?)">(.+?)<\/a>(.+)/
+                    link, name, version = $1, $2, $3
+                    reply event, "\x02#{name.strip}\x0f - #{version.strip} => #{port[1]}"
+                    reply event, "     ( #{'http://www.freshports.org' + link} )"
+                 else
+                   reply event, "Parse error."
+                 end if index < 3
+              end
+           end
+        else
+           reply event, "Freshports.org returned an error: #{re.code} #{re.message}"
+        end
+     end
+    
+   end
 
 
 end
