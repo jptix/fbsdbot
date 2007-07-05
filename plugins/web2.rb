@@ -29,8 +29,8 @@ FBSDBot::Plugin.define("web") {
             end
          end
 
-      end
-   end
+      end # method google
+   end # class Web
 
    @web = Web.new
 
@@ -38,9 +38,11 @@ FBSDBot::Plugin.define("web") {
    # = Plugin Methods =
    # ==================
 
-   def on_pubmsg_google(action) # becomes a singleton method
-      line = action.message
-      action.reply @web.google(line)
+   def on_pubmsg_google(action) 
+      action.reply @web.google(action.message)
+   end
 
+   def on_pubmsg_calc(action) 
+      action.reply @web.calc(action.message)
    end
 }
