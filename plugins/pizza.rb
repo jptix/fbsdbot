@@ -24,4 +24,8 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 			exit
 	end
 
+	def on_join(a)
+		a.reply("#{nick} joined #{channel}, and is #{a.auth? ? '' : 'not'} authenticated")		
+	end
+
 end 

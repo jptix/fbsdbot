@@ -84,7 +84,7 @@ end
 
 while true
 	pid = Runner.run
-	Signal.trap("SIGINT") { puts "^C pressed (fork-pid: #{pid})"; puts "--  R  E  A  L  O  A  D  --" }
+	#Signal.trap("SIGINT") { puts "^C pressed (fork-pid: #{pid})"; puts "--  R  E  A  L  O  A  D  --" }
 	puts "Running FBSDBot as pid #{pid}"
 	Process.waitpid(pid)
 end
