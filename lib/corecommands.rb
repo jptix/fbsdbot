@@ -8,4 +8,8 @@ class Corecommands < PluginBase
   def cmd_commands(event, line)
     reply event, "My commands are: " + $commands.keys.join(", ")
   end
+  
+  def cmd_authtest(event,line)
+  	reply event, "inheritance: #{self.auth.inspect}"
+  end
 end

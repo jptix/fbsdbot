@@ -13,7 +13,6 @@
 	$command_count = 0
     $hooks_pubmsg = []
     $hooks_privmsg = []
-	handler = FBSDBot.new(bot)
 
 	IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( IRCHelpers::NickObfusicator.run(bot.nick) ) }
 	IRCEvent.add_callback('endofmotd') do |event|

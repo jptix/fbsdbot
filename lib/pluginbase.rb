@@ -7,13 +7,41 @@
 class DuplcatePluginNameError < StandardError
 end
 
-class PluginBase
+module Bot
+	class Base
+		attr :auth
+		def self.inherited(subclass)
+			if subclass.name == "PluginBase"
+				#STDERR.puts "New subclass: #{subclass}"
+				#@@auth = Authentication.new
+			end
+		end
+	end
+	class Authentication
+		def initialize
+			@users = reload_users
+			@authenticated = {}
+		end
+		
+		def authenticate(event,line)
+			STDERR.puts event.inspect
+		end
+		
+		private
+		def reload_users
+			User.find(:all)
+		end
+	end
+end
+
+class PluginBase #< Bot::Base
    
+   attr_accessor :auth
    def initialize(bot)
       @bot = bot
+      @auth = Bot::Authentication.new
       @plugin_commands = {}
       register_commands
-      
    end
 
    def PluginBase.instantiate(bot)
