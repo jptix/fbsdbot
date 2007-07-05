@@ -1,22 +1,41 @@
 puts "Starting bot..."
+my_path = File.dirname(__FILE__)
 
 # UTF-8
 $KCODE = 'u'
 require 'jcode'
 
+# CORE
 require 'digest/sha1'
 require 'pp'
 require 'yaml'
+require 'ostruct'
+require 'optparse'
+
+# GEMS
 require 'rubygems'
 require 'IRC'
 require 'active_record'
 require 'htmlentities'
-require File.dirname(__FILE__) + '/models.rb'
-require File.dirname(__FILE__) + '/modules.rb'
-require File.dirname(__FILE__) + '/pluginbase.rb'
+require my_path + '/models.rb'
+require my_path + '/modules.rb'
+require my_path + '/pluginbase.rb'
 
-# check for config file 
-# FIXME: should use OptionParser or similar in the future
+# Default Options
+#options = OpenStruct.new
+#options.config_file =  my_path + '/../bin/bot.conf'
+
+#opt = OptionParser.new do |opt|
+#	opt.banner = "Usage: #{$0} [options]"
+#	opt.on("-c","--config FILE", "optional config file") do |c|
+#		unless File.exists?(c)
+#			puts "Config file #{c} dosn't exist"
+#			exit 1
+#		end
+#		options.config_file = c
+#	end
+#end
+
 if ARGV.size > 0
    config_file = File.expand_path(ARGF.file.path) 
 else
