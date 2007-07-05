@@ -70,6 +70,23 @@ module FBSDBot
             end
          end
          
+         IRCEvent.add_callback('part') do |event|
+            FBSDBot::Plugin.registered_plugins.each do |ident,p|
+               if p.respond_to?("on_part".to_sym)
+                  p.send("on_part".to_sym, Action.new(@irc, @auth, event))
+               end
+            end
+         end
+
+         IRCEvent.add_callback('quit') do |event|
+            FBSDBot::Plugin.registered_plugins.each do |ident,p|
+               if p.respond_to?("on_quit".to_sym)
+                  p.send("on_quit".to_sym, Action.new(@irc, @auth, event))
+               end
+            end
+         end
+         
+         
          
          @irc.connect
       end

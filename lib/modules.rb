@@ -45,15 +45,15 @@ module FBSDBot
 			attr_reader :auth, :nick, :channel, :message, :hostmask, :type
 			
 			def initialize(bot, auth, event, command = nil)
-				@event = event
-				@bot = bot
-				@auth = auth
-				@nick = nil
-				@channel = nil
-				@message = nil
+				@event    = event
+				@bot      = bot
+				@auth     = auth
+				@nick     = nil
+				@channel  = nil
+				@message  = nil
 				@hostmask = nil
-				@command = nil 
-				@type = nil
+				@command  = nil 
+				@type     = nil
 					
         case event.event_type.to_sym
         when :privmsg
@@ -73,21 +73,34 @@ module FBSDBot
 
            # private / public?
            if event.channel == bot.nick
-              @type = :privmsg
+              @type       = :privmsg
               @respond_to = @nick
            else
-              @type = :pubmsg
-              @channel = event.channel
+              @type       = :pubmsg
+              @channel    = event.channel
               @respond_to = @channel
            end
         when :join
-
-           @nick = event.from
-           @hostmask = event.hostmask
-           @channel = event.channel
-           @message = nil
-           @type = :join
-           @respond_to = @channel
+           @nick        = event.from
+           @hostmask    = event.hostmask
+           @channel     = event.channel
+           @message     = nil
+           @type        = :join
+           @respond_to  = @channel
+        when :part
+          @nick         = event.from
+          @hostmask     = event.stats[1]
+          @channel      = event.channel
+          @message      = event.message
+          @type         = :part
+          @respond_to   = @channel
+        when :quit
+          @nick         = event.from
+          @hostmask     = event.stats[1]
+          @channel      = event.channel
+          @message      = event.message
+          @type         = :quit
+          @respond_to   = @channel
         end
 
 			end
