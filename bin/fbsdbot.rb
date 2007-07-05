@@ -79,7 +79,7 @@ module FBSDBot
          IRCEvent.add_callback('endofmotd') do |event|
             puts "connected!"
             puts "Loaded plugins: "
-            pp FBSDBot::Plugin.registered_plugins
+						FBSDBot::Plugin.list_plugins
             @config['channels'].each do |ch|
                @irc.add_channel(ch)
                puts "Joined channel: #{ch}"
@@ -95,22 +95,18 @@ module FBSDBot
                if event.channel != @irc.nick
                   FBSDBot::Plugin.registered_plugins.each do |ident,p|
                      if p.respond_to?("on_pubmsg_#{command}".to_sym)
-                        p.send("on_pubmsg_#{command}".to_sym, Action.new(@irc,event))
+                        p.send("on_pubmsg_#{command}".to_sym, Action.new(@irc,@auth, event))
                      end
                   end
                else # PRIVATE
                   FBSDBot::Plugin.registered_plugins.each do |ident,p|
                      if p.respond_to?("on_privmsg_#{command}".to_sym)
-                        p.send("on_privmsg_#{command}".to_sym, Action.new( @irc, event ))
+                        p.send("on_privmsg_#{command}".to_sym, Action.new( @irc,@auth, event ))
                      end
                   end
                end
             end
          end
-         # 
-         # IRCEvent.add_callback('join') { |event| call_hooks(event, :join) }
-         # IRCEvent.add_callback('part') { |event| call_hooks(event, :part) }
-         # IRCEvent.add_callback('quit') { |event| call_hooks(event, :quit) }
          @irc.connect
       end
       
