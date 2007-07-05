@@ -27,7 +27,7 @@ class Freebsd < PluginBase
 
       line = line.strip
       man_html = %x{man '#{e_sh(line)}' | groff -man -Thtml 2>/dev/null}
-      if man_html =~ /<p>NAME(.+?)<\/p>.+?<p>SYNOPSIS(.+?)<\/p>/m
+      if man_html =~ /<p.*>NAME(.+?)<\/p>.+?<p.*>SYNOPSIS(.+?)<\/p>/m
          name, synop = $1, $2
          name = name.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '').gsub("\n", '').strip
          synop = synop.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '').strip
