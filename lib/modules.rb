@@ -116,6 +116,18 @@ module FBSDBot
 				end
 			end
 
+			def op(channel = @repond_to)
+					@bot.op(channel.nil? ? @channel : channel,@nick)
+			end
+
+			def join(channel = @respond_to)
+					@bot.join(channel)
+			end
+
+			def notice(message, to = @respond_to)
+					@bot.send_notice(to, message)
+			end
+
 			def syntax(msg)
 				return reply("Syntax: #{@command} #{msg}") unless @command.nil?
 				reply("Syntax: #{msg}")
