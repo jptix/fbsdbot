@@ -44,14 +44,17 @@ module FBSDBot
 							 return if command.nil?
                FBSDBot::Plugin.registered_plugins.each do |ident,p|
                   if p.respond_to?("on_msg_#{command}".to_sym)
+                     @command_count += 1
                      p.send("on_msg_#{command}".to_sym, Action.new(@irc,@auth, event, command))
 									elsif p.respond_to?('on_msg')
+                     @command_count += 1
 										 p.send("on_msg", Action.new(@irc,@auth, event))
                   end
                end
             else 
               FBSDBot::Plugin.registered_plugins.each do |ident,p|
 									if p.respond_to?('on_msg')
+									   @command_count += 1
 										 p.send("on_msg", Action.new(@irc,@auth, event))
                  end
               end
@@ -62,6 +65,7 @@ module FBSDBot
       
 			private
       def load_plugins
+        require File.dirname(__FILE__) + '/../lib/corecommands.rb'
         Dir.entries($plugins_active).each { |file| require file unless ['.', '..'].include?(file) }
       end
       

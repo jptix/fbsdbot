@@ -1,16 +1,12 @@
 TODO:
 
+* Make bot FiSH ( http://fish.sekure.us ) -Compatible so users can use bot securely.
+* Plugins should have an easy way to check if the user has special privileges.
+* Add !seen functionality
 * Make the bot host a DRb-object that will store users' now playing info       
   in the user database, and distribute a script that updates the database.
-
-* Make bot FiSH ( http://fish.sekure.us ) -Compatible so users can use bot securely.
-
-* Plugins should have an easy way to check if the user has special privileges.
-
-* Add !seen functionality
-
-* Add !ports (freebsd-doc and ports indexed)
 
 DONE:
 
 * !man should use local man pages for performance boost
+* Add !ports (freebsd-doc and ports indexed)
