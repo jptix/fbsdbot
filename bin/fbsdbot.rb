@@ -7,7 +7,7 @@ $: << $plugins_active
 module FBSDBot
 
    class Bot
-      attr_accessor :commands, :hooks, :config, :irc, :auth
+      attr_accessor :commands, :hooks, :nick, :auth
       attr_reader :threads, :command_count, :start_time
 
       def initialize(config)
@@ -15,6 +15,11 @@ module FBSDBot
          @command_count = 0
 
          @config = config
+         @nick = @config['nick']
+         @host = @config['host']
+         @port = @config['port']
+         @ircname = @config['ircname'].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']
+
          @start_time = Time.now
          @auth = FBSDBot::Authentication.new
          load_plugins
@@ -23,7 +28,7 @@ module FBSDBot
       def run
          $stdout.sync = true
          print "Connecting to #{@config['host']}:#{@config['port']}.."
-         @irc = IRC.new(@config['nick'], @config['host'], @config['port'], ( @config['ircname'].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']) )
+         @irc = IRC.new(@nick, @host, @port, @ircname )
          IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( FBSDBot::Helpers::NickObfusicator.run(bot.nick) ) }
          # FIRST EVENT
          IRCEvent.add_callback('endofmotd') do |event|
@@ -46,15 +51,14 @@ module FBSDBot
                   if p.respond_to?("on_msg_#{command}".to_sym)
                      @command_count += 1
                      p.send("on_msg_#{command}".to_sym, Action.new(@irc,@auth, event, command))
-									elsif p.respond_to?('on_msg')
-                     @command_count += 1
+                  end
+									if p.respond_to?('on_msg')
 										 p.send("on_msg", Action.new(@irc,@auth, event))
                   end
                end
             else 
               FBSDBot::Plugin.registered_plugins.each do |ident,p|
 									if p.respond_to?('on_msg')
-									   @command_count += 1
 										 p.send("on_msg", Action.new(@irc,@auth, event))
                  end
               end
