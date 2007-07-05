@@ -51,6 +51,53 @@ module FBSDBot
 		end
 		end
 	end
+
+	 class Action
+
+			attr :auth
+			attr_reader :nick, :channel, :message, :hostmask
+			
+			def initialize(bot,auth,event)
+				@event = event
+				@bot = bot
+				@auth = auth
+				@nick = nil
+				@channel = nil
+				@message = nil
+				@hostmask = nil
+					
+				case event.event_type.to_sym
+					when :privmsg
+						
+						@nick = event.from
+						@message = event.message.gsub(/!\S+\s/,'') unless(event.message.nil?)
+						@hostmask = event.hostmask
+
+						# private / public?
+						if event.channel == bot.nick
+							@type = :privmsg
+							@respond_to = @nick
+						else
+							@type = :pubmsg
+							@channel = event.channel
+							@respond_to = @channel
+					  end	
+				end
+			end
+
+			def auth?
+					self.auth.is_authenticated?(@event)
+			end
+
+			def reply(msg)
+				if @type == :privmsg
+					@bot.send_message(@respond_to, msg)
+				elsif @type == :pubmsg
+					@bot.send_message(@respond_to, "#{@nick}, #{msg}")
+				end
+			end
+			
+	 end
 end
 
 def e_sh(str)

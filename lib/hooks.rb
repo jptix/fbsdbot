@@ -25,6 +25,10 @@ module FBSDBot
     attr_reader :registered_plugins
     private :new
   end
+	
+	def self.list_plugins
+		@registered_plugins.each {|i,p| puts "  - #{i} (#{p.version}) by: #{p.author}"}
+	end
 
   def self.define(name, &block)
 		@name = name

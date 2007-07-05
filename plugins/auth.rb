@@ -3,6 +3,10 @@ FBSDBot::Plugin.define "AuthHandler" do
 	version "0.0.2"
 
 	def on_pubmsg_auth(a)
-		a.reply("hello world: #{a.message} from #{a.hostmask}")	
+		if a.auth?
+			a.reply("hello world: #{a.message} from #{a.hostmask}")	
+		else
+		a.reply("not authed")	
+		end
 	end
 end 
