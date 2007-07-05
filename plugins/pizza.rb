@@ -21,7 +21,7 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 
 	def on_msg_reload(a)
 			a.reply("reloading")
-			sefl.caller.exit
+			exit
 	end
 
 end 
