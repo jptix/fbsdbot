@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/../lib/boot.rb'
 module FBSDBot
 
    class Bot
-      attr_accessor :commands, :hooks, :config
+      attr_accessor :commands, :hooks, :config, :irc
       attr_reader :threads, :command_count, :start_time
 
       def initialize(config)
