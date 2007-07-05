@@ -20,6 +20,7 @@ require 'htmlentities'
 require my_path + '/models.rb'
 require my_path + '/modules.rb'
 require my_path + '/pluginbase.rb'
+require my_path + '/auth.rb'
 
 # Default Options
 #options = OpenStruct.new
