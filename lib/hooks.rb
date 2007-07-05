@@ -37,10 +37,12 @@ module FBSDBot
   author "Daniel Bond"
   version "0.0.1"
 	handles :privmsg
+
   
   # stuff
   def do_it(x)  # becomes a singleton method
     x * 2
+		puts @bot.inspect
   end
 	end
 

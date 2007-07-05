@@ -7,6 +7,7 @@
 
 	bot = IRC.new(@config['nick'], @config['host'], @config['port'], ( @config['ircname'].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']) )
 	
+	FBSDBot::Plugin.instance_variable_set("@bot",bot)
 	# global maps
 	#$commands      = {}
 	#$start_time    = Time.now
@@ -30,6 +31,10 @@
 	end
 	bot.connect
 	exit
+
+
+
+	# NOOOOOOOOOOOOOOOOTHING HAPPENS HERE
 
 	#IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( FBSDBot::Helpers::NickObfusicator.run(bot.nick) ) }
 	IRCEvent.add_callback('endofmotd') do |event|
