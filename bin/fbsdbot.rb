@@ -17,15 +17,13 @@
 	$hooks_join    = []
 	$hooks_part    = []
 	$hooks_quit    = []
-	
-	handler = FBSDBot.new(bot)
 
-	IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( IRCHelpers::NickObfusicator.run(bot.nick) ) }
+	IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( FBSDBot::Helpers::NickObfusicator.run(bot.nick) ) }
 	IRCEvent.add_callback('endofmotd') do |event|
-  	puts "connected!"
-  	load_plugin('corecommands', bot, (File.dirname(__FILE__) + "/../lib/corecommands.rb"))
-    @config['plugins'].each { |plugin| load_plugin(plugin, bot) }
-  	@config['channels'].each { |ch| bot.add_channel(ch); puts "Joined channel: #{ch}"}
+  		puts "connected!"
+  		load_plugin('corecommands', bot, (File.dirname(__FILE__) + "/../lib/corecommands.rb"))
+    	@config['plugins'].each { |plugin| load_plugin(plugin, bot) }
+  		@config['channels'].each { |ch| bot.add_channel(ch); puts "Joined channel: #{ch}"}
 	end
 	$stdout.sync = false
 	IRCEvent.add_callback('join') { |event| call_hooks(event, :join) }
