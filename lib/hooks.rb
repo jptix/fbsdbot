@@ -45,7 +45,7 @@ module FBSDBot
   	# stuff
   	def on_pubmsg_commands(event)  # becomes a singleton method
 			#puts bot.inspect
-			$bot.send_message(event.channel, "#{event.from}, I cannot tell you my commands yet :/")
+			$bot.send_message(event.channel, "#{event.from}, I cannot tell you my commands yet, sorry! :(")
   	end
 	end
 

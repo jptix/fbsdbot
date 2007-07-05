@@ -26,7 +26,7 @@
 				FBSDBot::Plugin.registered_plugins.each do |ident,p|
 						$bot.send_message(event.channel, "pub message")
 						if p.respond_to?("on_pubmsg_#{command}".to_sym)
-							$bot.send_message(event.channel, "plugin #{ident} can do 'on_pubmsg_#{command}'")
+							p.send("on_pubmsg_#{command}".to_sym, event)
 						else
 							$bot.send_message(event.channel, "plugin #{ident} can't do 'on_pubmsg_#{command}'")
 						end
