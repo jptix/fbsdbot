@@ -30,3 +30,4 @@ FBSDBot::Plugin.define "AuthHandler" do
 	end
 
 end 
+
