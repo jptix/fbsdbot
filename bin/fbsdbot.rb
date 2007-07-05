@@ -66,6 +66,7 @@ module FBSDBot
          @irc.connect
       end
       
+			private
       def load_plugins
         $: << 
         @config['plugins'].each { |p| require p }
