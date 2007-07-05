@@ -36,6 +36,7 @@ class Freebsd < PluginBase
          reply event, "#{name} ( #{link} )".decode_entities
          synop.gsub(/\n|\t/, ' ').gsub(cmd, "\n" + cmd).split("\n").each_with_index do |line, index|
             reply(event, line.decode_entities) unless line.empty? or index > 3
+            sleep(0.2)
          end
       else
          reply event, "No manual entry for #{line}"
@@ -62,9 +63,10 @@ class Freebsd < PluginBase
                     link, name, version = $1, $2, $3
                     reply event, "\x02#{name.strip}\x0f - #{version.strip} => #{port[1]}"
                     reply event, "     ( #{'http://www.freshports.org' + link} )"
+                    sleep(0.2)
                  else
                    reply event, "Parse error."
-                 end if index < 3
+                 end unless index > 4
               end
            end
         else
@@ -72,6 +74,34 @@ class Freebsd < PluginBase
         end
      end
     
+   end
+
+   def cmd_doc(event, line)
+
+     if !line or line.empty?
+        reply(event, 'USAGE: doc <search string>')
+        return
+     end
+    
+     Net::HTTP.start('www.freebsd.org') do |http|                                                                 
+       re = http.get("/cgi/search.cgi?words=#{CGI.escape(line)}&max=5&source=www", { 'User-Agent' => 'FBSDBot' }) 
+       if re.code == '200'                                                                                        
+          if re.body =~ /<div id="content">(.+?)<\/div>/m
+             content = $1
+             if content =~ /Nothing found/m
+                reply(event, "Nothing found.")
+                return
+             else
+                links = []
+                content.scan(/<li><a href="(.+?)"/) { |match| links << match[0]  }
+                links.each_with_index { |link, index| reply(event, link) unless index > 4; sleep(0.2) }
+             end
+          end
+       else                                                                                                       
+          reply(event, "FreeBSD.org returned an error: #{re.code} #{re.message}")                              
+       end                                                                                                        
+     end                                                                                                          
+
    end
 
 
