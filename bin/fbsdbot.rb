@@ -24,7 +24,6 @@
 			  line = event.message.sub(/^!/, '').split
 				command = line.shift
 				FBSDBot::Plugin.registered_plugins.each do |ident,p|
-						$bot.send_message(event.channel, "pub message")
 						if p.respond_to?("on_pubmsg_#{command}".to_sym)
 							p.send("on_pubmsg_#{command}".to_sym, event)
 						else
