@@ -12,6 +12,8 @@
 	# FIRST EVENT
 	IRCEvent.add_callback('endofmotd') do |event|
   		puts "connected!"
+			puts "Loaded plugins: " 
+				pp FBSDBot::Plugin.registered_plugins
   			@config['channels'].each do |ch| 
 						$bot.add_channel(ch)
 					  puts "Joined channel: #{ch}"
