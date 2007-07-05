@@ -11,7 +11,6 @@ TODO:
 
 * Add !ports (freebsd-doc and ports indexed)
 
-* !man should use local man pages for performance boost
-
 DONE:
 
+* !man should use local man pages for performance boost
