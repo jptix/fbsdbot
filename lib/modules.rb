@@ -13,10 +13,10 @@ def seconds_to_s(seconds)
 end
 
 # namespace for plugins
-module Plugins
-end
 
 module FBSDBot	
+	module Plugins
+	end
 	module Helpers
 		class NickObfusicator
 			def NickObfusicator.run( old_nick )
