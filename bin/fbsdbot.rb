@@ -60,6 +60,17 @@ module FBSDBot
               end
             end
          end
+         
+         # JOIN
+         IRCEvent.add_callback('join') do |event|
+            FBSDBot::Plugin.registered_plugins.each do |ident,p|
+               if p.respond_to?("on_join".to_sym)
+                  p.send("on_join".to_sym, Action.new(@irc, @auth, event))
+               end
+            end
+         end
+         
+         
          @irc.connect
       end
       

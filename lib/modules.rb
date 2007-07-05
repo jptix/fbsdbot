@@ -55,32 +55,41 @@ module FBSDBot
 				@command = nil 
 				@type = nil
 					
-				case event.event_type.to_sym
-					when :privmsg
-						
-						@nick = event.from
-						@message = event.message
-						unless event.message.nil?
-						  if command 
-						    @message = event.message.gsub(/!?#{command}/, '').strip
-						    @command = command
-						  else
-						    @message = event.message
-						    @command = nil
-						  end
-  					end
-						@hostmask = event.hostmask
+        case event.event_type.to_sym
+        when :privmsg
 
-						# private / public?
-						if event.channel == bot.nick
-							@type = :privmsg
-							@respond_to = @nick
-						else
-							@type = :pubmsg
-							@channel = event.channel
-							@respond_to = @channel
-					  end	
-				end
+           @nick = event.from
+           @message = event.message
+           unless event.message.nil?
+              if command
+                 @message = event.message.gsub(/!?#{command}/, '').strip
+                 @command = command
+              else
+                 @message = event.message
+                 @command = nil
+              end
+           end
+           @hostmask = event.hostmask
+
+           # private / public?
+           if event.channel == bot.nick
+              @type = :privmsg
+              @respond_to = @nick
+           else
+              @type = :pubmsg
+              @channel = event.channel
+              @respond_to = @channel
+           end
+        when :join
+
+           @nick = event.from
+           @hostmask = event.hostmask
+           @channel = event.channel
+           @message = nil
+           @type = :join
+           @respond_to = @channel
+        end
+
 			end
 
 			def auth?
@@ -88,10 +97,10 @@ module FBSDBot
 			end
 
 			def reply(msg)
-				if @type == :privmsg
-					@bot.send_message(@respond_to, msg)
-				elsif @type == :pubmsg
+				if @type == :pubmsg
 					@bot.send_message(@respond_to, "#{@nick}, #{msg}")
+				else
+					@bot.send_message(@respond_to, msg)
 				end
 			end
 
