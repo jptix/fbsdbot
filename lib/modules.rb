@@ -89,6 +89,12 @@ def call_hooks(event, type)
     $hooks_pubmsg.each { |hook| hook.call(event, event.message) }
   when :privmsg
     $hooks_privmsg.each { |hook| hook.call(event, event.message) }
+  when :join
+    $hooks_join.each { |hook| hook.call(event, event.message) }
+  when :part
+    $hooks_part.each { |hook| hook.call(event, event.message) }
+  when :quit
+    $hooks_quit.each { |hook| hook.call(event, event.message) }
   end
 end
 

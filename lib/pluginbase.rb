@@ -32,6 +32,12 @@ class PluginBase
             $hooks_pubmsg << method(name.to_sym)
          elsif name =~ /^hook_privmsg$/
             $hooks_privmsg << method(name.to_sym)
+         elsif name =~ /^hook_join$/
+            $hooks_join << method(name.to_sym)
+         elsif name =~ /^hook_part$/
+            $hooks_part << method(name.to_sym)
+         elsif name =~ /^hook_quit$/
+            $hooks_quit << method(name.to_sym)
          end
       end
    end
