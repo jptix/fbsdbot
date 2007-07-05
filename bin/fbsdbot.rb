@@ -6,7 +6,7 @@ module FBSDBot
 
    class Bot
       attr_accessor :commands, :hooks, :config
-      attr_reader :threads
+      attr_reader :threads, :command_count, :start_time
 
       def initialize(config)
          @commands = {}
