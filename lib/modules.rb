@@ -54,8 +54,7 @@ module FBSDBot
 
 	 class Action
 
-			attr :auth
-			attr_reader :nick, :channel, :message, :hostmask
+			attr_reader :auth, :nick, :channel, :message, :hostmask
 			
 			def initialize(bot,auth,event)
 				@event = event
@@ -65,12 +64,14 @@ module FBSDBot
 				@channel = nil
 				@message = nil
 				@hostmask = nil
+				@command = nil 
 					
 				case event.event_type.to_sym
 					when :privmsg
 						
 						@nick = event.from
-						@message = event.message.gsub(/!\S+\s/,'') unless(event.message.nil?)
+						@message = event.message.gsub(/!(\S+)(\s|)/,'') unless(event.message.nil?)
+						@command = $1 																unless(@message.nil?)
 						@hostmask = event.hostmask
 
 						# private / public?
@@ -86,7 +87,7 @@ module FBSDBot
 			end
 
 			def auth?
-					self.auth.is_authenticated?(@event)
+					@auth.is_authenticated?(self)
 			end
 
 			def reply(msg)
@@ -95,6 +96,10 @@ module FBSDBot
 				elsif @type == :pubmsg
 					@bot.send_message(@respond_to, "#{@nick}, #{msg}")
 				end
+			end
+
+			def syntax(msg)
+				reply("Syntax: #{@command} #{msg}")
 			end
 			
 	 end
