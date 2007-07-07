@@ -1,14 +1,18 @@
-class Now_playing < PluginBase
+FBSDBot::Plugin.define "now_playing" {
+	 author "Daniel Bond <gitbits@danielbond.org>"
+	 version "0.0.1"
      
-   def cmd_np(event, line)
+   def on_msg_np(action)
 			at = "/usr/bin/audtool"
 			song = `#{at} --current-song`	
 			bitrate =  `#{at} --current-song-bitrate-kbps`
-			answer = "Mr_Bond is playing: #{song} [#{bitrate}Kb/s]"
+			answer = "is playing: #{song} [#{bitrate}Kb/s]"
 			unless event.from == "Mr_Bond"
 				answer = "#{event.from}'s music is to gay to mention here!"
 			end
-			reply(event,answer)
+			reply(answer)
 	 end
    
-end
+
+}
+

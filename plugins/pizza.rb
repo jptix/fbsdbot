@@ -3,29 +3,18 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 	author "Daniel Bond"
 	version "0.0.3"
 
-
-	def on_msg_pizza(a)
-	if a.message.match(/^now/)
-	 a.reply("pizza confirmed at #{Time.now}")
-	else
-	 a.reply(a.message.inspect)
-	 a.syntax("<when>") 
-	end
-	end
-
+	@timings = {}
+	
 	def on_msg(a)
 		if a.message.match(/(.+?) now/)
-			a.reply("#{$1.sub(/^!/,'')} confirmed at #{Time.now}")
+			t = Time.now
+			@timings[$1] = t
+			a.reply("#{$1.sub(/^!/,'')} confirmed at #{t}")
+		end
+
+		if a.message.match(/(.+?) when\?/)
+			t = @timings[$1]
+			a.reply("#{$1} was confirmed #{FBSDBot::seconds_to_s(Time.now.to_i - t.to_i)} ago") unless t.nil?
 		end
 	end
-
-	def on_msg_reload(a)
-			a.reply("reloading")
-			exit
-	end
-
-	def on_join(a)
-		a.reply("#{nick} joined #{channel}, and is #{a.auth? ? '' : 'not'} authenticated")		
-	end
-
 end 

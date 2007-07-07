@@ -29,7 +29,7 @@ module FBSDBot
          $stdout.sync = true
          print "Connecting to #{@config['host']}:#{@config['port']}.."
          @irc = IRC.new(@nick, @host, @port, @ircname )
-         IRCEvent.add_callback('nicknameinuse') {|event|	bot.ch_nick( FBSDBot::Helpers::NickObfusicator.run(bot.nick) ) }
+         IRCEvent.add_callback('nicknameinuse') {|event|	@irc.ch_nick( FBSDBot::Helpers::NickObfusicator.run(@irc.nick) ) }
          # FIRST EVENT
          IRCEvent.add_callback('endofmotd') do |event|
             puts "connected!"
