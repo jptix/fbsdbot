@@ -6,6 +6,8 @@ $: << $plugins_active
 
 module FBSDBot
 
+   VERSION = 0.1.1
+
    class Bot
       attr_accessor :commands, :hooks, :nick, :auth
       attr_reader :threads, :command_count, :start_time
