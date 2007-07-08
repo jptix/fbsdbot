@@ -125,8 +125,12 @@ module FBSDBot
 					@bot.send_message(@respond_to, msg)
 				end
 			end
+			
+			def send_message(to = @respond_to, msg)
+			    @bot.send_message(to, msg)
+			end
 
-			def op(channel = @repond_to)
+			def op(channel = @respond_to)
 					@bot.op(channel.nil? ? @channel : channel,@nick)
 			end
 
