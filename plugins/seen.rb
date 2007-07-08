@@ -11,6 +11,7 @@ FBSDBot::Plugin.define("seen") {
    class Seen
       def initialize
          self.load
+         @botroot_path = File.dirname(__FILE__) + "/../"
       end
 
       def log_event(nick, channel, event_type, message = '')
@@ -22,7 +23,8 @@ FBSDBot::Plugin.define("seen") {
          if nick == $bot.nick
             action.reply "I'm right here."
          elsif @seen.has_key?(nick)
-            time = FBSDBot.seconds_to_s(Time.now.to_i - @seen[nick][2].to_i)
+            time = FBSDBot.distance_of_time_in_words(@seen[nick][2], Time.now, true)
+            # time = FBSDBot.seconds_to_s(Time.now.to_i - @seen[nick][2].to_i)
             info = @seen[nick]
             action.reply "#{nick} " + case info[0]
             when :msg: "said '#{info[1]}' in #{info[3]}, #{time} ago."
@@ -35,26 +37,27 @@ FBSDBot::Plugin.define("seen") {
             shortest_distance = 50
             @seen.each_key do |known_nick|
                dist = edit_distance(known_nick.downcase, nick.downcase)
-               # puts "edit distance for #{nick} and #{known_nick}: #{dist}" #    <-- DEBUG
                if dist < shortest_distance
                   best_match = known_nick
                   shortest_distance = dist
                end
-               # puts "shortest distance so far: #{shortest_distance}"
             end
-               action.reply "Indeed I have not. Perhaps you mean #{best_match}?"
-               # action.reply "Nope."
+              if shortest_distance <= (nick.size + best_match.size.to_f) / 2.0 * 0.70
+               action.reply "Indeed I have not. Perhaps you're looking for #{best_match}?"
+              else
+               action.reply "Nope."
+              end
             end
             self.save
          end
 
          def save
-            File.open("seen.yaml", "w") { |io| YAML.dump(@seen, io) }
+            File.open(@botroot_path + "seen.yaml", "w") { |io| YAML.dump(@seen, io) }
          end
 
          def load
             begin
-               @seen = YAML.load_file('seen.yaml')
+               @seen = YAML.load_file(@botroot_path + 'seen.yaml')
             rescue
                @seen = {}
             end
@@ -101,7 +104,8 @@ FBSDBot::Plugin.define("seen") {
          @logger.seen_nick(action, action.message)
       end
 
-
-
+      def on_shutdown
+        @logger.save
+      end
 
    }

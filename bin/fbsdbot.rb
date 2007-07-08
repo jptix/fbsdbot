@@ -34,7 +34,6 @@ module FBSDBot
          IRCEvent.add_callback('endofmotd') do |event|
             puts "connected!"
             puts "Loaded plugins: "
-						FBSDBot::Plugin.list_plugins
             @config['channels'].each do |ch|
                @irc.add_channel(ch)
                puts "Joined channel: #{ch}"
@@ -89,20 +88,28 @@ module FBSDBot
                end
             end
          end
-         
-         
-         
+               
          @irc.connect
       end
       
 			private
       def load_plugins
-        require File.dirname(__FILE__) + '/../lib/corecommands.rb'
-        Dir.entries($plugins_active).each { |file| require file unless ['.', '..'].include?(file) }
+        require $plugins_active + '/../lib/corecommands.rb'
+        Dir.entries($plugins_active).each { |file| require $plugins_active + file unless ['.', '..'].include?(file) }
+        FBSDBot::Plugin.list_plugins
       end
       
    end # class FBSDBot::Bot
 end # module FBSDBot
 
-$bot = FBSDBot::Bot.new($config)
-$bot.run
+begin
+  $bot = FBSDBot::Bot.new($config)
+  $bot.run
+ensure
+  puts "\nShutting down."
+   FBSDBot::Plugin.registered_plugins.each do |ident,p|
+      if p.respond_to?("on_shutdown".to_sym)
+         p.send("on_shutdown".to_sym)
+      end
+   end
+end
