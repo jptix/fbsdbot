@@ -3,11 +3,15 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 	author "Daniel Bond"
 	version "0.0.3"
 
+	class Test < Time
+
+	end
+
 	@timings = {}
 	
 	def on_msg(a)
 		if a.message.match(/(.+?) now/)
-			t = Time.now
+			t = Test.now
 			@timings[$1] = t
 			a.reply("#{$1.sub(/^!/,'')} confirmed at #{t}")
 		end
