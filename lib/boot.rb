@@ -50,7 +50,7 @@ end
 
 
 $config = YAML.load( File.open(config_file) )
-puts "Loaded config"
+puts "Loaded config."
 
 
 

@@ -89,9 +89,7 @@ module FBSDBot
                end
             end
          end
-         
-         
-         
+               
          @irc.connect
       end
       
@@ -104,5 +102,14 @@ module FBSDBot
    end # class FBSDBot::Bot
 end # module FBSDBot
 
-$bot = FBSDBot::Bot.new($config)
-$bot.run
+begin
+  $bot = FBSDBot::Bot.new($config)
+  $bot.run
+ensure
+  puts "\nShutting down."
+   FBSDBot::Plugin.registered_plugins.each do |ident,p|
+      if p.respond_to?("on_shutdown".to_sym)
+         p.send("on_shutdown".to_sym)
+      end
+   end
+end
