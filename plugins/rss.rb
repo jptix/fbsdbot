@@ -14,6 +14,32 @@ FBSDBot::Plugin.define "rss" do
    require "uri"
    require 'cgi'
    require "yaml"
+   require 'rexml/document'
+
+   class SimpleRSSParser
+      RSS      = Struct.new("RSS", :channel, :items)
+      Item     = Struct.new("Item", :title, :link, :description, :guid, :author, :pubdate)
+      Channel  = Struct.new("Channel", :title, :link, :description)
+
+      def SimpleRSSParser.parse(src)
+         @items   = []
+         @xml     = REXML::Document.new(src)
+         @channel = Channel.new(@xml.root.elements['channel/title'].text, @xml.root.elements['channel/link'].text, @xml.root.elements['channel/description'].text)
+
+         @xml.elements.each('//item') do |item|
+            title       = item.elements['title'] ? item.elements['title'].text : nil
+            link        = item.elements['link'] ? item.elements['link'].text : nil
+            description = item.elements['description'] ? item.elements['description'].text : nil
+            guid        = item.elements['guid'] ? item.elements['guid'].text : nil
+            author      = item.elements['dc:creator'] ? item.elements['dc:creator'].text : nil
+            pubdate     = (item.elements['dc:date'] ? item.elements['dc:date'].text : nil) || (item.elements['pubDate'] ? item.elements['pubDate'].text : nil)
+            item = Item.new(title, link, description, guid)
+            @items << item
+         end
+         return RSS.new(@channel, @items)
+      end
+
+   end
 
 
    class RSSReader
@@ -76,11 +102,16 @@ FBSDBot::Plugin.define "rss" do
          def check
             @last_checked = Time.now
             path = @url.path.empty? ? "/" : @url.path
-            # FIXME: Need to fall back on our own parser for RSS 0.90 feeds.
+            # DONE: Need to fall back on our own parser for RSS 0.90 feeds.
             # The parser should return objects similar to the built-in RSS library
             # so the rest of the plugin can work as is. Basically an array of 'item' objects 
             # that has accessors for title, link, description etc. will do. 
-            rss = RSS::Parser.parse(open(@url.to_s), false)
+            begin
+               rss = RSS::Parser.parse(open(@url.to_s))
+            rescue
+               puts "Using SimpleRSSParser for #{@url} (#{$!.message})" if @first_check
+               rss = SimpleRSSParser.parse(open(@url.to_s))
+            end
             items = rss.items.map { |item| Item.new(rss.channel, item) }
             items.delete_if { |item| @read_guids.include?(item.guid) }
             @read_guids += items.map { |item| item.guid }
@@ -91,7 +122,7 @@ FBSDBot::Plugin.define "rss" do
          end
 
          def save
-            result = {'url' => @url.to_s, 'last_checked'  => @last_checked }
+            {'url' => @url.to_s, 'last_checked'  => @last_checked, 'read_guids' => @read_guids}
          end
 
       end # end class Feed
@@ -102,7 +133,9 @@ FBSDBot::Plugin.define "rss" do
 
       def subscribe(url)
          begin
-            if @feeds.nil?
+            if @feeds.any? { |feed| feed.url.to_s == url }
+               return "I'm already subscribed to #{url}"
+            elsif @feeds.nil?
                @feeds = [Feed.new(url)]
             else
                @feeds << Feed.new(url)
@@ -114,15 +147,17 @@ FBSDBot::Plugin.define "rss" do
       end
 
       def unsubscribe(url)
+         old_feeds = @feeds.dup
          @feeds.reject! do |feed|
             feed = feed.url.to_s
             true if feed == url or feed =~ Regexp.new(url, true)
          end
+         return old_feeds - @feeds
       end
 
       def load(filename)
          if File.exist?(filename)
-            @feeds = open(filename) { |io| yml = YAML.load(io); yml.map { |feed| Feed.new(feed['url'], feed['last_checked']) } if yml }
+            @feeds = open(filename) { |io| yml = YAML.load(io); yml.map { |feed| Feed.new(feed['url'], feed['last_checked'], feed['read_guids']) } if yml }
          else
             @feeds = []
          end
@@ -167,7 +202,7 @@ FBSDBot::Plugin.define "rss" do
    @started = false
    @filename = 'rss.yaml'
 
-   def on_msg(action)
+   def on_join(action)
       return if @started
       @reader.run(action, @filename, ($config['rss-refresh'] || 30*60))
       @started = true
@@ -184,10 +219,10 @@ FBSDBot::Plugin.define "rss" do
 
    def on_msg_unsubscribe(action)
       result = @reader.unsubscribe(action.message)
-      if result.nil?
+      if result.empty?
          action.reply "I'm not subscribed to #{action.message}"
       else
-         action.reply "No longer subscribed to: #{action.message}"
+         action.reply "Removed subscription: #{result.first.url.to_s}"
       end
    end
 
