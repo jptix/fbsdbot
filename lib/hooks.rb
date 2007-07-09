@@ -38,7 +38,7 @@ module FBSDBot
   end
   
   extend PluginSugar
-  def_field :author, :version 
+  def_field :author, :version, :commands 
 	end
 
 end

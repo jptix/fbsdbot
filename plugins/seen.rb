@@ -6,7 +6,8 @@
 
 FBSDBot::Plugin.define("seen") {
    author "jp_tix"
-   version "0.0.1"
+   version "0.0.3"
+   commands "seen"
 
    class Seen
       def initialize
@@ -20,6 +21,13 @@ FBSDBot::Plugin.define("seen") {
       end
 
       def seen_nick(action, nick)
+         if !nick or nick.empty?
+            action.reply 'USAGE: seen <nick>'
+            return
+         end
+        
+        
+        
          if nick == $bot.nick
             action.reply "I'm right here."
          elsif @seen.has_key?(nick)
@@ -34,14 +42,33 @@ FBSDBot::Plugin.define("seen") {
             end
          else
             best_match = ''
+            runnerups = []
             shortest_distance = 50
             @seen.each_key do |known_nick|
                dist = edit_distance(known_nick.downcase, nick.downcase)
                if dist < shortest_distance
                   best_match = known_nick
                   shortest_distance = dist
+               elsif dist <= (shortest_distance + 2)
+                 runnerups << known_nick
                end
             end
+              runnerups.reject! { |e| edit_distance(e.downcase, nick.downcase) > (shortest_distance + 2) }
+              unless runnerups.empty?
+                runnerups << best_match
+                splitnick = nick.split(//)
+                most_shared_chars = 0
+                runnerups.each do |runnerup|
+                  shared_chars = 0
+                  splitnick.uniq.each { |chr| shared_chars += 1 if runnerup.include?(chr) }
+                  if shared_chars > most_shared_chars
+                    best_match = runnerup
+                    most_shared_chars = shared_chars
+                  end
+                end
+              end
+
+
               if shortest_distance <= (nick.size + best_match.size.to_f) / 2.0 * 0.70
                action.reply "Indeed I have not. Perhaps you're looking for #{best_match}?"
               else

@@ -8,6 +8,7 @@ require 'cgi'
 FBSDBot::Plugin.define("freebsd") {
    author "jp_tix"
    version "0.0.2"
+   commands %w{whatis man ports doc}
 
    class FreeBSD
       # display output from the whatis shell command

@@ -11,7 +11,7 @@ module FBSDBot
       attr_reader :threads, :command_count, :start_time
 
       def initialize(config)
-         @commands = {}
+         @commands = []
          @command_count = 0
 
          @config = config
@@ -97,6 +97,10 @@ module FBSDBot
         Dir.entries($plugins_active).each { |file| require $plugins_active + file unless ['.', '..'].include?(file) }
         puts "Loaded plugins: "
         FBSDBot::Plugin.list_plugins
+        FBSDBot::Plugin.registered_plugins.each do |ident,p|
+          p.commands ? @commands += p.commands : nil
+        end
+        @commands.flatten!
       end
       
    end # class FBSDBot::Bot
