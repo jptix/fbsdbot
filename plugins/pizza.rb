@@ -14,7 +14,7 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 
 		if a.message.match(/(.+?) when\?/)
 			t = @timings[$1]
-			a.reply("#{$1} was confirmed #{FBSDBot::seconds_to_s(Time.now.to_i - t.to_i)} ago") unless t.nil?
+			a.reply("#{$1.sub(/^!/,'')} was confirmed #{FBSDBot::seconds_to_s(Time.now.to_i - t.to_i)} ago") unless t.nil?
 		end
 	end
 end 

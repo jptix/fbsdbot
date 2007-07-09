@@ -3,12 +3,6 @@ class Array
 		self[rand(self.length)]
 	end
 end
-class String
-	def random
-		self[rand(self.length)].chr
-	end
-
-end
 
 
 module FBSDBot	
@@ -132,6 +126,7 @@ module FBSDBot
 			end
 
 			def reply(msg)
+				msg = FBSDBot::format_string(msg)
 				case @type.to_sym
 				  when :pubmsg
 					@bot.send_message(@respond_to, "#{@nick}, #{msg}")
@@ -142,8 +137,8 @@ module FBSDBot
 				end
 			end
 			
-			def send_message(message, to = @respond_to)
-			    @bot.send_message(to, msg)
+			def send_message(msg, to = @respond_to)
+			    @bot.send_message(to, FBSDBot::format_string(msg))
 			end
 
 			def op(channel = @respond_to)
@@ -213,6 +208,39 @@ module FBSDBot
      else                      "over #{(distance_in_minutes / 525960).round} years"
      end
   end
+  
+  
+  # TODO: formatting codes can only use one letter, so some of these are commented out for now
+  IRCColors = {
+                 # Colors                                                                                
+                 "%k"    => "\x0301",  #black
+                 # "%db"   => "\x0302",  # dark blue
+                 "%g"    => "\x0303",  # green 
+                 "%r"    => "\x0304",  # red   
+                 # "%lr"   => "\x0304",  # light red     
+                 # "%dr"   => "\x0305",  # dark red      
+                 "%p"    => "\x0306",  # purple        
+                 "%b"    => "\x0307",  # brown     # On some clients this is orange, others it is brown
+                 "%o"    => "\x0307",  # orange        
+                 "%y"    => "\x0308",  # yellow        
+                 "%a"    => "\x0310",  # aqua          
+                 # "%lb"   => "\x0311",  # light blue    
+                 "%b"    => "\x0312",  # blue          
+                 "%v"    => "\x0313",  # violet        
+                 # "%gr"    => "\x0314",  # grey          
+                 # "%lg"   => "\x0315",  # light grey    
+                 "%w"    => "\x0316",  # white       
+  
+                 # Other formatting
+                 "%n" => "\x0F", # normal
+                 "%B" => "\x02", # bold
+                 "%R" => "\x16", # reverse
+                 "%U" => "\x1F" } #underline      
+  
+  def format_string(string)
+    IRCColors.each_pair { |fmt, code| string.gsub!(fmt, code) }
+    return string
+  end                    
 	 
   def e_sh(str)
   	str.to_s.gsub(/(?=[^a-zA-Z0-9_.\/\-\x7F-\xFF\n])/, '\\').gsub(/\n/, "'\n'").sub(/^$/, "''")

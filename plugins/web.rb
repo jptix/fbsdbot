@@ -5,6 +5,7 @@ require 'cgi'
 FBSDBot::Plugin.define("web") {
    author "jp_tix"
    version "0.0.2"
+   commands %w{google calc wp}
    
    # =============
    # = Web class =

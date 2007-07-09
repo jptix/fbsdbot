@@ -12,7 +12,7 @@ module FBSDBot
       attr_reader :threads, :command_count, :start_time
 
       def initialize(config)
-         @commands = {}
+         @commands = []
          @command_count = 0
 
          @config = config
@@ -51,11 +51,10 @@ module FBSDBot
 							 return if command.nil?
 							 
 				action = Action.new(@irc,@auth,event)
-				if FBSDBot::Plugin.find_plugins("on_msg_#{command}".to_sym, action )
+				@command_count += 1 if( FBSDBot::Plugin.find_plugins("on_msg_#{command}".to_sym, action) )
+
+			else FBSDBot::Plugin.find_plugins("on_msg".to_sym, Action.new(@irc,@auth,event) )
 					@command_count += 1
-				elsif FBSDBot::Plugin.find_plugins("on_msg".to_sym, Action.new(@irc,@auth,event) )
-					@command_count += 1
-               end
             end
          end
          
@@ -75,6 +74,10 @@ module FBSDBot
         Dir.entries($plugins_active).each { |file| require $plugins_active + file unless ['.', '..'].include?(file) }
         puts "Loaded plugins: "
         FBSDBot::Plugin.list_plugins
+        FBSDBot::Plugin.registered_plugins.each do |ident,p|
+          p.commands ? @commands += p.commands : nil
+        end
+        @commands.flatten!
       end
       
    end # class FBSDBot::Bot
