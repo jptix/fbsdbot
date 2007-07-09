@@ -126,7 +126,7 @@ module FBSDBot
 				end
 			end
 			
-			def send_message(message, to = @respond_to)
+			def send_message(msg, to = @respond_to)
 			    @bot.send_message(to, msg)
 			end
 
