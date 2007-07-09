@@ -35,7 +35,6 @@ module FBSDBot
          # FIRST EVENT
          IRCEvent.add_callback('endofmotd') do |event|
             puts "connected!"
-            puts "Loaded plugins: "
             @config['channels'].each do |ch|
                @irc.add_channel(ch)
                puts "Joined channel: #{ch}"
@@ -98,6 +97,7 @@ module FBSDBot
       def load_plugins
         require $plugins_active + '/../lib/corecommands.rb'
         Dir.entries($plugins_active).each { |file| require $plugins_active + file unless ['.', '..'].include?(file) }
+        puts "Loaded plugins: "
         FBSDBot::Plugin.list_plugins
       end
       
