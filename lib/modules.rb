@@ -46,7 +46,7 @@ module FBSDBot
 
 	 class Action
 
-			attr_reader :auth, :nick, :channel, :message, :hostmask, :type
+			attr_reader :auth, :nick, :channel, :message, :hostmask, :type, :command
 			
 			def initialize(bot, auth, event, command = nil)
 			@event    = event

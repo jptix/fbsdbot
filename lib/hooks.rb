@@ -47,6 +47,7 @@ module FBSDBot
 	found = false
 	@registered_plugins.each do |i,p|
 	  if p.respond_to?(name)
+	   $bot.command_count += 1 unless action.command.nil?
 		p.send(name,action)
 		found = true
 	  end
