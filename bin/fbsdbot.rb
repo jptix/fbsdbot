@@ -2,11 +2,10 @@
 
 require File.dirname(__FILE__) + '/../lib/boot.rb'
 $plugins_active = File.dirname(__FILE__) + '/../plugins-active/'
-$: << $plugins_active
 
 module FBSDBot
 
-   VERSION = 0.1.1
+   VERSION = "0.1"
 
    class Bot
       attr_accessor :commands, :hooks, :nick, :auth
@@ -44,51 +43,28 @@ module FBSDBot
          
          # MESSAGES
          IRCEvent.add_callback('privmsg') do |event|
-            if event.message =~ /^!(\S+)/ or event.channel == @irc.nick
+			if event.message[0] == 001
+				action = Action.new(@irc,@auth,event)
+				@command_count += 1  if( FBSDBot::Plugin.find_plugins("on_ctcp_#{action.message}".to_sym, action) )
+            elsif event.message =~ /^!(\S+)/ or event.channel == @irc.nick
                command = event.message.sub(/^!/, '').split[0]
 							 return if command.nil?
-               FBSDBot::Plugin.registered_plugins.each do |ident,p|
-                  if p.respond_to?("on_msg_#{command}".to_sym)
-                     @command_count += 1
-                     p.send("on_msg_#{command}".to_sym, Action.new(@irc,@auth, event, command))
-                  end
-									if p.respond_to?('on_msg')
-										 p.send("on_msg", Action.new(@irc,@auth, event))
-                  end
+							 
+				action = Action.new(@irc,@auth,event)
+				if FBSDBot::Plugin.find_plugins("on_msg_#{command}".to_sym, action )
+					@command_count += 1
+				elsif FBSDBot::Plugin.find_plugins("on_msg".to_sym, Action.new(@irc,@auth,event) )
+					@command_count += 1
                end
-            else 
-              FBSDBot::Plugin.registered_plugins.each do |ident,p|
-									if p.respond_to?('on_msg')
-										 p.send("on_msg", Action.new(@irc,@auth, event))
-                 end
-              end
             end
          end
          
          # JOIN
-         IRCEvent.add_callback('join') do |event|
-            FBSDBot::Plugin.registered_plugins.each do |ident,p|
-               if p.respond_to?("on_join".to_sym)
-                  p.send("on_join".to_sym, Action.new(@irc, @auth, event))
-               end
-            end
-         end
-         
-         IRCEvent.add_callback('part') do |event|
-            FBSDBot::Plugin.registered_plugins.each do |ident,p|
-               if p.respond_to?("on_part".to_sym)
-                  p.send("on_part".to_sym, Action.new(@irc, @auth, event))
-               end
-            end
-         end
-
-         IRCEvent.add_callback('quit') do |event|
-            FBSDBot::Plugin.registered_plugins.each do |ident,p|
-               if p.respond_to?("on_quit".to_sym)
-                  p.send("on_quit".to_sym, Action.new(@irc, @auth, event))
-               end
-            end
-         end
+         IRCEvent.add_callback('join') {|event| FBSDBot::Plugin.find_plugins(:on_join, Action.new(@irc, @auth, event)) }
+		 # PART
+		 IRCEvent.add_callback('part') {|event| FBSDBot::Plugin.find_plugins(:on_part, Action.new(@irc, @auth, event)) }
+		 # QUIT
+		 IRCEvent.add_callback('quit') {|event| FBSDBot::Plugin.find_plugins(:on_quit, Action.new(@irc, @auth, event)) }
                
          @irc.connect
       end

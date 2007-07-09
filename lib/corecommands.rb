@@ -1,4 +1,3 @@
-
 FBSDBot::Plugin.define("corecommands") {
    author "jp_tix"
    version "0.0.1"
@@ -10,5 +9,7 @@ FBSDBot::Plugin.define("corecommands") {
   # def on_msg_commands(action)
   #   action.reply "My commands are: " + FBSDBot::Plugin.registered_plugins.keys.join(", ")
   # end
-
+	def on_ctcp_version(action)
+		action.reply "running FBSDBot v#{FBSDBot::VERSION} - on Ruby v#{RUBY_VERSION}"
+	end
 }

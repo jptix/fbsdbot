@@ -68,6 +68,8 @@ module FBSDBot
 				case event.event_type.to_sym
 				when :privmsg
 
+					#STDERR.puts event.inspect
+
 				   @nick = event.from
 				   @message = event.message
 				   unless event.message.nil?
@@ -89,6 +91,17 @@ module FBSDBot
 					  @type       = :pubmsg
 					  @channel    = event.channel
 					  @respond_to = @channel
+				   end
+
+				   # ctcp also gets handled as privmsg, so we have to override the type here
+				   if event.message[0] == 001
+					  if event.message[event.message.size - 1] == 001
+						@message = event.message[1, event.message.size - 2].downcase
+					  else
+						@message = event.message[1, event.message.size - 1].downcase
+					  end
+					  @type = :ctcp
+					  @respond_to = @nick
 				   end
 				when :join
 				  @nick        = event.from
@@ -119,10 +132,13 @@ module FBSDBot
 			end
 
 			def reply(msg)
-				if @type == :pubmsg
+				case @type.to_sym
+				  when :pubmsg
 					@bot.send_message(@respond_to, "#{@nick}, #{msg}")
-				else
+				  when :privmsg
 					@bot.send_message(@respond_to, msg)
+				  when :ctcp
+					@bot.send_notice(@respond_to, 001.chr + "#{@message.upcase}: #{msg}" + 001.chr)
 				end
 			end
 			

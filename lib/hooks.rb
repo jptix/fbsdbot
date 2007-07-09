@@ -1,6 +1,12 @@
 # SYMBOLS
 "pubmsg".to_sym
 "privmsg".to_sym
+"ctcp".to_sym
+"on_join".to_sym
+"on_msg".to_sym
+"on_ctcp".to_sym
+"on_part".to_sym
+"on_quit".to_sym
 
 module FBSDBot
 
@@ -35,6 +41,18 @@ module FBSDBot
     p = new
     p.instance_eval(&block)
     Plugin.registered_plugins[name.to_sym] = p
+  end
+
+  def self.find_plugins(name,action)
+	found = false
+	@registered_plugins.each do |i,p|
+	  if p.respond_to?(name)
+		p.send(name,action)
+		found = true
+	  end
+	end
+
+	return found
   end
   
   extend PluginSugar
