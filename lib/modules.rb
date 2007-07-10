@@ -1,6 +1,12 @@
 class Array
 	def random
-		self[rand(self.length)]
+		self[rand(self.size - 1)]
+	end
+end
+
+class String
+	def random
+		self[rand(self.size - 1)].chr
 	end
 end
 
@@ -16,19 +22,8 @@ module FBSDBot
 
 
 			def NickObfusicator.run( old_nick )
-				puts old_nick.length
-				if old_nick.length < (@NICK_MAX_LEN -1) and old_nick[0] != '|'
-
-					return "|#{old_nick}|"    
-
-				elsif old_nick.length < @NICK_MAX_LEN
-					replacements = "\_-|"
-					old_nick += replacements.random
-					# just add something behind it
-					#
-				else
-					Array.new(@NICK_MAX_LEN) { (rand(122-97) + 97).chr }.join
-				end
+				old_nick[rand(old_nick.size - 1)] = (rand(122-97) + 97).chr
+				old_nick
 			end
 		end
 		class Hostmask
