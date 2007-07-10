@@ -176,7 +176,6 @@ FBSDBot::Plugin.define "rss" do
                loop do
                   puts "Checking feeds @ #{Time.now}"
                   feed_refresh = refresh / @feeds.size
-                  puts "feed_refresh = #{feed_refresh.inspect}" #    <-- DEBUG
                   @feeds.each do |feed|
                      puts "===> #{feed.url} (@ #{Time.now})"
                      feed.check
@@ -224,7 +223,7 @@ FBSDBot::Plugin.define "rss" do
       if result.empty?
          action.reply "I'm not subscribed to #{action.message}"
       else
-         action.reply "Removed subscription: #{result.first.url.to_s}"
+         action.reply "Removed subscription: " + result.map { |feed| feed.url.to_s }.join("; ")
       end
    end
 
