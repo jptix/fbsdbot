@@ -20,6 +20,7 @@ FBSDBot::Plugin.define "rss" do
       RSS      = Struct.new("RSS", :channel, :items)
       Item     = Struct.new("Item", :title, :link, :description, :guid, :author, :pubdate)
       Channel  = Struct.new("Channel", :title, :link, :description)
+      Guid     = Struct.new("Guid", :content)
 
       def SimpleRSSParser.parse(src)
          @items   = []
@@ -33,7 +34,8 @@ FBSDBot::Plugin.define "rss" do
             guid        = item.elements['guid'] ? item.elements['guid'].text : nil
             author      = item.elements['dc:creator'] ? item.elements['dc:creator'].text : nil
             pubdate     = (item.elements['dc:date'] ? item.elements['dc:date'].text : nil) || (item.elements['pubDate'] ? item.elements['pubDate'].text : nil)
-            item = Item.new(title, link, description, guid)
+            guid = Guid.new(guid) unless guid.nil?
+            item = Item.new(title, link, description, guid, author, pubdate)
             @items << item
          end
          return RSS.new(@channel, @items)
@@ -43,6 +45,8 @@ FBSDBot::Plugin.define "rss" do
 
 
    class RSSReader
+      attr_accessor :refresh, :feeds
+      
       class Feed
          attr_accessor :unread
          attr_reader :url
@@ -70,7 +74,7 @@ FBSDBot::Plugin.define "rss" do
                suffix = @item.link ? "%g — #{@item.link}" : ''
                length = limit - prefix.length - suffix.length
 
-               body   = @item.description.gsub(/<.*?>/, ' ')
+               body   = @item.description.to_s.gsub(/<.*?>/, ' ')
                body   = CGI::unescapeHTML(body)
                body   = body.gsub(/\s+/, ' ').gsub(/\A\s+|\s+\z/, '')
                body   = body.sub(/(.{0,#{length}})(\s.+)?$/) { $1 + ($2.nil? ? '' : '…')}
@@ -115,9 +119,7 @@ FBSDBot::Plugin.define "rss" do
             items = rss.items.map { |item| Item.new(rss.channel, item) }
             items.delete_if { |item| @read_guids.include?(item.guid) }
             @read_guids += items.map { |item| item.guid }
-            unless @first_check
-               @unread = items
-            end
+            @unread = items
             @first_check = false
          end
 
@@ -127,6 +129,7 @@ FBSDBot::Plugin.define "rss" do
 
       end # end class Feed
 
+      # init method for RSSReader class
       def initialize
          @feeds = []
       end
@@ -169,13 +172,14 @@ FBSDBot::Plugin.define "rss" do
 
       def run(action, filename = 'rss.yaml', refresh = 30*60)
          @action = action
-         thread = Thread.new do
+         @refresh = refresh
+         Thread.new do
             begin
                load(filename)
 
                loop do
                   puts "Checking feeds @ #{Time.now}"
-                  feed_refresh = refresh / @feeds.size
+                  feed_refresh = @refresh / @feeds.size if @feeds.size > 0
                   @feeds.each do |feed|
                      puts "===> #{feed.url} (@ #{Time.now})"
                      feed.check
@@ -185,9 +189,10 @@ FBSDBot::Plugin.define "rss" do
                         item.read = true
                      end
                      sleep(feed_refresh)
-                  end unless @feeds.nil?
+                  end unless @feeds.nil? 
                   puts "Done checking feeds."
                   save(filename)
+                  sleep(@refresh) unless @feeds.size > 0 
                end
             rescue
                puts $!.message
@@ -205,7 +210,8 @@ FBSDBot::Plugin.define "rss" do
 
    def on_join(action)
       return if @started
-      @reader.run(action, @filename, ($config['rss-refresh'] || 30*60))
+      @action = action
+      @reader.run(@action, @filename, ($config['rss-refresh'] || 30*60))
       @started = true
    end
 
@@ -226,9 +232,26 @@ FBSDBot::Plugin.define "rss" do
          action.reply "Removed subscription: " + result.map { |feed| feed.url.to_s }.join("; ")
       end
    end
+   
+   def on_msg_rssrefresh(action)
+      if action.message =~ /^\d+$/
+         period = action.message.to_i
+         @reader.save(@filename)
+         @msg = "NB: RSS refresh period was changed from #{@reader.refresh} to #{period} seconds."
+         @reader.refresh = period 
+         action.reply "RSS refresh period set to #{period} seconds."
+      else
+         action.reply "Please provide a refresh period in seconds."
+      end
+   end
+   
+   def on_msg_rsslist(action)
+      action.reply "I'm currently subscribed to these feeds: " + @reader.feeds.map { |f| f.url.to_s.gsub("http://", '') }.join(" %r|%n ")
+   end
 
    def on_shutdown
       @reader.save(@filename)
+      puts @msg unless @msg.nil?
    end
 
 
