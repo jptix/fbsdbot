@@ -6,7 +6,7 @@
 
 FBSDBot::Plugin.define "rss" do
    author "jp_tix"
-   version "0.0.2"
+   version "0.0.3"
    commands %w{subscribe unsubscribe}
 
    require "net/http"
@@ -175,18 +175,20 @@ FBSDBot::Plugin.define "rss" do
 
                loop do
                   puts "Checking feeds @ #{Time.now}"
+                  feed_refresh = refresh / @feeds.size
+                  puts "feed_refresh = #{feed_refresh.inspect}" #    <-- DEBUG
                   @feeds.each do |feed|
-                     puts "===> #{feed.url}"
+                     puts "===> #{feed.url} (@ #{Time.now})"
                      feed.check
                      feed.unread.each do |item|
                         puts "=======> #{item.title} "
                         action.send_message(item.summary, action.channel)
                         item.read = true
                      end
+                     sleep(feed_refresh)
                   end unless @feeds.nil?
                   puts "Done checking feeds."
                   save(filename)
-                  sleep(refresh)
                end
             rescue
                puts $!.message
