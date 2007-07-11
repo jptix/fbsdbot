@@ -12,7 +12,6 @@ FBSDBot::Plugin.define("seen") {
    class Seen
       def initialize
          self.load
-         @botroot_path = File.dirname(__FILE__) + "/../"
       end
 
       def log_event(nick, channel, event_type, message = '')
@@ -79,12 +78,12 @@ FBSDBot::Plugin.define("seen") {
          end
 
          def save
-            File.open(@botroot_path + "seen.yaml", "w") { |io| YAML.dump(@seen, io) }
+            File.open($botdir + "seen.yaml", "w") { |io| YAML.dump(@seen, io) }
          end
 
          def load
             begin
-               @seen = YAML.load_file(@botroot_path + 'seen.yaml')
+               @seen = YAML.load_file($botdir + 'seen.yaml')
             rescue
                @seen = {}
             end

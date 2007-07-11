@@ -279,7 +279,7 @@ FBSDBot::Plugin.define "rss" do
 
    @reader = RSSReader.new
    @started = false
-   @filename = 'rss.yaml'
+   @filename = $botdir + 'rss.yaml'
 
    def on_join(action)
       return if @started
