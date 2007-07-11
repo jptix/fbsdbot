@@ -48,7 +48,7 @@ FBSDBot::Plugin.define "rss" do
       attr_accessor :refresh, :feeds
       
       class Feed
-         attr_accessor :unread
+         attr_accessor :unread, :filters
          attr_reader :url
 
          class Item
@@ -93,11 +93,12 @@ FBSDBot::Plugin.define "rss" do
          end # end class Item
 
          # init method for new feed
-         def initialize(url, last_checked = '', read_guids = [])
+         def initialize(url, last_checked = '', read_guids = [], filters = [])
             puts "Adding feed #{url}"
             @url = URI.parse(url)
             @last_checked = last_checked
             @unread = []
+            @filters = filters
             @read_guids = read_guids
             @first_check = true
             check
@@ -119,6 +120,7 @@ FBSDBot::Plugin.define "rss" do
                end
                items = rss.items.map { |item| Item.new(rss.channel, item) }
                items.delete_if { |item| @read_guids.include?(item.guid) }
+               items = items.select { |item| @filters.any? { |f| f =~ item.summary } } unless @filters.empty?
                @read_guids += items.map { |item| item.guid }
                @unread = items
                @first_check = false
@@ -128,7 +130,7 @@ FBSDBot::Plugin.define "rss" do
          end
 
          def save
-            {'url' => @url.to_s, 'last_checked'  => @last_checked, 'read_guids' => @read_guids}
+            {'url' => @url.to_s, 'last_checked'  => @last_checked, 'read_guids' => @read_guids, 'filters' => @filters}
          end
 
       end # end class Feed
@@ -152,19 +154,81 @@ FBSDBot::Plugin.define "rss" do
             return $!.message
          end
       end
+      
+      def add_filter_for_feed(action, url_or_regexp, filter)
+         feeds = @feeds.select { |f| f.url.to_s == url_or_regexp or f.url.to_s =~ Regexp.new(url_or_regexp, true) }
+         if feeds.empty?
+            action.reply "No matching feeds found."
+            return
+         end
+         feeds.each do |f|
+            url = f.url.to_s.gsub("http://", '')
+            regexp = Regexp.new(filter, true)
+            if f.filters.include?(regexp)
+               action.reply "Filter already saved for #{url}"
+            else
+               f.filters << regexp
+               action.reply "Added filter #{f.filters[-1]} to #{url}"
+            end
+         end
+      end
+      
+      def del_filter_for_feed(action, url_or_regexp, filter)
+         feeds = @feeds.select { |f| f.url.to_s == url_or_regexp or f.url.to_s =~ Regexp.new(url_or_regexp, true) }
+         if feeds.empty?
+            action.reply "No matching feeds found."
+            return
+         end
+         
+         feeds.each do |f|
+            url = f.url.to_s.gsub("http://", '')
+            if filter == "*"
+               f.filters = []
+               result = "all filters"
+            else
+               result = filter if f.filters.reject! { |f| f.to_s == filter or f == Regexp.new(filter, true) }
+            end
+            if result
+               action.reply "Deleted #{result} from #{url}"
+            else
+               action.reply "No matching filters found for #{url}"
+            end
+         end
+         
+      end
+      
+      def list_filters_for_feed(action, url_or_regexp)
+         if url_or_regexp
+            feeds = @feeds.select { |f| f.url.to_s == url_or_regexp or f.url.to_s =~ Regexp.new(url_or_regexp, true) }
+         else
+            feeds = @feeds
+         end
+         if feeds.empty?
+            action.reply "No matching feeds found."
+            return
+         end
+         feeds.each do |f| 
+            url = f.url.to_s.gsub("http://", '')
+            if f.filters.empty?
+               action.reply "No active filtering for #{url}"
+            else
+               action.reply "Active filters for #{url}: #{f.filters.join(' ')}" 
+            end
+         end
+      end
 
-      def unsubscribe(url)
+      def unsubscribe(url_or_regexp)
          old_feeds = @feeds.dup
          @feeds.reject! do |feed|
             feed = feed.url.to_s
-            true if feed == url or feed =~ Regexp.new(url, true)
+            true if feed == url_or_regexp or feed =~ Regexp.new(url_or_regexp, true)
          end
          return old_feeds - @feeds
       end
 
       def load(filename)
          if File.exist?(filename)
-            @feeds = open(filename) { |io| yml = YAML.load(io); yml.map { |feed| Feed.new(feed['url'], feed['last_checked'], feed['read_guids']) } if yml }
+            @feeds = open(filename) { |io| yml = YAML.load(io); yml.map { |feed| Feed.new(feed['url'], feed['last_checked'], feed['read_guids'], feed['filters']) } if yml }
          else
             @feeds = []
          end
@@ -250,11 +314,38 @@ FBSDBot::Plugin.define "rss" do
    end
    
    def on_msg_rsslist(action)
-      action.reply "I'm currently subscribed to #{@reader.feeds.size > 1 ? 'these' : 'this'} feed#{@reader.feeds.size > 1 ? 's' : ''}: " + @reader.feeds.map { |f| f.url.to_s.gsub("http://", '') }.join(" %r|%n ")
+      if @reader.feeds.size > 0
+         action.reply "I'm currently subscribed to #{@reader.feeds.size > 1 ? 'these' : 'this'} feed#{@reader.feeds.size > 1 ? 's' : ''}: " + @reader.feeds.map { |f| f.url.to_s.gsub("http://", '') }.join(" %r|%n ")
+      else
+         action.reply "I'm not subscribed to any feeds."
+      end
+   end
+   
+   def on_msg_rssfilter(action)
+      cmd = action.message.split(/\"(.+?)\"|\s/).reject { |e| e.empty? }
+      
+      case cmd.shift
+      when "add"
+         if cmd.size != 2
+            action.reply "usage: rssfilter add <url or regexp> <filter>"
+         else
+            @reader.add_filter_for_feed(action, cmd[0], cmd[1])
+         end
+      when "del"
+         if cmd.size != 2
+            action.reply "usage: rssfilter del <url or regexp> <filter>"
+         else
+            @reader.del_filter_for_feed(action, cmd[0], cmd[1])
+         end
+      when "list"
+            @reader.list_filters_for_feed(action, cmd[0])
+      end
+      
+      
    end
 
    def on_shutdown
-      @reader.save(@filename)
+      @reader.save(@filename) unless @reader.feeds.empty?
       puts @msg unless @msg.nil?
    end
 
