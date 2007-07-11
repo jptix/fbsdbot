@@ -3,7 +3,3 @@ host: irc.homelien.no
 port: 6667
 channels:
   - "#bot-test.no"
-plugins:
-  - now_playing
-  - user_priv
-  - web

@@ -7,7 +7,7 @@
 FBSDBot::Plugin.define "rss" do
    author "jp_tix"
    version "0.0.3"
-   commands %w{subscribe unsubscribe}
+   commands %w{subscribe unsubscribe rssfilter rssrefresh rsslist}
 
    require "net/http"
    require 'rss'
@@ -305,7 +305,7 @@ FBSDBot::Plugin.define "rss" do
       if action.message =~ /^\d+$/
          period = action.message.to_i
          @reader.save(@filename)
-         @msg = "NB: RSS refresh period was changed from #{@reader.refresh} to #{period} seconds."
+         @msg = "NB: RSS refresh period was changed from #{@reader.refresh} to #{period} seconds." unless period == $config['rss-refresh']
          @reader.refresh = period 
          action.reply "RSS refresh period set to #{period} seconds."
       else

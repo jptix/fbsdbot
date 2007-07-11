@@ -3,7 +3,6 @@ install dependencies with ruby-gems:
 	gem install ruby-irc
 	gem install sqlite3-ruby
 	gem install activerecord
-	gem install htmlentities
 
 
 edit bin/bot.conf.example, and save it to file bot.conf
