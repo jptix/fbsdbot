@@ -96,6 +96,7 @@ FBSDBot::Plugin.define "rss" do
          def initialize(url, last_checked = '', read_guids = [], filters = [])
             puts "Adding feed #{url}"
             @url = URI.parse(url)
+            @title = ''
             @last_checked = last_checked
             @unread = []
             @filters = filters
@@ -107,7 +108,6 @@ FBSDBot::Plugin.define "rss" do
          def check
             begin
                @last_checked = Time.now
-               path = @url.path.empty? ? "/" : @url.path
                # DONE: Need to fall back on our own parser for RSS 0.90 feeds.
                # The parser should return objects similar to the built-in RSS library
                # so the rest of the plugin can work as is. Basically an array of 'item' objects 
@@ -118,6 +118,7 @@ FBSDBot::Plugin.define "rss" do
                   puts "Using SimpleRSSParser for #{@url} (#{$!.message})" if @first_check
                   rss = SimpleRSSParser.parse(open(@url.to_s))
                end
+               @title = rss.channel.title
                items = rss.items.map { |item| Item.new(rss.channel, item) }
                items.delete_if { |item| @read_guids.include?(item.guid) }
                items = items.select { |item| @filters.any? { |f| f =~ item.summary } } unless @filters.empty?
@@ -127,6 +128,10 @@ FBSDBot::Plugin.define "rss" do
             rescue # trying this to rescue "Operation timed out - connect(2)"
                retry
             end
+         end
+         
+         def title
+            @title.nil? ? @url.to_s : @title
          end
 
          def save
@@ -315,7 +320,7 @@ FBSDBot::Plugin.define "rss" do
    
    def on_msg_rsslist(action)
       if @reader.feeds.size > 0
-         action.reply "I'm currently subscribed to #{@reader.feeds.size > 1 ? 'these' : 'this'} feed#{@reader.feeds.size > 1 ? 's' : ''}: " + @reader.feeds.map { |f| f.url.to_s.gsub("http://", '') }.join(" %r|%n ")
+         action.reply "I'm currently subscribed to #{@reader.feeds.size > 1 ? 'these' : 'this'} feed#{@reader.feeds.size > 1 ? 's' : ''}: " + @reader.feeds.map { |f| f.title }.join(" %r|%n ")
       else
          action.reply "I'm not subscribed to any feeds."
       end
