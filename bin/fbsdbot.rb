@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
-require File.dirname(__FILE__) + '/../lib/boot.rb'
-$plugins_active = File.dirname(__FILE__) + '/../plugins-active/'
+$botdir = File.expand_path(File.dirname(__FILE__) + '/..') + '/'
+$LOAD_PATH << $botdir
+require 'lib/boot.rb'
+
 
 module FBSDBot
 
@@ -69,8 +71,8 @@ module FBSDBot
       
 			private
       def load_plugins
-        require $plugins_active + '/../lib/corecommands.rb'
-        Dir.entries($plugins_active).each { |file| require $plugins_active + file unless ['.', '..'].include?(file) }
+        require 'lib/corecommands.rb'
+        Dir.entries($botdir + 'plugins-active').each { |file| require 'plugins-active/' + file unless ['.', '..'].include?(file) }
         puts "Loaded plugins: "
         FBSDBot::Plugin.list_plugins
         FBSDBot::Plugin.registered_plugins.each do |ident,p|

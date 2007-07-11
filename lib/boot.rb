@@ -1,5 +1,4 @@
 puts "Starting bot..."
-my_path = File.dirname(__FILE__)
 
 # UTF-8
 $KCODE = 'u'
@@ -16,11 +15,11 @@ require 'optparse'
 require 'rubygems'
 require 'IRC'
 require 'active_record'
-require my_path + '/models.rb'
-require my_path + '/modules.rb'
-require my_path + '/hooks.rb'
+require 'lib/models.rb'
+require 'lib/modules.rb'
+require 'lib/hooks.rb'
 #require my_path + '/pluginbase.rb'
-require my_path + '/auth.rb'
+require 'lib/auth.rb'
 
 # Default Options
 #options = OpenStruct.new
@@ -40,7 +39,7 @@ require my_path + '/auth.rb'
 if ARGV.size > 0
    config_file = File.expand_path(ARGF.file.path) 
 else
-   config_file = File.dirname(__FILE__) + '/../bin/bot.conf'
+   config_file = $botdir + 'bin/bot.conf'
 end
 
 unless File.exists?( config_file )
@@ -56,5 +55,5 @@ puts "Loaded config."
 
 ActiveRecord::Base.establish_connection({
   :adapter => 'sqlite3',
-  :dbfile => File.dirname(__FILE__) + '/fbsdbot.db',
+  :dbfile => $botdir + 'bin/fbsdbot.db',
 })
