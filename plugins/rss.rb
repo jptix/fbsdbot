@@ -319,8 +319,10 @@ FBSDBot::Plugin.define "rss" do
    end
    
    def on_msg_rsslist(action)
+      type = (action.message == 'urls' ? :url : :title)
       if @reader.feeds.size > 0
-         action.reply "I'm currently subscribed to #{@reader.feeds.size > 1 ? 'these' : 'this'} feed#{@reader.feeds.size > 1 ? 's' : ''}: " + @reader.feeds.map { |f| f.title }.join(" %r|%n ")
+         plural = @reader.feeds.size > 1
+         action.reply "I'm currently subscribed to #{plural ? 'these' : 'this'} feed#{ plural ? 's' : ''}: " + @reader.feeds.map { |f| f.send(type).to_s + (f.filters.size > 0 ? ' (w/filtering)' : '') }.join(" %r|%n ")
       else
          action.reply "I'm not subscribed to any feeds."
       end
