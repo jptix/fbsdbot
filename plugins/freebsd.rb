@@ -16,7 +16,7 @@ FBSDBot::Plugin.define("freebsd") {
          if !line or line.empty?
             return 'USAGE: whatis <search string>'
          else
-            return %x{whatis "#{line}"}
+            return %x{whatis "#{FBSDBot::e_sh(line)}"}
          end
       end # method whatis
 
@@ -29,7 +29,7 @@ FBSDBot::Plugin.define("freebsd") {
          end
 
          line = line.strip
-         man_html = %x{man '#{e_sh(line)}' | groff -man -Thtml 2>/dev/null}
+         man_html = %x{man '#{FBSDBot::e_sh(line)}' | groff -man -Thtml 2>/dev/null}
          if man_html =~ /<p.*>NAME(.+?)<\/p>.+?<p.*>SYNOPSIS(.+?)<\/p>/m
             name, synop = $1, $2
             name = name.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '').gsub("\n", '').strip

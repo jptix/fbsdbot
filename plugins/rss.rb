@@ -166,16 +166,19 @@ FBSDBot::Plugin.define "rss" do
             action.reply "No matching feeds found."
             return
          end
+         regexp = Regexp.new(filter, true)
+         urls = {:saved => [], :added => []}
          feeds.each do |f|
             url = f.url.to_s.gsub("http://", '')
-            regexp = Regexp.new(filter, true)
             if f.filters.include?(regexp)
-               action.reply "Filter already saved for #{url}"
+               urls[:saved] << url
             else
                f.filters << regexp
-               action.reply "Added filter #{f.filters[-1]} to #{url}"
+               urls[:added] << url
             end
          end
+         action.reply "Added filter #{regexp} to #{urls[:added].join(" %r|%n ")}" unless urls[:added].empty?
+         action.reply "Filter already saved for #{urls[:saved].join(" %r|%n ")}" unless urls[:saved].empty?
       end
       
       def del_filter_for_feed(action, url_or_regexp, filter)
@@ -185,6 +188,7 @@ FBSDBot::Plugin.define "rss" do
             return
          end
          
+         urls = {:deleted => [], :not_found => [], :result => nil}
          feeds.each do |f|
             url = f.url.to_s.gsub("http://", '')
             if filter == "*"
@@ -194,11 +198,14 @@ FBSDBot::Plugin.define "rss" do
                result = filter if f.filters.reject! { |f| f.to_s == filter or f == Regexp.new(filter, true) }
             end
             if result
-               action.reply "Deleted #{result} from #{url}"
+               urls[:deleted] << url
+               urls[:result] = result
             else
-               action.reply "No matching filters found for #{url}"
+               urls[:not_found] << url
             end
          end
+         action.reply "Deleted #{urls[:result]} from #{urls[:deleted].join(" %r|%n ")}" unless urls[:deleted].empty?
+         action.reply "No matching filters found for #{urls[:not_found].join(" %r|%n ")}" unless urls[:not_found].empty?
          
       end
       
