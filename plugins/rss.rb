@@ -60,11 +60,11 @@ FBSDBot::Plugin.define "rss" do
                @item = item
                @read = false
                if @item.pubDate.nil?
-                  @sha1 = Digest::MD5.hexdigest(@item.link + @item.description.to_s)
+                  @sha1 = Digest::SHA1.hexdigest(@item.link + @item.description.to_s)
                elsif @item.link.nil?
-                  @sha1 = Digest::MD5.hexdigest(@item.description.to_s + @item.pubDate.to_s)
+                  @sha1 = Digest::SHA1.hexdigest(@item.description.to_s + @item.pubDate.to_s)
                else
-                  @sha1 = Digest::MD5.hexdigest(@item.link + @item.pubDate.to_s)
+                  @sha1 = Digest::SHA1.hexdigest(@item.link + @item.pubDate.to_s)
                end
             end
 
