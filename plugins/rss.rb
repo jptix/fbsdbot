@@ -18,7 +18,7 @@ FBSDBot::Plugin.define "rss" do
 
    class SimpleRSSParser
       RSS      = Struct.new("RSS", :channel, :items)
-      Item     = Struct.new("Item", :title, :link, :description, :guid, :author, :pubdate)
+      Item     = Struct.new("Item", :title, :link, :description, :guid, :author, :pubDate)
       Channel  = Struct.new("Channel", :title, :link, :description)
       Guid     = Struct.new("Guid", :content)
 
@@ -33,9 +33,9 @@ FBSDBot::Plugin.define "rss" do
             description = item.elements['description'] ? item.elements['description'].text : nil
             guid        = item.elements['guid'] ? item.elements['guid'].text : nil
             author      = item.elements['dc:creator'] ? item.elements['dc:creator'].text : nil
-            pubdate     = (item.elements['dc:date'] ? item.elements['dc:date'].text : nil) || (item.elements['pubDate'] ? item.elements['pubDate'].text : nil)
+            pubDate     = (item.elements['dc:date'] ? item.elements['dc:date'].text : nil) || (item.elements['pubDate'] ? item.elements['pubDate'].text : nil)
             guid = Guid.new(guid) unless guid.nil?
-            item = Item.new(title, link, description, guid, author, pubdate)
+            item = Item.new(title, link, description, guid, author, pubDate)
             @items << item
          end
          return RSS.new(@channel, @items)
@@ -46,7 +46,7 @@ FBSDBot::Plugin.define "rss" do
 
    class RSSReader
       attr_accessor :refresh, :feeds
-      
+
       class Feed
          attr_accessor :unread, :filters
          attr_reader :url
@@ -59,6 +59,13 @@ FBSDBot::Plugin.define "rss" do
                @channel = channel
                @item = item
                @read = false
+               if @item.pubDate.nil?
+                  @sha1 = Digest::MD5.hexdigest(@item.link + @item.description.to_s)
+               elsif @item.link.nil?
+                  @sha1 = Digest::MD5.hexdigest(@item.description.to_s + @item.pubDate.to_s)
+               else
+                  @sha1 = Digest::MD5.hexdigest(@item.link + @item.pubDate.to_s)
+               end
             end
 
             def read?
@@ -83,11 +90,16 @@ FBSDBot::Plugin.define "rss" do
             end
 
             def guid
-               if @item.respond_to? :guid
-                  @item.guid.nil? ? @item.link : @item.guid.content
+               if @sha1.nil? or @sha1.empty?
+                  if @item.respond_to? :guid
+                     @item.guid.nil? ? @item.link : @item.guid.content
+                  else
+                     @item.link
+                  end
                else
-                  @item.link
+                  @sha1
                end
+
             end
 
          end # end class Item
@@ -100,7 +112,7 @@ FBSDBot::Plugin.define "rss" do
             @last_checked = last_checked
             @unread = []
             @filters = filters
-            @read_guids = read_guids
+            read_guids.nil? ? @read_guids = [] : @read_guids = read_guids
             @first_check = true
             check
          end
@@ -110,8 +122,8 @@ FBSDBot::Plugin.define "rss" do
                @last_checked = Time.now
                # DONE: Need to fall back on our own parser for RSS 0.90 feeds.
                # The parser should return objects similar to the built-in RSS library
-               # so the rest of the plugin can work as is. Basically an array of 'item' objects 
-               # that has accessors for title, link, description etc. will do. 
+               # so the rest of the plugin can work as is. Basically an array of 'item' objects
+               # that has accessors for title, link, description etc. will do.
                begin
                   rss = RSS::Parser.parse(open(@url.to_s))
                rescue
@@ -121,15 +133,16 @@ FBSDBot::Plugin.define "rss" do
                @title = rss.channel.title
                items = rss.items.map { |item| Item.new(rss.channel, item) }
                items.delete_if { |item| @read_guids.include?(item.guid) }
-               items = items.select { |item| @filters.any? { |f| f =~ item.summary } } unless @filters.empty?
                @read_guids += items.map { |item| item.guid }
+               items = items.select { |item| @filters.any? { |f| f =~ item.summary } } unless @filters.empty? 
                @unread = items
                @first_check = false
             rescue # trying this to rescue "Operation timed out - connect(2)"
+               puts "#{$!.message}\n#{$!.backtrace.join("\n")}"
                retry
             end
          end
-         
+
          def title
             @title.nil? ? @url.to_s : @title
          end
@@ -159,7 +172,7 @@ FBSDBot::Plugin.define "rss" do
             return $!.message
          end
       end
-      
+
       def add_filter_for_feed(action, url_or_regexp, filter)
          feeds = @feeds.select { |f| f.url.to_s == url_or_regexp or f.url.to_s =~ Regexp.new(url_or_regexp, true) }
          if feeds.empty?
@@ -180,14 +193,14 @@ FBSDBot::Plugin.define "rss" do
          action.reply "Added filter #{regexp} to #{urls[:added].join(" %r|%n ")}" unless urls[:added].empty?
          action.reply "Filter already saved for #{urls[:saved].join(" %r|%n ")}" unless urls[:saved].empty?
       end
-      
+
       def del_filter_for_feed(action, url_or_regexp, filter)
          feeds = @feeds.select { |f| f.url.to_s == url_or_regexp or f.url.to_s =~ Regexp.new(url_or_regexp, true) }
          if feeds.empty?
             action.reply "No matching feeds found."
             return
          end
-         
+
          urls = {:deleted => [], :not_found => [], :result => nil}
          feeds.each do |f|
             url = f.url.to_s.gsub("http://", '')
@@ -206,9 +219,9 @@ FBSDBot::Plugin.define "rss" do
          end
          action.reply "Deleted #{urls[:result]} from #{urls[:deleted].join(" %r|%n ")}" unless urls[:deleted].empty?
          action.reply "No matching filters found for #{urls[:not_found].join(" %r|%n ")}" unless urls[:not_found].empty?
-         
+
       end
-      
+
       def list_filters_for_feed(action, url_or_regexp)
          if url_or_regexp
             feeds = @feeds.select { |f| f.url.to_s == url_or_regexp or f.url.to_s =~ Regexp.new(url_or_regexp, true) }
@@ -219,12 +232,12 @@ FBSDBot::Plugin.define "rss" do
             action.reply "No matching feeds found."
             return
          end
-         feeds.each do |f| 
+         feeds.each do |f|
             url = f.url.to_s.gsub("http://", '')
             if f.filters.empty?
                action.reply "No active filtering for #{url}"
             else
-               action.reply "Active filters for #{url}: #{f.filters.join(' ')}" 
+               action.reply "Active filters for #{url}: #{f.filters.join(' ')}"
             end
          end
       end
@@ -269,10 +282,10 @@ FBSDBot::Plugin.define "rss" do
                         item.read = true
                      end
                      sleep(feed_refresh)
-                  end unless @feeds.nil? 
+                  end unless @feeds.nil?
                   puts "Done checking feeds."
                   save(filename)
-                  sleep(@refresh) unless @feeds.size > 0 
+                  sleep(@refresh) unless @feeds.size > 0
                end
             rescue
                puts $!.message
@@ -312,19 +325,19 @@ FBSDBot::Plugin.define "rss" do
          action.reply "Removed subscription: " + result.map { |feed| feed.url.to_s }.join("; ")
       end
    end
-   
+
    def on_msg_rssrefresh(action)
       if action.message =~ /^\d+$/
          period = action.message.to_i
          @reader.save(@filename)
          @msg = "NB: RSS refresh period was changed from #{@reader.refresh} to #{period} seconds." unless period == $config['rss-refresh']
-         @reader.refresh = period 
+         @reader.refresh = period
          action.reply "RSS refresh period set to #{period} seconds."
       else
          action.reply "Please provide a refresh period in seconds."
       end
    end
-   
+
    def on_msg_rsslist(action)
       type = (action.message == 'urls' ? :url : :title)
       if @reader.feeds.size > 0
@@ -334,10 +347,10 @@ FBSDBot::Plugin.define "rss" do
          action.reply "I'm not subscribed to any feeds."
       end
    end
-   
+
    def on_msg_rssfilter(action)
       cmd = action.message.split(/\"(.+?)\"|\s/).reject { |e| e.empty? }
-      
+
       case cmd.shift
       when "add"
          if cmd.size != 2
@@ -352,10 +365,10 @@ FBSDBot::Plugin.define "rss" do
             @reader.del_filter_for_feed(action, cmd[0], cmd[1])
          end
       when "list"
-            @reader.list_filters_for_feed(action, cmd[0])
+         @reader.list_filters_for_feed(action, cmd[0])
       end
-      
-      
+
+
    end
 
    def on_shutdown
