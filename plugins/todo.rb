@@ -56,7 +56,7 @@ class TODOApp
    
    def list(nick)
       if @todos[nick].nil?
-         return
+         return []
       else
          @todos[nick].select { |t| t.done? == false }
       end
@@ -66,14 +66,17 @@ end
    
 @td = TODOApp.new   
 @file = $botdir + 'todo.yaml'
+@started = false
 
 def on_join(action)
+   return if @started
    if File.exist?(@file)
       @td.load(@file)
       puts "Loaded TODO-file."
    else
       puts "No TODO-file found @ #{@file}"
    end
+   @started = true
 end
 
 def on_msg_todo(action)

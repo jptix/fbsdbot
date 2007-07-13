@@ -297,9 +297,10 @@ FBSDBot::Plugin.define "rss" do
 
    end # class RSSReader
 
-   @reader = RSSReader.new
-   @started = false
+   @reader   = RSSReader.new
+   @started  = false
    @filename = $botdir + 'rss.yaml'
+   @help     = "!rss [subscribe|unsubscribe|refresh|list|filter] %r|%n !rss filter [add|del|list]"
 
    def on_join(action)
       return if @started
@@ -308,29 +309,47 @@ FBSDBot::Plugin.define "rss" do
       @started = true
    end
 
-   def on_msg_subscribe(action)
-      if action.message =~ /^http:/
-         result = @reader.subscribe(action.message)
-         action.reply result
-      else
-         action.reply "Not a valid URL: #{action.message}"
+   def on_msg_rss(action)
+      cmd = action.message.split
+      case cmd.shift
+      when 'subscribe'
+         self.subscribe(action, cmd.join(' '))
+      when 'unsubscribe'
+         self.unsubscribe(action, cmd.join(' '))
+      when 'refresh'
+         self.refresh(action, cmd.join(' '))
+      when 'list'
+         self.list(action, cmd.join(' '))
+      when 'filter'
+         self.filter(action, cmd.join(' '))
+      when 'help'
+         action.reply @help
       end
    end
 
-   def on_msg_unsubscribe(action)
-      result = @reader.unsubscribe(action.message)
+   def subscribe(action, msg)
+      if msg =~ /^http:/
+         result = @reader.subscribe(msg)
+         action.reply result
+      else
+         action.reply "Not a valid URL: #{msg}"
+      end
+   end
+
+   def unsubscribe(action, msg)
+      result = @reader.unsubscribe(msg)
       if result.empty?
-         action.reply "I'm not subscribed to #{action.message}"
+         action.reply "I'm not subscribed to #{msg}"
       else
          action.reply "Removed subscription: " + result.map { |feed| feed.url.to_s }.join("; ")
       end
    end
 
-   def on_msg_rssrefresh(action)
-      if action.message =~ /^\d+$/
-         period = action.message.to_i
+   def refresh(action, msg)
+      if msg =~ /^\d+$/
+         period = msg.to_i
          @reader.save(@filename)
-         @msg = "NB: RSS refresh period was changed from #{@reader.refresh} to #{period} seconds." unless period == $config['rss-refresh']
+         period == $config['rss-refresh'] ? @shutdown_msg = nil : @shutdown_msg = "NB: RSS refresh period was changed from #{@reader.refresh} to #{period} seconds."
          @reader.refresh = period
          action.reply "RSS refresh period set to #{period} seconds."
       else
@@ -338,8 +357,8 @@ FBSDBot::Plugin.define "rss" do
       end
    end
 
-   def on_msg_rsslist(action)
-      type = (action.message == 'urls' ? :url : :title)
+   def list(action, msg)
+      type = (msg == 'urls' ? :url : :title)
       if @reader.feeds.size > 0
          plural = @reader.feeds.size > 1
          action.reply "I'm currently subscribed to #{plural ? 'these' : 'this'} feed#{ plural ? 's' : ''}: " + @reader.feeds.map { |f| f.send(type).to_s + (f.filters.size > 0 ? ' (w/filtering)' : '') }.join(" %r|%n ")
@@ -348,32 +367,30 @@ FBSDBot::Plugin.define "rss" do
       end
    end
 
-   def on_msg_rssfilter(action)
-      cmd = action.message.split(/\"(.+?)\"|\s/).reject { |e| e.empty? }
+   def filter(action, msg)
+      cmd = msg.split(/\"(.+?)\"|\s/).reject { |e| e.empty? }
 
       case cmd.shift
       when "add"
          if cmd.size != 2
-            action.reply "usage: rssfilter add <url or regexp> <filter>"
+            action.reply "usage: rssfilter add <url or regexp> <filter-regexp>"
          else
             @reader.add_filter_for_feed(action, cmd[0], cmd[1])
          end
       when "del"
          if cmd.size != 2
-            action.reply "usage: rssfilter del <url or regexp> <filter>"
+            action.reply "usage: rssfilter del <url or regexp> <filter-regexp>"
          else
             @reader.del_filter_for_feed(action, cmd[0], cmd[1])
          end
       when "list"
          @reader.list_filters_for_feed(action, cmd[0])
       end
-
-
    end
 
    def on_shutdown
       @reader.save(@filename) unless @reader.feeds.empty?
-      puts @msg unless @msg.nil?
+      puts @shutdown_msg unless @shutdown_msg.nil?
    end
 
 
