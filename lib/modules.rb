@@ -63,7 +63,7 @@ module FBSDBot
 				   @message = event.message
 				   unless event.message.nil?
 					  if command
-						 @message = event.message.gsub(/!?#{command}/, '').strip
+						 @message = event.message.sub(/^!?#{command}/, '').strip
 						 @command = command
 					  else
 						 @message = event.message
