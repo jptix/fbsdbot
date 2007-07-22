@@ -7,7 +7,7 @@
 FBSDBot::Plugin.define "rss" do
    author "jp_tix"
    version "0.0.3"
-   commands %w{subscribe unsubscribe rssfilter rssrefresh rsslist}
+   commands %w{rss}
 
    require "net/http"
    require 'rss'
@@ -54,17 +54,17 @@ FBSDBot::Plugin.define "rss" do
          class Item
             attr_accessor :read
 
-
             def initialize(channel, item)
-               @channel = channel
-               @item = item
+               @channel, @item = channel, item
                @read = false
+               # hashing is case insensitive for the URL's protocol and domain.
+               link = @item.link.sub(%r{^(.+?)://(.+?)(/.*)}) { $1.downcase + '://' + $2.downcase + $3  }
                if @item.pubDate.nil?
-                  @sha1 = Digest::SHA1.hexdigest(@item.link + @item.description.to_s)
+                  @sha1 = Digest::SHA1.hexdigest(link + @item.description.to_s)
                elsif @item.link.nil?
                   @sha1 = Digest::SHA1.hexdigest(@item.description.to_s + @item.pubDate.to_s)
                else
-                  @sha1 = Digest::SHA1.hexdigest(@item.link + @item.pubDate.to_s)
+                  @sha1 = Digest::SHA1.hexdigest(link + @item.pubDate.to_s)
                end
             end
 
@@ -108,10 +108,9 @@ FBSDBot::Plugin.define "rss" do
          def initialize(url, last_checked = '', read_guids = [], filters = [])
             puts "Adding feed #{url}"
             @url = URI.parse(url)
+            @last_checked, @filters = last_checked, filters
             @title = ''
-            @last_checked = last_checked
             @unread = []
-            @filters = filters
             read_guids.nil? ? @read_guids = [] : @read_guids = read_guids
             @first_check = true
             check
@@ -138,10 +137,12 @@ FBSDBot::Plugin.define "rss" do
                @unread = items
                @first_check = false
             rescue # trying this to rescue "Operation timed out - connect(2)"
-               puts "#{$!.message}\n#{$!.backtrace.join("\n")}"
-               retry
+               $stderr.puts "#{$!.message}\n#{$!.backtrace.join("\n")}"
+               # retry
             end
          end
+
+
 
          def title
             @title.nil? ? @url.to_s : @title
@@ -275,7 +276,12 @@ FBSDBot::Plugin.define "rss" do
                   feed_refresh = @refresh / @feeds.size if @feeds.size > 0
                   @feeds.each do |feed|
                      puts "===> #{feed.url} (@ #{Time.now})"
-                     feed.check
+                     begin
+                        feed.check
+                     rescue
+                        $stderr.puts "ERROR: #{$!.message} - #{$!.backtrace[0]}"
+                        next
+                     end
                      feed.unread.each do |item|
                         puts "=======> #{item.title} "
                         action.send_message(item.summary, action.channel)
