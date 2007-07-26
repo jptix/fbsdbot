@@ -179,7 +179,7 @@ FBSDBot::Plugin.define "rss" do
             action.reply "No matching feeds found."
             return
          end
-         regexp = Regexp.new(filter, true)
+         regexp = Regexp.new(filter, Regexp::MULTILINE+Regexp::IGNORECASE, 'u')
          urls = {:saved => [], :added => []}
          feeds.each do |f|
             url = f.url.to_s.gsub("http://", '')
@@ -190,7 +190,7 @@ FBSDBot::Plugin.define "rss" do
                urls[:added] << url
             end
          end
-         action.reply "Added filter #{regexp} to #{urls[:added].join(" %r|%n ")}" unless urls[:added].empty?
+         action.reply "Added filter #{regexp.inspect} to #{urls[:added].join(" %r|%n ")}" unless urls[:added].empty?
          action.reply "Filter already saved for #{urls[:saved].join(" %r|%n ")}" unless urls[:saved].empty?
       end
 
@@ -250,7 +250,7 @@ FBSDBot::Plugin.define "rss" do
          old_feeds = @feeds.dup
          @feeds.reject! do |feed|
             feed = feed.url.to_s
-            true if feed == url_or_regexp or feed =~ Regexp.new(url_or_regexp, Regexp::MULTILINE+Regexp::IGNORECASE, 'u')
+            true if feed == url_or_regexp or feed =~ Regexp.new(url_or_regexp)
          end
          return old_feeds - @feeds
       end
