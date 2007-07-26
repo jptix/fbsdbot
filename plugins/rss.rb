@@ -208,7 +208,7 @@ FBSDBot::Plugin.define "rss" do
                f.filters = []
                result = "all filters"
             else
-               result = filter if f.filters.reject! { |f| f.to_s == filter or f == Regexp.new(filter, true) }
+               result = filter if f.filters.reject! { |f| f.inspect == filter or f == Regexp.new(filter, true) }
             end
             if result
                urls[:deleted] << url
