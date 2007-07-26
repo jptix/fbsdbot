@@ -250,7 +250,7 @@ FBSDBot::Plugin.define "rss" do
          old_feeds = @feeds.dup
          @feeds.reject! do |feed|
             feed = feed.url.to_s
-            true if feed == url_or_regexp or feed =~ Regexp.new(url_or_regexp, true)
+            true if feed == url_or_regexp or feed =~ Regexp.new(url_or_regexp, Regexp::MULTILINE+Regexp::IGNORECASE, 'u')
          end
          return old_feeds - @feeds
       end
