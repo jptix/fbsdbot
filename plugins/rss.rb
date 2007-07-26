@@ -58,7 +58,7 @@ FBSDBot::Plugin.define "rss" do
                @channel, @item = channel, item
                @read = false
                # hashing is case insensitive for the URL's protocol and domain.
-               link = @item.link.sub(%r{^(.+?)://(.+?)(/.*)}) { $1.downcase + '://' + $2.downcase + $3  }
+               link = @item.link.to_s.sub(%r{^(.+?)://(.+?)(/.*)}) { $1.downcase + '://' + $2.downcase + $3  }
                if @item.pubDate.nil?
                   @sha1 = Digest::SHA1.hexdigest(link + @item.description.to_s)
                elsif @item.link.nil?
@@ -136,9 +136,8 @@ FBSDBot::Plugin.define "rss" do
                items = items.select { |item| @filters.any? { |f| f =~ item.summary } } unless @filters.empty? 
                @unread = items
                @first_check = false
-            rescue # trying this to rescue "Operation timed out - connect(2)"
-               $stderr.puts "#{$!.message}\n#{$!.backtrace.join("\n")}"
-               # retry
+            rescue 
+               $stderr.puts "ERROR: #{$!.message}\n#{$!.backtrace[0]}"
             end
          end
 
@@ -233,14 +232,18 @@ FBSDBot::Plugin.define "rss" do
             action.reply "No matching feeds found."
             return
          end
-         feeds.each do |f|
+          
+          not_filtered = []
+          feeds.each do |f|
             url = f.url.to_s.gsub("http://", '')
             if f.filters.empty?
-               action.reply "No active filtering for #{url}"
+               not_filtered << f.title
             else
-               action.reply "Active filters for #{url}: #{f.filters.join(' ')}"
+               filter_list = f.filters.map { |filter| filter.inspect }
+               action.reply "Active filters for #{f.title}: #{filter_list.join(' %r|%n ')}"
             end
          end
+         action.reply "Not filtered: " + not_filtered.join(' %r|%n ') unless not_filtered.empty?
       end
 
       def unsubscribe(url_or_regexp)
