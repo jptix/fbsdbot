@@ -362,7 +362,7 @@ FBSDBot::Plugin.define "rss" do
          @reader.refresh = period
          action.reply "RSS refresh period set to #{period} seconds."
       else
-         action.reply "Please provide a refresh period in seconds."
+         action.reply "Please provide a refresh period in seconds (current refresh: #{@reader.refresh} seconds)."
       end
    end
 
