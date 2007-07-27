@@ -137,7 +137,7 @@ FBSDBot::Plugin.define "rss" do
                @unread = items
                @first_check = false
             rescue 
-               $stderr.puts "ERROR: #{$!.message}\n#{$!.backtrace[0]}"
+               $stderr.puts "ERROR: #{$!.message}\n#{$!.backtrace.join("\n")}"
             end
          end
 
@@ -250,7 +250,7 @@ FBSDBot::Plugin.define "rss" do
          old_feeds = @feeds.dup
          @feeds.reject! do |feed|
             feed = feed.url.to_s
-            true if feed == url_or_regexp or feed =~ Regexp.new(url_or_regexp)
+            true if feed == url_or_regexp or feed =~ Regexp.new(url_or_regexp, true)
          end
          return old_feeds - @feeds
       end
@@ -267,7 +267,7 @@ FBSDBot::Plugin.define "rss" do
          open(filename, "w") { |io| Marshal.dump(@feeds, io)  } unless @feeds.nil?
       end
 
-      def run(action, filename = 'rss.yaml', refresh = 30*60)
+      def run(action, filename = 'rss.dump', refresh = 30*60)
          @action = action
          @refresh = refresh
          Thread.new do
@@ -282,7 +282,7 @@ FBSDBot::Plugin.define "rss" do
                      begin
                         feed.check
                      rescue
-                        $stderr.puts "ERROR: #{$!.message} - #{$!.backtrace[0]}"
+                        $stderr.puts "ERROR: #{$!.message} - #{$!.backtrace.join("\n")}"
                         next
                      end
                      feed.unread.each do |item|
@@ -297,8 +297,7 @@ FBSDBot::Plugin.define "rss" do
                   sleep(@refresh) unless @feeds.size > 0
                end
             rescue
-               puts $!.message
-               puts $!.backtrace.join("\n")
+               $stderr.puts "#{$!.message}\n#{$!.backtrace.join("\n")}"
             end
          end
       end
