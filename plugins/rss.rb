@@ -257,14 +257,14 @@ FBSDBot::Plugin.define "rss" do
 
       def load(filename)
          if File.exist?(filename)
-            @feeds = open(filename) { |io| yml = YAML.load(io); yml.map { |feed| Feed.new(feed['url'], feed['last_checked'], feed['read_guids'], feed['filters']) } if yml }
+            @feeds = open(filename, 'r') { |io| Marshal.load(io) }
          else
             @feeds = []
          end
       end
 
       def save(filename)
-         open(filename, "w") { |io| YAML.dump(@feeds.map { |feed| feed.save }, io)  } unless @feeds.nil?
+         open(filename, "w") { |io| Marshal.dump(@feeds, io)  } unless @feeds.nil?
       end
 
       def run(action, filename = 'rss.yaml', refresh = 30*60)
@@ -308,7 +308,7 @@ FBSDBot::Plugin.define "rss" do
 
    @reader   = RSSReader.new
    @started  = false
-   @filename = $botdir + 'rss.yaml'
+   @filename = $botdir + 'rss.dump'
    @help     = "!rss [subscribe|unsubscribe|refresh|list|filter] %r|%n !rss filter [add|del|list]"
 
    def on_join(action)
