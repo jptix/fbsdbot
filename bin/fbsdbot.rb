@@ -72,7 +72,7 @@ module FBSDBot
 			private
       def load_plugins
         require 'lib/corecommands.rb'
-        (Dir.entries($botdir + 'plugins-active') - ['.', '..']).each { |file| require 'plugins-active/' + file }
+        (Dir.entries($botdir + 'plugins-active') - ['.', '..']).each { |file| require 'plugins-active/' + file } if File.exists?('plugins-active')
         puts "Loaded plugins: "
         FBSDBot::Plugin.list_plugins
         FBSDBot::Plugin.registered_plugins.each do |ident,p|
