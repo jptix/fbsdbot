@@ -31,20 +31,18 @@ module FBSDBot
     def run
       $stdout.sync = true
       print "Connecting to #{@config['host']}:#{@config['port']}.."
-      @irc = IRC.new(@nick, @host, @port, @ircname )
-      IRCEvent.add_callback('nicknameinuse') {|event|	@irc.ch_nick( FBSDBot::Helpers::NickObfusicator.run(@irc.nick) ) }
-      # FIRST EVENT
-      IRCEvent.add_callback('endofmotd') do |event|
+      @irc = IRC::Connection.new(@nick, @host, :port => @port, :real_name => @ircname )
+      @irc.add_callback(:nickname_in_use) {|event|	@irc.ch_nick( FBSDBot::Helpers::NickObfusicator.run(@irc.nick) ) }
+      @irc.add_callback(:end_of_motd) do |event|
         puts "connected!"
         @config['channels'].each do |ch|
-          @irc.add_channel(ch)
+          @irc.join_channel(ch)
           puts "Joined channel: #{ch}"
         end
       end
       $stdout.sync = false
 
-      # MESSAGES
-      IRCEvent.add_callback('privmsg') do |event|
+      @irc.add_callback(:private_message) do |event|
         if event.message[0] == 001
           action = Action.new(@irc,@auth,event)
           FBSDBot::Plugin.find_plugins("on_ctcp_#{action.message}".to_sym, action)
@@ -59,14 +57,12 @@ module FBSDBot
       end
 
 
-      # JOIN
-      IRCEvent.add_callback('join') {|event| FBSDBot::Plugin.find_plugins(:on_join, Action.new(@irc, @auth, event)) }
-      # PART
-      IRCEvent.add_callback('part') {|event| FBSDBot::Plugin.find_plugins(:on_part, Action.new(@irc, @auth, event)) }
-      # QUIT
-      IRCEvent.add_callback('quit') {|event| FBSDBot::Plugin.find_plugins(:on_quit, Action.new(@irc, @auth, event)) }
+      @irc.add_callback(:join) {|event| FBSDBot::Plugin.find_plugins(:on_join, Action.new(@irc, @auth, event)) }
+      @irc.add_callback(:part) {|event| FBSDBot::Plugin.find_plugins(:on_part, Action.new(@irc, @auth, event)) }
+      @irc.add_callback(:quit) {|event| FBSDBot::Plugin.find_plugins(:on_quit, Action.new(@irc, @auth, event)) }
 
       @irc.connect
+      @irc.join
     end
 
     private

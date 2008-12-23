@@ -13,13 +13,13 @@ require 'optparse'
 
 # GEMS
 require 'rubygems'
-require 'IRC'
 require 'active_record'
-require 'lib/models.rb'
-require 'lib/modules.rb'
-require 'lib/hooks.rb'
+require "lib/action"
+require 'lib/models'
+require 'lib/modules'
+require 'lib/hooks'
 #require my_path + '/pluginbase.rb'
-require 'lib/auth.rb'
+require 'lib/auth'
 require "lib/irc/connection"
 
 # Default Options

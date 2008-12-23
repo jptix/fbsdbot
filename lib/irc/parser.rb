@@ -2,41 +2,84 @@ module FBSDBot
   module IRC
     class Parser
       
+      User = Struct.new(:nick, :hostmask)
+      
+      # messy!
       def parse_line(line)
-        match, from, type, to, msg = *line.match(%r{(\S+?) ([A-Z0-9]+) (\w+) :(.+)})
-        
-        unless match
-          return puts("could not parse #{line.inspect}")
+        case line
+        when %r{(:\S+)? ([A-Z0-9 ]+?)( [#\w ]+? )?:(.+)}
+          _, from, type, to, msg = *$~
+        else
+          $stderr.puts "can't parse #{line.inspect}"
         end
+        
+        p :capts => $~.captures if $~
+        
+        type = type.to_s.strip
+        event = Event.new
         
         case type
         when 'PRIVMSG'
-          return privmsg(from, to, msg)
+          parse_privmsg(event, msg)
+        when 'JOIN'
+          event.type = :join
+        when 'PART'
+          event.type = :part
+        when 'QUIT'
+          event.type = :quit
+        when 'PING'
+          event.type = :ping
+        when '376'
+          event.type = :end_of_motd
         else
-          puts("unknown type #{type}")
+          puts(err = "unknown event type #{type.inspect} for #{line.inspect}")
+          event.type = type.downcase    
         end
         
-        return nil
+        event.user = from
+        event.to = to
+        
+        event
       end
       
       private
       
-      def privmsg(from, to, msg)
+      
+      def parse_privmsg(event, msg)
         case msg
         when /\x01(.+?)\x01/
-          ctcp($1, from, to)
+          parse_ctcp($1, event, msg)
         else
-          [:private_message, from, to, msg]
+          event.type = :private_message
+          event.message = msg
         end
       end
       
-      def ctcp(type, from, to)
+      def parse_ctcp(type, event, msg)
         case type
         when 'VERSION'
-          [:ctcp_version, from, to]
+          event.type = :ctcp_version
+        when 'PING'
+          event.type = :ctcp_ping
+        when 'CLIENTINFO'
+          event.type =:ctcp_clientinfo
+        when 'ACTION'
+          event.type =:ctcp_action
+        when 'FINGER'
+          event.type =:ctcp_finger
+        when 'TIME'
+          event.type =:ctcp_time
+        when 'DCC'
+          event.type =:ctcp_dcc
+        when 'ERRMSG'
+          event.type =:ctcp_errmsg
+        when 'PLAY'
+          event.type =:ctcp_play
         else
           puts "unknown ctcp type #{type.inspect}"
+          event.type =:ctcp
         end
+            
       end
       
     end

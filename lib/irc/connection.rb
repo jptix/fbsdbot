@@ -1,10 +1,11 @@
 require "#{File.dirname(__FILE__)}/socket"
 require "#{File.dirname(__FILE__)}/parser"
+require "#{File.dirname(__FILE__)}/event"
 
 module FBSDBot
   module IRC
     class Connection
-      attr_reader :socket
+      attr_reader :socket, :nick, :server
       attr_accessor :delegate
 
       DefaultOptions = {
@@ -12,9 +13,6 @@ module FBSDBot
         :real_name        => 'FBSDBot',
         :server_password  => nil
       }
-      
-      # a list of callbacks
-      Callbacks = [ :disconnect, :raw_message, :private_message  ]
       
       def initialize(nick, server, options = {})
         options = DefaultOptions.merge(options)
@@ -29,6 +27,7 @@ module FBSDBot
         @server_password = options.delete :server_password
         
         @socket = Socket.new(@server, options)
+        @socket.log_out = $stderr if $DEBUG
         
         @callbacks = Hash.new { |h, k| h[k] = [] }
         @threads = []
@@ -49,46 +48,55 @@ module FBSDBot
         @callbacks[symbol] << block
       end
 
-      # perhaps remove callback code entirely and base everything on delegates?
-      #
-      # # adding a delegate currently removes all previously added callbacks,
-      # # so you're forced to choose either a delegate or a callback approach
-      # #  
-      # def delegate=(obj)
-      #   @callbacks.clear
-      #   
-      #   Callbacks.each do |sym|
-      #     meth = "on_#{sym}"
-      #     
-      #     if obj.respond_to?(meth)
-      #       @callbacks[sym] << lambda { |*args| @delegate.send(meth, self, *args)}
-      #     end
-      #   end
-      #   
-      #   @callbacks.keys
-      # end
+      def join_channel(channel)
+        channel = "\##{channel}" unless channel[/^#/]
+        @socket.send_join(channel)
+      end
+      
+      def send_message(recipient, message)
+        @socket.send_privmsg(message, recipient)
+      end
       
       private
+      
+      def execute_callbacks(event)
+        p :event => event
+        cbs = @callbacks[type = event.type]
+        missing_callback(type, event) if cbs.empty?
+        cbs.each { |cb| cb.call(event) }
+        
+        if @delegate
+          @delegate.send("on_#{event.type}", self, event)
+        end
+      end
       
       def read_loop
         while line = @socket.read
           parse_line line
         end
         
-        @callbacks[:disconnect].each { |cb| cb.call }
+        e = Event.new(:disconnect)
+        e.message = "connection closed"
+        
+        execute_callbacks(e)
       end
       
       def parse_line(line)
         @callbacks[:raw_message].each { |cb| cb.call(line) }
-        sym, *args = @parser.parse_line(line)
-        
-        p :got => sym
-        if cbs = @callbacks[sym]
-          cbs.each { |cb| cb.call(*args) }
+        e = @parser.parse_line(line)
+        if e.is_a?(Event)
+          execute_callbacks(e)
+        else
+          puts "could not parse #{line}"
         end
       end
       
-      
+      def missing_callback(event_type, event)
+        case event_type
+        when :ping
+          @socket.send_pong(event.message)
+        end
+      end
       
     end
   end
