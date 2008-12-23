@@ -20,6 +20,7 @@ require 'lib/modules.rb'
 require 'lib/hooks.rb'
 #require my_path + '/pluginbase.rb'
 require 'lib/auth.rb'
+require "lib/irc/connection"
 
 # Default Options
 #options = OpenStruct.new
