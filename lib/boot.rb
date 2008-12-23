@@ -37,14 +37,14 @@ require 'lib/auth.rb'
 #end
 
 if ARGV.size > 0
-   config_file = File.expand_path(ARGF.file.path) 
+  config_file = File.expand_path(ARGF.file.path)
 else
-   config_file = $botdir + 'bin/bot.conf'
+  config_file = $botdir + 'bin/bot.conf'
 end
 
 unless File.exists?( config_file )
-   puts "Please create a config-file (YAML syntax) and put it in #{config_file}"
-   exit 1
+  puts "Please create a config-file (YAML syntax) and put it in #{config_file}"
+  exit 1
 end
 
 
