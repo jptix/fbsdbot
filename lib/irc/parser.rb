@@ -1,45 +1,26 @@
+require "#{File.dirname(__FILE__)}/irc_nodes"
+Treetop.load File.dirname(__FILE__) + "/irc.treetop"
+
+
 module FBSDBot
   module IRC
     class Parser
       
       User = Struct.new(:nick, :hostmask)
+
+      def initialize
+        @parser = IRCParser.new
+      end
       
       # messy!
       def parse_line(line)
-        case line
-        when %r{(:\S+)? ([A-Z0-9 ]+?)( [#\w ]+? )?:(.+)}
-          _, from, type, to, msg = *$~
-        else
-          $stderr.puts "can't parse #{line.inspect}"
+        result = @parser.parse(line)
+        unless result
+          debugger
+          puts "couldn't parse line #{line.inspect}"
         end
         
-        p :capts => $~.captures if $~
-        
-        type = type.to_s.strip
-        event = Event.new
-        
-        case type
-        when 'PRIVMSG'
-          parse_privmsg(event, msg)
-        when 'JOIN'
-          event.type = :join
-        when 'PART'
-          event.type = :part
-        when 'QUIT'
-          event.type = :quit
-        when 'PING'
-          event.type = :ping
-        when '376'
-          event.type = :end_of_motd
-        else
-          puts(err = "unknown event type #{type.inspect} for #{line.inspect}")
-          event.type = type.downcase    
-        end
-        
-        event.user = from
-        event.to = to
-        
-        event
+        result.value if result
       end
       
       private

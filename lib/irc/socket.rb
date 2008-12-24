@@ -128,12 +128,13 @@ module FBSDBot
         @connected = true
       end
 
-      # get next message (eol already chomped) from server, blocking, returns nil if closed
+      # get next message from server, blocking, returns nil if closed
       def read
         if m = @socket.gets(@eol) then
           @count[:read_lines] += 1
           @count[:read_bytes] += m.size
-          m.chomp(@eol)
+          # m.chomp(@eol)
+          m
         else
           @connected = false
           nil

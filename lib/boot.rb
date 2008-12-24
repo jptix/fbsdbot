@@ -14,6 +14,9 @@ require 'optparse'
 # GEMS
 require 'rubygems'
 require 'active_record'
+require "treetop"
+require "ruby-debug"
+
 require "lib/action"
 require 'lib/models'
 require 'lib/modules'

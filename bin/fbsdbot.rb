@@ -30,11 +30,9 @@ module FBSDBot
 
     def run
       $stdout.sync = true
-      print "Connecting to #{@config['host']}:#{@config['port']}.."
       @irc = IRC::Connection.new(@nick, @host, :port => @port, :real_name => @ircname )
       @irc.add_callback(:nickname_in_use) {|event|	@irc.ch_nick( FBSDBot::Helpers::NickObfusicator.run(@irc.nick) ) }
       @irc.add_callback(:end_of_motd) do |event|
-        puts "connected!"
         @config['channels'].each do |ch|
           @irc.join_channel(ch)
           puts "Joined channel: #{ch}"
