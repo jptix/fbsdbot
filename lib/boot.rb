@@ -21,7 +21,7 @@ require "lib/action"
 require 'lib/models'
 require 'lib/modules'
 require 'lib/hooks'
-#require my_path + '/pluginbase.rb'
+#require my_path + '/pluginbase'
 require 'lib/auth'
 require "lib/irc/connection"
 

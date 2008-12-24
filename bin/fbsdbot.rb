@@ -2,7 +2,7 @@
 
 $botdir = File.expand_path(File.dirname(__FILE__) + '/..') + '/'
 $LOAD_PATH << $botdir
-require 'lib/boot.rb'
+require 'lib/boot'
 
 
 module FBSDBot
@@ -65,7 +65,7 @@ module FBSDBot
 
     private
     def load_plugins
-      require 'lib/corecommands.rb'
+      require 'lib/corecommands'
       (Dir.entries($botdir + 'plugins-active') - ['.', '..']).each { |file| require 'plugins-active/' + file } if File.exists?('plugins-active')
       puts "Loaded plugins: "
       FBSDBot::Plugin.list_plugins
