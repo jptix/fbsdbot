@@ -149,6 +149,7 @@ module FBSDBot
       # you from several tasks like translating newlines, take care of overlength
       # messages etc.
       def write_with_eol(data)
+        p :writing => data
         @mutex.synchronize {
           warn("Raw too long (#{data.length} instead of #{@limit[:raw_length]})") if (data.length > @limit[:raw_length])
           now = Time.now

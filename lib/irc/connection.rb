@@ -57,6 +57,10 @@ module FBSDBot
         @socket.send_privmsg(message, recipient)
       end
       
+      def send_notice(recipient, notice)
+        @socket.send_notice(notice, recipient)
+      end
+      
       private
       
       def execute_callbacks(event)

@@ -13,6 +13,7 @@ module FBSDBot
       end
       
       def parse_line(line)
+        p :incoming => line
         result = @parser.parse(line)
         
         if result
@@ -29,7 +30,7 @@ module FBSDBot
         when 'PRIVMSG'
           parse_privmsg(hash)
         when 'PING'
-          Event.new(:ping, :from => hash[:prefix])
+          Event.new(:ping, :from => hash[:prefix], :message => hash[:params][:message])
         when '376'
           Event.new(:end_of_motd)
         else
@@ -44,9 +45,9 @@ module FBSDBot
         when /\x01(.+?)\x01/
           parse_ctcp($1, event, hash[:params])
         else
-          event.type = :private_message
-          event.message = hash[:params]
-          event.from = hash[:prefix]
+          event.type    = :private_message
+          event.params  = hash[:params]
+          event.sender  = hash[:prefix]
         end
         
         event

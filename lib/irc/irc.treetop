@@ -59,13 +59,7 @@ grammar IRC
     end
 
     rule params
-        space receiver:(target space)? msg:( ':' trailing / middle params ) {
-            def value
-                r = {:message => msg.trailing.text_value}
-                r[:to] = receiver.target.to.text_value if respond_to?(:receiver)
-                r
-            end
-        }
+        space receiver:(target space)? msg:( ':' trailing / middle params ) <ParamsNode>
     end
     
     rule target
