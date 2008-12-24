@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require File.dirname(__FILE__) + '/../lib/boot.rb'
+require File.dirname(__FILE__) + '/../lib/boot'
 $plugins_active = File.dirname(__FILE__) + '/../plugins-active/'
 $: << $plugins_active
 
@@ -65,7 +65,7 @@ module FBSDBot
       
 			private
       def load_plugins
-        require File.dirname(__FILE__) + '/../lib/corecommands.rb'
+        require File.dirname(__FILE__) + '/../lib/corecommands'
         Dir.entries($plugins_active).each { |file| require file unless ['.', '..'].include?(file) }
       end
       
