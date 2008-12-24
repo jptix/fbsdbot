@@ -4,6 +4,8 @@ REQUESTS:
 
 TODO:
 
+* Refactor Action/Event stuff. Can probably remove the Action class now when we have control over the Event class and can add Event#reply() directly.
+* Move to a more typical ruby project layout, get rid of require/File.dirname(__FILE__) chaos.
 * Make bot FiSH ( http://fish.sekure.us ) -Compatible so users can use bot securely.
 * Plugins should have an easy way to check if the user has special privileges.
 
