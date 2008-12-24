@@ -12,28 +12,44 @@ module FBSDBot
         @parser = IRCParser.new
       end
       
-      # messy!
       def parse_line(line)
         result = @parser.parse(line)
-        unless result
-          debugger
-          puts "couldn't parse line #{line.inspect}"
-        end
         
-        result.value if result
+        if result
+          hash_to_event(result.value)
+        else
+          puts "ignoring: #{line.inspect}"
+        end
       end
       
       private
       
+      def hash_to_event(hash)
+        case hash[:command]
+        when 'PRIVMSG'
+          parse_privmsg(hash)
+        when 'PING'
+          Event.new(:ping, :from => hash[:prefix])
+        when '376'
+          Event.new(:end_of_motd)
+        else
+          "unknown event for #{hash.inspect}"
+        end
+      end
       
-      def parse_privmsg(event, msg)
-        case msg
+      def parse_privmsg(hash)
+        event = Event.new(:private_message, :from => hash[:prefix])
+        
+        case hash[:params]
         when /\x01(.+?)\x01/
-          parse_ctcp($1, event, msg)
+          parse_ctcp($1, event, hash[:params])
         else
           event.type = :private_message
-          event.message = msg
+          event.message = hash[:params]
+          event.from = hash[:prefix]
         end
+        
+        event
       end
       
       def parse_ctcp(type, event, msg)

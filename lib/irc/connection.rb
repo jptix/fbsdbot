@@ -87,7 +87,7 @@ module FBSDBot
         if e.is_a?(Event)
           execute_callbacks(e)
         else
-          puts "could not parse #{line}"
+          puts "no event for #{line}"
         end
       end
       

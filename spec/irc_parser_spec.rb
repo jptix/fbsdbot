@@ -1,10 +1,11 @@
 require "rubygems"
 require "spec"
 require "treetop"
+require "ruby-debug"
 require "#{File.dirname(__FILE__)}/../lib/irc/parser"
 
 
-describe "IRCParser" do
+describe "Treetop IRCParser" do
   before(:all) do
     @parser = IRCParser.new
   end
@@ -27,6 +28,14 @@ describe "IRCParser" do
     val[:prefix][:user].should == "freenode"
     val[:prefix][:host].should == "freenode/bot/connect"
     val[:command].should == "PRIVMSG"
+    val[:params][:to].should == 'utf82bot'
+    val[:params][:message].should == 'hello'
+  end
+  
+  it "should parse a channel message" do
+    result = parse(":freenode-connect!freenode@freenode/bot/connect PRIVMSG #freebsd.no :hello\r\n")
+    val    = result.value
+    val[:params][:to].should == '#freebsd.no'
   end
   
   it "should parse notices" do

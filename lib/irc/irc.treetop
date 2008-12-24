@@ -59,9 +59,35 @@ grammar IRC
     end
 
     rule params
-        space ( ':' trailing / middle params )
+        space receiver:(target space)? msg:( ':' trailing / middle params ) {
+            def value
+                r = {:message => msg.trailing.text_value}
+                r[:to] = receiver.target.to.text_value if respond_to?(:receiver)
+                r
+            end
+        }
     end
-
+    
+    rule target
+        to (',' target)*
+    end
+    
+    rule to
+        channel / user '@' host / nick / mask
+    end
+    
+    rule channel
+        ('#' / '&') chstring
+    end
+    
+    rule mask
+        ('#' / '$') chstring        
+    end
+    
+    rule chstring
+        [^ \7\0\r\n,]+
+    end
+    
     rule number
         digit+
     end

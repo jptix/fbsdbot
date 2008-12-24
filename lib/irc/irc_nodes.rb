@@ -2,7 +2,8 @@ class MessageNode < Treetop::Runtime::SyntaxNode
   
   def value
     r = { :command => command.text_value,
-         :params  => params.text_value }
+          :params  => params.value
+        }
     r[:prefix] = pre.prefix.value if pre.respond_to?(:prefix)
     r
   end

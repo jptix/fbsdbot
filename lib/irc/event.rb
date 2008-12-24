@@ -9,9 +9,10 @@ module FBSDBot
       :private_message => 'privmsg'
     }
     
-    def initialize(type = nil, msg = nil)
+    def initialize(type = nil, opts = {})
       @type = type
-      @message = msg
+      @message = opts.delete(:message)
+      @from = opts.delete(:from)
     end
     
     def user=(user)
