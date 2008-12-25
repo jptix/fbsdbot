@@ -430,6 +430,10 @@ module FBSDBot
         log :error, msg
       end
       
+      def warn(msg)
+        log :warn, msg
+      end
+      
       def log(type, msg)
         puts "#{Time.now} :: #{type} - #{msg}"
       end
