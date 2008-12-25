@@ -12,15 +12,21 @@ module FBSDBot
     }
     
     def initialize(type = nil, opts = {})
-      @type    = type
-      @message = opts.delete(:message)
-      @from    = opts.delete(:from)
+      @type       = type
+      @message    = opts.delete(:message)
+      @from       = opts.delete(:from)
+      self.sender = opts.delete(:sender) if opts.has_key?(:sender)
+      self.params = opts.delete(:params) if opts.has_key?(:params)
     end
 
-    def params=(hash)
-      @params  = hash
-      @message = hash[:message]
-      @channel = hash[:to]
+    def params=(input)
+      if input.is_a? Hash
+        @params  = input
+        @message = input[:message]
+        @channel = input[:to]
+      else
+        @params = input
+      end
     end
     
     def sender=(hash)

@@ -1,5 +1,4 @@
-require "#{File.dirname(__FILE__)}/../lib/irc/event"
-include FBSDBot
+require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "Event" do
   it "sets the 'message' and 'channel' attributes when the params hash is set" do
