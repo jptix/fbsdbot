@@ -12,8 +12,8 @@ EventMachine::run {
       :realname => "FBSDBot", 
       :username => "db")
       
-  irc.callback {|message|
-    puts "got a message from server: #{message}"
+  irc.callback {|data|
+    puts "got a message from server: #{data[:message]}"
   }
   
 }

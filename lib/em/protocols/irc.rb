@@ -36,16 +36,17 @@ module EventMachine
         data.each_line(EOL) do |line|
           line =~ EXP_EOL ? dispatch(line) : @buffer << line
         end
-        p :buffer => @buffer
+        #p :buffer => @buffer
       end
 
       def dispatch(line)
-        if @buffer.empty?
-          p :dispatch => line
-        else
-          p :dispatch => "#{@buffer}#{line}"
-          @buffer = ""
-        end
+        client_out = @buffer.empty? ? line : @buffer + line
+        @buffer = "" # important, reset buffer!
+        
+        #p :dispatch => client_out
+        
+        # generate a callback with message
+        succeed(:message => client_out)
       end
 
       
