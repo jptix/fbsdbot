@@ -11,17 +11,19 @@ require 'yaml'
 
 # GEMS
 require 'rubygems'
-require 'active_record'
+#require 'active_record'
 require "treetop"
 require "ruby-debug"
+require "eventmachine"
 
 require "lib/action"
-require 'lib/models'
+#require 'lib/models'
 require 'lib/modules'
 require 'lib/hooks'
 #require 'lib/pluginbase'
 require 'lib/auth'
-require "lib/irc/connection"
+#require "lib/irc/connection"
+require 'lib/em/protocols/irc'
 
 config_file = (ARGV.size > 0) ? File.expand_path(ARGF.file.path) : $botdir + 'bin/bot.conf'
 
@@ -34,7 +36,7 @@ end
 $config = YAML.load( File.open(config_file) )
 puts "Loaded config."
 
-ActiveRecord::Base.establish_connection({
-  :adapter => 'sqlite3',
-  :dbfile => $botdir + 'bin/fbsdbot.db',
-})
+#ActiveRecord::Base.establish_connection({
+#  :adapter => 'sqlite3',
+#  :dbfile => $botdir + 'bin/fbsdbot.db',
+#})
