@@ -5,6 +5,8 @@ module EventMachine
 
       MaxRawLength = 400
       MaxMsgLength = 300
+      
+      EOL = "\r\n"
 
       def self.connect(args = {})
         args[:port] ||= 6667
@@ -15,7 +17,7 @@ module EventMachine
       
       def post_init
         @start_time = Time.now
-        @message = ""
+        @buffer = ""
       end
       
       def connection_completed
@@ -30,36 +32,21 @@ module EventMachine
       end
       
       def receive_data(data)
-        # check if we where given more than one line
-        lines = data.split("\r\n")
-        
-        if lines.empty?
-          #single newline char given, this must be handled!
-          @message << data
-        else
-          lines.each do |line|
-            case line.object_id
-              when lines.first.object_id
-                @message << line
-                puts "First part of array, buffering with last: '#{@message}'"
-                @message = ""
-              when lines.last.object_id
-                unless data[-2].chr == "\r" && data[-1].chr == "\n"
-                  puts "Last part of array, no newline: '#{line}'"
-                  @message = line
-                else
-                  puts "Last part of array, with newline: #{line}"
-                  @message = ""
-                end
-              else
-                puts "Array elem: #{line}"
-                @message = ""
-            end
-          end
+        data.each_line(EOL) do |line|
+          line[/#{EOL}$/] ? dispatch(line) : @buffer << line
         end
-        
-#        dispatch
+        p :buffer => @buffer
       end
+
+      def dispatch(line)
+        if @buffer.empty?
+          p :dispatch => line
+        else
+          p :dispatch => "#{@buffer}#{line}"
+          @buffer = ""
+        end
+      end
+
       
       def unbind
         puts "connection to #{@args[:host]}:#{@args[:port]} died"
