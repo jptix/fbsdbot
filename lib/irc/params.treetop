@@ -32,11 +32,11 @@ grammar Params
   end
   
   rule hostname
-    !digit cloak !"." / shortname ("." shortname)*
+     cloak !"." / shortname ("." shortname)*
   end
   
   rule cloak
-    (letter / "/")*
+    (letter / "/")+
   end
   
   rule shortname
