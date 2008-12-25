@@ -7,7 +7,7 @@ module EventMachine
       MaxMsgLength = 300
       
       EOL    = "\r\n"
-      EOL_RX = /#{EOL}$/
+      EXP_EOL = /#{EOL}$/
 
       def self.connect(args = {})
         args[:port] ||= 6667
@@ -34,7 +34,7 @@ module EventMachine
       
       def receive_data(data)
         data.each_line(EOL) do |line|
-          line =~ EOL_RX ? dispatch(line) : @buffer << line
+          line =~ EXP_EOL ? dispatch(line) : @buffer << line
         end
         p :buffer => @buffer
       end
