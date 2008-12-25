@@ -64,6 +64,10 @@ describe "Treetop IRCParser" do
     result = parse(":jptix!i=markus@81.167.229.37 PRIVMSG #bot-test.no :!uptime\r\n")
   end
   
+  it "should prase a PING request" do
+    result = parse("PING :irc.homelien.no\r\n")
+  end
+  
 end
 
 

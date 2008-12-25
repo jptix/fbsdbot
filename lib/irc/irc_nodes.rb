@@ -56,6 +56,6 @@ class ParamsNode < Treetop::Runtime::SyntaxNode
       :message => trail.trailing.text_value,
     }
   rescue
-    text_value
+    text_value.strip
   end
 end

@@ -32,11 +32,15 @@ module FBSDBot
         when 'PRIVMSG'
           parse_privmsg(hash)
         when 'PING'
-          Event.new(:ping, :from => hash[:prefix], :message => hash[:params][:message])
+          Event.new(:ping, :from => hash[:prefix], :message => hash[:params][1..-1])
+        when 'JOIN'
+          Event.new(:join, :sender => hash[:prefix])
         when '376'
           Event.new(:end_of_motd)
+        when '353'
+          Event.new(:names_reply, :message => hash[:params][:message])
         else
-          "unknown event for #{hash.inspect}"
+          puts "unknown event for #{hash.inspect}"
         end
       end
       
