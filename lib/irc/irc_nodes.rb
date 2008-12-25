@@ -59,7 +59,7 @@ class PrivMsgNode < Treetop::Runtime::SyntaxNode
   def value
     {
       :to => msgto.text_value,
-      :message => trailing.text_value
+      :message => msg.text_value
     }
   end
 end

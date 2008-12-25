@@ -1,9 +1,5 @@
 puts "Starting bot..."
 
-# UTF-8
-$KCODE = 'u'
-require 'jcode'
-
 # CORE
 require 'digest/sha1'
 require 'pp'

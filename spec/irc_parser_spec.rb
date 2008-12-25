@@ -57,17 +57,17 @@ describe "Treetop IRCParser" do
   
   it "should parse messages with UTF-8 chars" do
     result = parse(":jptix!markus@81.167.229.37 PRIVMSG #bot-test.no :æ ø å\r\n")
-    p result.value
   end
   
   it "should parse a PING request" do
     result = parse("PING :irc.homelien.no\r\n")
   end
   
+  it "should should parse messages with colons" do
+    result = parse(":jptix!markus@81.167.229.37 PRIVMSG #bot-test.no : :)\r\n")
+  end
+  
 end
 
 
 __END__
-
-:freenode-connect!freenode@freenode/bot/connect PRIVMSG utf82bot :hello
-:10.0.0.2 372 utf82bot :- take place where the channel owner(s) has requested this

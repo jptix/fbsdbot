@@ -17,7 +17,7 @@ grammar IRC
   end
   
   rule params
-    space msgto space ':' trailing <PrivMsgNode>
+    space msgto space ':' msg:[^\r\n]+ <PrivMsgNode>
     /
     mdl:(space middle)* trail:(space ':' trailing)? <ParamsNode>
     /
