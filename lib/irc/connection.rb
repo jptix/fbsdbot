@@ -86,7 +86,7 @@ module FBSDBot
       end
       
       def parse_line(line)
-        @callbacks[:raw_message].each { |cb| cb.call(line) }
+        @callbacks[:raw_message].each { |callback| callback.call(line) }
         e = @parser.parse_line(line)
         if e.is_a?(Event)
           execute_callbacks(e)

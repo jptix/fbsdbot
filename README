@@ -1,8 +1,9 @@
 install dependencies with ruby-gems:
 
-	gem install ruby-irc
+	gem install ruby-irc	 ?remove this?
 	gem install sqlite3-ruby
-	gem install activerecord
+	gem install activerecord ?remove this?
+	gem install treetop
 
 
 edit bin/bot.conf.example, and save it to file bot.conf
