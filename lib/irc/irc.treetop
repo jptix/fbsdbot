@@ -1,105 +1,42 @@
 grammar IRC
-    rule message
-        pre:(':' prefix space)? command params crlf <MessageNode>
-    end
+  include Params
+  # http://www.faqs.org/rfcs/rfc2812.html
 
-    rule prefix
-        host { def value; {:host => text_value}; end }
-        / 
-        nick ( '!' user )? ( '@' host:(host / cloak) )? <PrefixNode>
-    end
-
-    rule command
-        letter+  / digit digit digit
-    end
-
-    rule space
-        ' '+
-    end
-
-    rule letter
-        [a-zA-Z]
-    end
-
-    rule host
-        host_address / host_name
-    end
-    
-    rule host_address
-        number "." number "." number "." number
-        # does not guarantee 0-255
-    end
-    
-    rule host_name
-        netname ("." netname)+
-    end
-    
-    rule netname
-      letter (letter / digit / '-')*
-    end
-    
-    rule nick
-        letter (letter / number / special)*
-    end
-    
-    rule cloak
-        nonspace+
-    end
-    
-    rule special
-        '-' / '[' / ']' / '\\' / '`' / '^' / '{' / '}'
-    end
-
-    rule user
-        nonspace+
-    end
-
-    rule nonspace
-        [^\r\n\0!@ ]
-    end
-
-    rule params
-        space receiver:(target space)? msg:( ':' trailing / middle params ) <ParamsNode>
-    end
-    
-    rule target
-        to (',' target)*
-    end
-    
-    rule to
-        channel / user '@' host / nick / mask
-    end
-    
-    rule channel
-        ('#' / '&') chstring
-    end
-    
-    rule mask
-        ('#' / '$') chstring        
-    end
-    
-    rule chstring
-        [^ \7\0\r\n,]+
-    end
-    
-    rule number
-        digit+
-    end
-    
-    rule digit
-        [0-9]
-    end
-
-    rule trailing
-        [^\r\n\0]+
-    end
-
-    rule middle
-        nonspace+
-    end
-
-    rule crlf
-        "\r\n"
-    end
-
+  rule message
+    pre:( ':' prefix space)? command params crlf <MessageNode>
+  end
+  
+  rule prefix
+    (nickname ( ('!' user)? '@' host )? )
+    / 
+    hostname
+  end
+  
+  rule command
+    letter+ / digit digit digit
+  end
+  
+  rule params
+    mdl:(space middle)* trail:(space ':' trailing)? <ParamsNode>
+    /
+    mdl:(space middle)* trail:(space ':'? trailing)? <ParamsNode>
+  end
+  
+  rule middle
+    nonspace (":"  / nonspace)*
+  end
+  
+  rule trailing
+    ("*" / " " / nonspace)*
+  end
+  
+  rule space
+    ' '
+  end
+  
+  rule crlf
+    "\r\n"
+  end
+  
 end
+

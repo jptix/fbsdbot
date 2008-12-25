@@ -1,0 +1,26 @@
+grammar Common
+  rule nonspace
+    [^\0\r\n :]
+  end
+  
+  rule user
+    [^\0\r\n @]+
+  end
+  
+  rule letter
+    [A-Za-z]
+  end
+  
+  rule digit
+    [0-9]
+  end
+  
+  rule hexdigit
+    digit / [A-F]
+  end
+  
+  rule special
+    "[" / "]" / "\\" / "`" / "_" / "^" / "{" / "|" / "}"
+  end
+  
+end

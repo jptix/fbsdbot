@@ -1,4 +1,6 @@
 require "#{File.dirname(__FILE__)}/irc_nodes"
+Treetop.load File.dirname(__FILE__) + "/common.treetop"
+Treetop.load File.dirname(__FILE__) + "/params.treetop"
 Treetop.load File.dirname(__FILE__) + "/irc.treetop"
 
 
@@ -43,7 +45,7 @@ module FBSDBot
         
         case hash[:params]
         when /\x01(.+?)\x01/
-          parse_ctcp($1, event, hash[:params])
+          parse_ctcp($1, event)
         else
           event.type    = :private_message
           event.params  = hash[:params]
@@ -53,7 +55,7 @@ module FBSDBot
         event
       end
       
-      def parse_ctcp(type, event, msg)
+      def parse_ctcp(type, event)
         case type
         when 'VERSION'
           event.type = :ctcp_version
