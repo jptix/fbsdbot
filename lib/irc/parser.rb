@@ -32,7 +32,7 @@ module FBSDBot
         when 'PRIVMSG'
           parse_privmsg(hash)
         when 'PING'
-          Event.new(:ping, :from => hash[:prefix], :message => hash[:params][1..-1])
+          Event.new(:ping, :from => hash[:prefix], :message => hash[:params])
         when 'JOIN'
           Event.new(:join, :sender => hash[:prefix])
         when '376'

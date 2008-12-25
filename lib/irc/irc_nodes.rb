@@ -51,11 +51,15 @@ end
 
 class ParamsNode < Treetop::Runtime::SyntaxNode
   def value
-    {
-      :to => mdl.elements.first.middle.text_value,
-      :message => trail.trailing.text_value,
-    }
-  rescue
     text_value.strip
+  end
+end
+
+class PrivMsgNode < Treetop::Runtime::SyntaxNode
+  def value
+    {
+      :to => msgto.text_value,
+      :message => trailing.text_value
+    }
   end
 end

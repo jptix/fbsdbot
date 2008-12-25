@@ -55,11 +55,12 @@ describe "Treetop IRCParser" do
     var[:prefix][:user].should == "~db"
   end
   
-  it "should parse private messages with IP host" do
-    result = parse(":jptix!i=markus@81.167.229.37 PRIVMSG #bot-test.no :!uptime\r\n")
+  it "should parse messages with UTF-8 chars" do
+    result = parse(":jptix!markus@81.167.229.37 PRIVMSG #bot-test.no :æ ø å\r\n")
+    p result.value
   end
   
-  it "should prase a PING request" do
+  it "should parse a PING request" do
     result = parse("PING :irc.homelien.no\r\n")
   end
   
