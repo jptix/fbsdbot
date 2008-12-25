@@ -1,9 +1,4 @@
-require "rubygems"
-require "spec"
-require "treetop"
-require "ruby-debug"
-require "#{File.dirname(__FILE__)}/../lib/irc/parser"
-
+require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "Treetop IRCParser" do
   before(:all) do
