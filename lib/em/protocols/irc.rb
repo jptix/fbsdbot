@@ -32,14 +32,32 @@ module EventMachine
       def receive_data(data)
         # check if we where given more than one line
         lines = data.split("\r\n")
+        
         if lines.empty?
           #single newline char given, this must be handled!
-#          puts @message
+          @message << data
         else
           lines.each do |line|
-            puts "## #{line}"
+            case line.object_id
+              when lines.first.object_id
+                @message << line
+                puts "First part of array, buffering with last: '#{@message}'"
+                @message = ""
+              when lines.last.object_id
+                unless data[-2].chr == "\r" && data[-1].chr == "\n"
+                  puts "Last part of array, no newline: '#{line}'"
+                  @message = line
+                else
+                  puts "Last part of array, with newline: #{line}"
+                  @message = ""
+                end
+              else
+                puts "Array elem: #{line}"
+                @message = ""
+            end
           end
         end
+        
 #        dispatch
       end
       
