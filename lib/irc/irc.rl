@@ -1,4 +1,4 @@
-# IRC Ragel parser
+# IRC Ragel parser - compile with `ragel -R irc.rl -o parser.rb`
 
 %%{
 	machine irc;
@@ -116,6 +116,11 @@ module FBSDBot
         end
         
         result
+      end
+      
+      def self.parse_msg_target(data)
+        %% write init;
+        cs = 
       end
     end
   end

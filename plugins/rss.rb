@@ -307,7 +307,7 @@ FBSDBot::Plugin.define "rss" do
 
    @reader   = RSSReader.new
    @started  = false
-   @filename = $botdir + 'rss.dump'
+   @filename = 'rss.dump'
    @help     = "!rss [subscribe|unsubscribe|refresh|list|filter] %r|%n !rss filter [add|del|list]"
 
    def on_join(action)

@@ -65,10 +65,14 @@ module FBSDBot
         @socket.send_pong who
       end
       
+      def change_nick(new_nick)
+        @socket.send_nick new_nick
+      end
+      
       private
       
       def execute_callbacks(event)
-        p :event => event
+        Log.debug :event => event
         cbs = @callbacks[type = event.type]
         cbs.each { |cb| cb.call(event) }
         
@@ -91,7 +95,7 @@ module FBSDBot
         if e.is_a?(Event)
           execute_callbacks(e)
         else
-          puts "no event for #{line}"
+          Log.warn "no event for #{line}"
         end
       end
       

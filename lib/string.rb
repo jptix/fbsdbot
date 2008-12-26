@@ -19,4 +19,14 @@ class String
    split('_').map{|e| e.capitalize}.join
   end
   
+  
+  #
+  # A convenient way to do File.join
+  #
+  #   'a' / 'b' # => 'a/b'
+  #
+
+  def / obj
+    File.join(self, obj.to_s)
+  end
 end

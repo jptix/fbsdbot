@@ -108,12 +108,12 @@ module FBSDBot
 
       # connects to the server
       def connect
-        info("Connecting to #{@server} on port #{@port} from #{@host || '<default>'}")
+        Log.info("Connecting to #{@server} on port #{@port} from #{@host || '<default>'}")
         @socket = TCPSocket.open(@server, @port, @host)
-        info("Successfully connected")
+        Log.info("Successfully connected")
       rescue ArgumentError => error
         if @host then
-          warn("host-parameter is not supported by your ruby version. Parameter discarted.")
+          Log.warn("host-parameter is not supported by your ruby version. Parameter discarted.")
           @host = nil
           retry
         else
@@ -122,7 +122,7 @@ module FBSDBot
       rescue Interrupt
         raise
       rescue Exception
-        error("Connection failed.")
+        Log.error("Connection failed.")
         raise
       else
         @connected = true
@@ -149,9 +149,9 @@ module FBSDBot
       # you from several tasks like translating newlines, take care of overlength
       # messages etc.
       def write_with_eol(data)
-        p :writing => data
+        Log.debug :writing => data
         @mutex.synchronize {
-          warn("Raw too long (#{data.length} instead of #{@limit[:raw_length]})") if (data.length > @limit[:raw_length])
+          Log.warn("Raw too long (#{data.length} instead of #{@limit[:raw_length]})") if (data.length > @limit[:raw_length])
           now = Time.now
     
           # keep delay between single (bursted) messages
@@ -192,7 +192,7 @@ module FBSDBot
           @log_out.puts(data) if @log_out
         }
       rescue IOError
-        error("Writing #{data.inspect} failed")
+        Log.error("Writing #{data.inspect} failed")
         raise
       end 
   
@@ -419,24 +419,6 @@ module FBSDBot
         # /sprintf
       end
       
-      private
-      
-      # create a Logger instance?
-      def info(msg)
-        log :info, msg
-      end
-      
-      def error(msg)
-        log :error, msg
-      end
-      
-      def warn(msg)
-        log :warn, msg
-      end
-      
-      def log(type, msg)
-        puts "#{Time.now} :: #{type} - #{msg}"
-      end
     end
     
   end

@@ -1,11 +1,10 @@
 module FBSDBot
-  class EndOfMotdEvent < Event
-    
-    attr_reader :server
+  class NoticeEvent < Event
+    include Replyable
     
     def initialize(conn, opts = {})
       super(conn)
-      @server = opts[:server]
+      setup(opts)
     end
     
   end

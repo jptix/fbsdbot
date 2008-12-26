@@ -3,7 +3,7 @@ module FBSDBot
     
     def initialize(conn, opts = {})
       super(conn)
-      p :disconnected => conn
+      warn :disconnected => conn
     end
     
   end

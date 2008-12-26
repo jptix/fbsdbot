@@ -78,7 +78,7 @@ FBSDBot::Plugin.define("seen") {
          end
 
          def save
-            File.open($botdir + "seen.yaml", "w") { |io| YAML.dump(@seen, io) }
+            File.open("seen.yaml", "w") { |io| YAML.dump(@seen, io) }
          end
 
          def load

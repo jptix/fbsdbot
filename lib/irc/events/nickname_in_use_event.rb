@@ -1,12 +1,12 @@
 module FBSDBot
-  class EndOfMotdEvent < Event
-    
-    attr_reader :server
+  class NicknameInUseEvent < Event
+    attr_reader :nick
     
     def initialize(conn, opts = {})
       super(conn)
-      @server = opts[:server]
+      @nick = opts[:params][1]
     end
     
   end
+
 end
