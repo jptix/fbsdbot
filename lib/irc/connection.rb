@@ -1,6 +1,4 @@
 require "#{File.dirname(__FILE__)}/socket"
-require "#{File.dirname(__FILE__)}/parser"
-require "#{File.dirname(__FILE__)}/event_producer"
 
 module FBSDBot
   module IRC

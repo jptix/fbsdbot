@@ -12,8 +12,8 @@ require "lib/action"
 require "lib/string"
 require 'lib/modules'
 require 'lib/hooks'
-#require 'lib/pluginbase'
 require 'lib/auth'
-require "lib/irc/connection"
+require 'lib/irc/parser'
+require 'lib/irc/event_producer'
 
 Log = FBSDBot::Logger.new
