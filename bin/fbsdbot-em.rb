@@ -10,7 +10,9 @@ EventMachine::run {
   :host     => $config[:host], 
   :nick     => $config[:nick], 
   :realname => $config[:realname] || "FBSDBot",
-  :username => $config[:username] || "fbsd")
+  :username => $config[:username] || "fbsd",
+  :channels => $config[:channels]
+  )
   # todo, define errback for handling reconnecting
 
 }

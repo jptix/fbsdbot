@@ -1,4 +1,4 @@
-require 'lib/irc/commands.rb'
+require 'lib/irc/commands'
 
 module FBSDBot
   module IRC
@@ -12,6 +12,8 @@ module FBSDBot
         args[:port]     ||= 6667
         args[:username] ||= args[:nick]
         args[:realname] ||= args[:nick]
+        args[:channels] ||= args[:channels]
+         
         EventMachine::connect( args[:host], args[:port], self) do |instance| 
           instance.instance_eval {
             @args = args
@@ -56,7 +58,7 @@ module FBSDBot
         
         case(event)
         when EndOfMotdEvent
-          join_channels("#bot-test.no")
+          join_channels(*@args[:channels])
         when NicknameInUseEvent
           change_nick Helpers::NickObfusicator.run(@args[:nick])
         end
