@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 
-$botdir = File.expand_path(File.dirname(__FILE__) + '/..') + '/'
-$LOAD_PATH << $botdir
+ 
+$LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/..')
 require 'lib/boot'
+require "lib/options_parser" # creates $config
 
 
 module FBSDBot
@@ -24,6 +25,8 @@ module FBSDBot
       @ircname = @config['ircname'].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']
 
       @start_time = Time.now
+      puts "Starting bot..."
+      
       @auth = FBSDBot::Authentication.new
       load_plugins
     end
@@ -82,8 +85,8 @@ begin
 ensure
   puts "\nShutting down."
   FBSDBot::Plugin.registered_plugins.each do |ident,p|
-    if p.respond_to?("on_shutdown".to_sym)
-      p.send("on_shutdown".to_sym)
+    if p.respond_to?(:on_shutdown)
+      p.send(:on_shutdown)
     end
   end
 end
