@@ -42,22 +42,20 @@ module FBSDBot
 
       @irc.add_callback(:private_message) do |event|
         if event.message[0] == 001
-          action = Action.new(@irc,@auth,event)
-          FBSDBot::Plugin.find_plugins("on_ctcp_#{action.message}".to_sym, action)
-        elsif event.message =~ /^!(\S+)/ or event.channel == @irc.nick
+          FBSDBot::Plugin.find_plugins("on_ctcp_#{action.message}".to_sym, event)
+        elsif event.message =~ /^!(\S+)/ or event.nick == @irc.nick
           command = event.message.sub(/^!/, '').split[0]
           return if command.nil?
-          action = Action.new(@irc,@auth,event, command)
-          FBSDBot::Plugin.find_plugins("on_msg_#{command}".to_sym, action)
+          FBSDBot::Plugin.find_plugins("on_msg_#{command}".to_sym, event)
         else
-          FBSDBot::Plugin.find_plugins("on_msg".to_sym, Action.new(@irc,@auth,event) )
+          FBSDBot::Plugin.find_plugins("on_msg".to_sym, event )
         end
       end
 
 
-      @irc.add_callback(:join) {|event| FBSDBot::Plugin.find_plugins(:on_join, Action.new(@irc, @auth, event)) }
-      @irc.add_callback(:part) {|event| FBSDBot::Plugin.find_plugins(:on_part, Action.new(@irc, @auth, event)) }
-      @irc.add_callback(:quit) {|event| FBSDBot::Plugin.find_plugins(:on_quit, Action.new(@irc, @auth, event)) }
+      @irc.add_callback(:join) {|event| FBSDBot::Plugin.find_plugins(:on_join, event) }
+      @irc.add_callback(:part) {|event| FBSDBot::Plugin.find_plugins(:on_part, event) }
+      @irc.add_callback(:quit) {|event| FBSDBot::Plugin.find_plugins(:on_quit, event) }
 
       @irc.connect
       @irc.join

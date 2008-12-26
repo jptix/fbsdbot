@@ -43,12 +43,12 @@ module FBSDBot
       Plugin.registered_plugins[name.to_sym] = p
     end
 
-    def self.find_plugins(name,action)
+    def self.find_plugins(name, event)
       found = false
       @registered_plugins.each do |i,p|
         if p.respond_to?(name)
-          $bot.command_count += 1 unless action.command.nil?
-          p.send(name,action)
+          $bot.command_count += 1 if event.command?
+          p.send(name,event)
           found = true
         end
       end

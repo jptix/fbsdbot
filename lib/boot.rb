@@ -11,6 +11,7 @@ require 'active_record'
 require "ruby-debug"
 
 require "lib/action"
+require "lib/string"
 require 'lib/models'
 require 'lib/modules'
 require 'lib/hooks'
