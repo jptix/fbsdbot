@@ -5,10 +5,10 @@ module FBSDBot
     
     def initialize(connection, opts = {})
       super(connection)
-      @to, @message  = opts.delete(:params)
-      @nick          = opts.delete(:nick)
-      @user          = opts.delete(:user)
-      @host          = opts.delete(:host)
+      @to, @message  = opts[:params]
+      @nick          = opts[:nick]
+      @user          = opts[:user]
+      @host          = opts[:host]
     end
     
     def channel?

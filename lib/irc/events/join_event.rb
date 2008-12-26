@@ -5,9 +5,9 @@ module FBSDBot
     
     def initialize(conn, opts = {})
       super(conn)
-      @nick    = opts.delete(:nick)
-      @host    = opts.delete(:host)
-      @channel = opts.delete(:params).first
+      @nick    = opts[:nick]
+      @host    = opts[:host]
+      @channel = opts[:params].first
     end
     
   end

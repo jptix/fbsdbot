@@ -1,9 +1,11 @@
 module FBSDBot
   class EndOfMotdEvent < Event
     
+    attr_reader :server
+    
     def initialize(conn, opts = {})
       super(conn)
-      p :end_of_motd => opts
+      @server = opts[:server]
     end
     
   end

@@ -4,7 +4,7 @@ module FBSDBot
     
     def initialize(conn, opts = {})
       super(conn)
-      @names = opts.delete(:params).last.split(' ')
+      @names = opts[:params].last.split(' ')
     end
     
   end

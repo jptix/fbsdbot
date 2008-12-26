@@ -7,6 +7,7 @@ require "#{File.dirname(__FILE__)}/events/join_event"
 require "#{File.dirname(__FILE__)}/events/names_event"
 require "#{File.dirname(__FILE__)}/events/ping_event"
 require "#{File.dirname(__FILE__)}/events/nickname_in_use_event"
+require "#{File.dirname(__FILE__)}/events/end_of_names_event"
 
 
 module FBSDBot
@@ -19,6 +20,7 @@ module FBSDBot
         '376'  => EndOfMotdEvent,
         '353'  => NamesEvent,
         '433'  => NicknameInUseEvent,
+        '366'  => EndOfNamesEvent,
       }
       
       CTCP_COMMANDS = {
