@@ -6,34 +6,35 @@ module FBSDBot
       attr_reader :args
       include EventMachine::Deferrable
       include Commands
-
-      MaxRawLength = 400
-      MaxMsgLength = 300
-      
-      EOL    = "\r\n"
-      EXP_EOL = /#{EOL}$/
+      include Constants
 
       def self.connect(args = {})
-        args[:port] ||= 6667
+        args[:port]     ||= 6667
         args[:username] ||= args[:nick]
         args[:realname] ||= args[:nick]
-        EventMachine::connect( args[:host], args[:port], self) {|c| c.instance_eval {@args = args;} }
+        EventMachine::connect( args[:host], args[:port], self) do |instance| 
+          instance.instance_eval {
+            @args = args
+            @event_producer = EventProducer.new(self)
+            Log.info("Connecting to server", self)
+          }
+        end
+      end
+      
+      def to_s
+        "<Worker ##{object_id}::(#{@connected ? "C" : "D"}:#{@args[:host]})>"
       end
       
       def post_init
         @start_time = Time.now
         @buffer = ""
+        @connected = false
       end
       
       def connection_completed
         @connected = true
+        Log.info("Sending login information", self)
         login
-      end
-      
-      def login
-        puts "sending login to server with args:"
-        send_data("NICK #{@args[:nick]}\r\n")
-        send_data("USER #{@args[:username]} 0 * #{@args[:realname]}\r\n")
       end
       
       def receive_data(data)
@@ -43,15 +44,19 @@ module FBSDBot
       end
 
       def dispatch_message(line)
-        client_out = @buffer.empty? ? line : @buffer + line
+        message = @buffer.empty? ? line : @buffer + line
         @buffer = "" # important, reset buffer!
-                
-        p :dispatch => client_out
+
+        e = @event_producer.parse_line(line)
+        if e.is_a?(Event)
+          p e.inspect
+        end
       end
 
       
       def unbind
-        puts "== Connection id##{self.object_id}(#{@args[:host]}): quiting normally"
+        @connected = false
+        Log.info("Worker id##{self.object_id}(#{@args[:host]}): quiting normally")
         succeed(self) # send status to handle if this is good or bad, good in this case.. 
       end
       

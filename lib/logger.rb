@@ -22,33 +22,33 @@ module FBSDBot
       @level = level
     end
 
-    def debug(msg)
-      log :debug, msg
+    def debug(msg, obj = nil)
+      log :debug, msg, obj
     end
 
-    def info(msg)
-      log :info, msg
+    def info(msg, obj = nil)
+      log :info, msg, obj
     end
     
-    def warn(msg)
-      log :warn, msg
+    def warn(msg, obj = nil)
+      log :warn, msg, obj
     end
     
-    def error(msg)
-      log :error, msg
+    def error(msg, obj = nil)
+      log :error, msg, obj
     end
     
-    def fatal(msg)
-      log :fatal, msg
+    def fatal(msg, obj = nil)
+      log :fatal, msg, obj
     end
     
     private
     
-    def log(type, msg)
+    def log(type, msg, obj)
       return unless LOG_LEVELS[type] >= LOG_LEVELS[@level]
       
       msg = msg.inspect if Hash === msg
-      @out.puts "#{Time.now.strftime("%F %T")} :: #{type} - #{msg}"
+      @out.puts "#{Time.now.strftime("%F %T")} #{obj} :: #{type} - #{msg}"
     end
   end
 end

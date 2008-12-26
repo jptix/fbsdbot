@@ -38,8 +38,8 @@ module FBSDBot
         'PLAY'       => CTCPPlayEvent
       }
 
-      def initialize(connection)
-        @conn = connection
+      def initialize(worker)
+        @conn = worker
       end
       
       def parse_line(line)
