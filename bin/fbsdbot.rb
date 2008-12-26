@@ -19,10 +19,10 @@ module FBSDBot
       @command_count = 0
 
       @config = config
-      @nick = @config['nick']
-      @host = @config['host']
-      @port = @config['port']
-      @ircname = @config['ircname'].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']
+      @nick = @config[:nick]
+      @host = @config[:host]
+      @port = @config[:port]
+      @ircname = @config[:ircname].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']
 
       @start_time = Time.now
       puts "Starting bot..."
