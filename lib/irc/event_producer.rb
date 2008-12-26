@@ -1,10 +1,21 @@
+require "#{File.dirname(__FILE__)}/events/event"
+require "#{File.dirname(__FILE__)}/events/private_message_event"
+require "#{File.dirname(__FILE__)}/events/ctcp_events"
+require "#{File.dirname(__FILE__)}/events/disconnect_event"
+require "#{File.dirname(__FILE__)}/events/end_of_motd_event"
+require "#{File.dirname(__FILE__)}/events/join_event"
+require "#{File.dirname(__FILE__)}/events/names_event"
+require "#{File.dirname(__FILE__)}/events/ping_event"
+
+
 module FBSDBot
   module IRC
     class EventProducer
       
       User = Struct.new(:nick, :hostmask)
 
-      def initialize
+      def initialize(connection)
+        @conn = connection
       end
       
       def parse_line(line)
@@ -18,68 +29,67 @@ module FBSDBot
         end
       end
       
+      def disconnect_event
+        create DisconnectEvent
+      end
+      
       private
       
       def hash_to_event(hash)
         case hash[:command]
         when 'PRIVMSG'
-          parse_privmsg(hash)
+          create_privmsg(hash)
         when 'PING'
-          Event.new(:ping, :from => hash[:nick], :message => hash[:params].first)
+          create PingEvent, hash
         when 'JOIN'
-          Event.new(:join, :from => hash[:nick])
+          create JoinEvent, hash
         when '376'
-          Event.new(:end_of_motd)
+          create EndOfMotdEvent, hash
         when '353'
-          Event.new(:names_reply, :message => hash[:params].join(' '))
+          create NamesEvent, hash
         else
           puts "unknown event for #{hash.inspect}"
         end
       end
       
-      def parse_privmsg(hash)
-        event = Event.new(:private_message, :from => hash[:nick])
-        
-        case hash[:params]
+      def create_privmsg(hash)
+        case hash[:params].first
         when /\x01(.+?)\x01/
-          parse_ctcp($1, event)
+          create_ctcp($1, hash)
         else
-          event.type    = :private_message
-          event.to      = hash[:params].first
-          event.channel  = event.to
-          event.message = hash[:params].last
+          create PrivateMessageEvent, hash
         end
-        
-        event
       end
       
-      def parse_ctcp(type, event)
+      def create_ctcp(type, hash)
         case type
         when 'VERSION'
-          event.type = :ctcp_version
+          create CTCPVersionEvent, hash
         when 'PING'
-          event.type = :ctcp_ping
+          create CTCPPingEvent, hash
         when 'CLIENTINFO'
-          event.type =:ctcp_clientinfo
+          create CTCPClientInfoEvent, hash
         when 'ACTION'
-          event.type =:ctcp_action
+          create CTCPActionEvent, hash
         when 'FINGER'
-          event.type =:ctcp_finger
+          create CTCPFingerEvent, hash
         when 'TIME'
-          event.type =:ctcp_time
+          create CTCPTimeEvent, hash
         when 'DCC'
-          event.type =:ctcp_dcc
+          create CTCPDccEvent, hash
         when 'ERRMSG'
-          event.type =:ctcp_errmsg
+          create CTCPErrorMessageEvent, hash
         when 'PLAY'
-          event.type =:ctcp_play
+          create CTCPPlayEvent, hash
         else
-          puts "unknown ctcp type #{type.inspect}"
-          event.type =:ctcp
+          raise "unknown ctcp type #{type.inspect}"
         end
-            
       end
       
-    end
-  end
-end
+      def create(type, opts = {})
+        type.new(@conn, opts)
+      end
+      
+    end # EventProducer
+  end # IRC
+end # FBSDBot

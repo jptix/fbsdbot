@@ -7,11 +7,12 @@ require 'yaml'
 
 # GEMS
 require 'rubygems'
-require "treetop"
+require 'active_record'
 require "ruby-debug"
 require "eventmachine"
 
 require "lib/action"
+require "lib/string"
 require 'lib/modules'
 require 'lib/hooks'
 #require 'lib/pluginbase'

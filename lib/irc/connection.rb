@@ -1,6 +1,5 @@
 require "#{File.dirname(__FILE__)}/socket"
 require "#{File.dirname(__FILE__)}/parser"
-require "#{File.dirname(__FILE__)}/event"
 require "#{File.dirname(__FILE__)}/event_producer"
 
 module FBSDBot
@@ -17,7 +16,7 @@ module FBSDBot
       
       def initialize(nick, server, options = {})
         options = DefaultOptions.merge(options)
-        @parser = EventProducer.new
+        @event_producer = EventProducer.new(self)
         
         @nick   = nick
         @server = server
@@ -62,12 +61,15 @@ module FBSDBot
         @socket.send_notice(notice, recipient)
       end
       
+      def send_pong(who)
+        @socket.send_pong who
+      end
+      
       private
       
       def execute_callbacks(event)
         p :event => event
         cbs = @callbacks[type = event.type]
-        missing_callback(type, event) if cbs.empty?
         cbs.each { |cb| cb.call(event) }
         
         if @delegate
@@ -80,15 +82,12 @@ module FBSDBot
           parse_line line
         end
         
-        e = Event.new(:disconnect)
-        e.message = "connection closed"
-        
-        execute_callbacks(e)
+        execute_callbacks @event_producer.disconnect_event
       end
       
       def parse_line(line)
         @callbacks[:raw_message].each { |callback| callback.call(line) }
-        e = @parser.parse_line(line)
+        e = @event_producer.parse_line(line)
         if e.is_a?(Event)
           execute_callbacks(e)
         else
@@ -96,16 +95,9 @@ module FBSDBot
         end
       end
       
-      def missing_callback(event_type, event)
-        case event_type
-        when :ping
-          @socket.send_pong(event.message)
-        end
-      end
-      
-    end
-  end
-end
+    end # Connection
+  end # IRC
+end # FBSDBot
 
 if __FILE__ == $0
   conn = FBSDBot::IRC::Connection.new('utf8v2', 'irc.freenode.net')
