@@ -4,17 +4,13 @@ $botdir = File.expand_path(File.dirname(__FILE__) + '/..') + '/'
 $LOAD_PATH << $botdir
 require 'lib/boot'
 
-
 EventMachine::run {
-  irc = EventMachine::Protocols::IrcClient.connect(
-      :host     => "irc.daxnet.no", 
-      :nick     => "WorkBond", 
-      :realname => "FBSDBot", 
-      :username => "db")
-      
-  irc.callback {|data|
-    puts "got a message from server: #{data[:message]}"
-  }
-  
+  FBSDBot::IRC::EMCore.connect(
+  :host     => $config[:host], 
+  :nick     => $config[:nick], 
+  :realname => $config[:realname] || "FBSDBot",
+  :username => $config[:username] || "fbsd")
+  # todo, define errback for handling reconnecting
+
 }
 

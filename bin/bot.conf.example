@@ -1,5 +1,5 @@
-nick: WorkBond
-host: irc.homelien.no
-port: 6667
-channels:
+:nick: WorkBond
+:host: irc.homelien.no
+:port: 6667
+:channels:
   - "#bot-test.no"
