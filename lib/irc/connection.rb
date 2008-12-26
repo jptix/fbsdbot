@@ -1,6 +1,7 @@
 require "#{File.dirname(__FILE__)}/socket"
 require "#{File.dirname(__FILE__)}/parser"
 require "#{File.dirname(__FILE__)}/event"
+require "#{File.dirname(__FILE__)}/event_producer"
 
 module FBSDBot
   module IRC
@@ -16,7 +17,7 @@ module FBSDBot
       
       def initialize(nick, server, options = {})
         options = DefaultOptions.merge(options)
-        @parser = Parser.new
+        @parser = EventProducer.new
         
         @nick   = nick
         @server = server

@@ -1,8 +1,8 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
-describe "Parser" do
+describe "EventProducer" do
   before(:all) do
-    @parser = FBSDBot::IRC::Parser.new
+    @parser = FBSDBot::IRC::EventProducer.new
   end
 
   it "should return a :private_message Event for a private message" do
