@@ -10,6 +10,8 @@ require "#{File.dirname(__FILE__)}/events/ping_event"
 require "#{File.dirname(__FILE__)}/events/nickname_in_use_event"
 require "#{File.dirname(__FILE__)}/events/end_of_names_event"
 require "#{File.dirname(__FILE__)}/events/notice_event"
+require "#{File.dirname(__FILE__)}/events/quit_event"
+require "#{File.dirname(__FILE__)}/events/part_event"
 
 
 module FBSDBot
@@ -17,13 +19,15 @@ module FBSDBot
     class EventProducer
       
       COMMANDS = {
-        'PING' => PingEvent,
-        'JOIN' => JoinEvent,
+        'PING'   => PingEvent,
+        'JOIN'   => JoinEvent,
+        'PART'   => PartEvent,
         'NOTICE' => NoticeEvent,
-        '376'  => EndOfMotdEvent,
-        '353'  => NamesEvent,
-        '433'  => NicknameInUseEvent,
-        '366'  => EndOfNamesEvent,
+        'QUIT'   => QuitEvent,
+        '376'    => EndOfMotdEvent,
+        '353'    => NamesEvent,
+        '433'    => NicknameInUseEvent,
+        '366'    => EndOfNamesEvent,
       }
       
       CTCP_COMMANDS = {
