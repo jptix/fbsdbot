@@ -158,9 +158,6 @@ module FBSDBot
 end # FBSDBot
 
 
-%% write data;
-
-
 if __FILE__ == $0
    FBSDBot::IRC::Parser.parse(STDIN.read)
 end
