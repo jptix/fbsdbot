@@ -84,6 +84,10 @@ module FBSDBot
           }
         }
       end
+      
+      def send_pong(*args)
+        send_raw(PONG, *args)
+      end
 
       def change_nick(nick)
         send_raw(NICK, nick)
