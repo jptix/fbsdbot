@@ -2,7 +2,7 @@
 
 %%{
 	machine irc;
-        
+
         action strbegin {
                 buf = ""
         }
@@ -47,6 +47,22 @@
                 result[:params] = params
         }
         
+        action msgto_channel_finish {
+                result = :channel
+        }
+        
+        action msgto_user_finish {
+                result = :user
+        }
+        
+        action msgto_begin {
+                result = nil
+        }
+
+        action msgto_mask_finish {
+                result = :targetmask
+        }
+        
 	SPACE      = " ";
 	crlf       = "\r" "\n";
 	letter   = 0x41..0x5a | 0x61..0x7a;
@@ -56,14 +72,14 @@
 	
 	user       = ^[\0\r\n@! ]+;
 	key        = ( 0x01..0x05 | 0x07..0x08 | "\f" | 0x0e..0x1f | 0x21..0x7f ){1,23};
-	nowild     = 0x01..0x29 | 0x2b..0x3e | 0x40..0xff;
-	noesc      = 0x01..0x5b | 0x5d..0xff;
+	nowild     = extend - ( 0 | '*' | '?'); #  any octet except NUL, "*", "?"
+	noesc      = extend - ( 0 | '\\'); # any octet except NUL and "\"
 	wildone    = "?";
 	wildmany   = "*";
 	mask       = ( nowild | ( noesc wildone ) | ( noesc wildmany ) )*;
 	matchone   = 0x01..0xff;
 	matchmany  = matchone*;
-	nospcrlfcl = ^[\0\r\n :];
+	nospcrlfcl = extend - ( 0 | SPACE | '\r' | '\n' | ':' ); # ; any octet except NUL, CR, LF, " " and ":"
 	middle     = nospcrlfcl ( ":" | nospcrlfcl )*;
 	trailing   = ( ":" | " " | nospcrlfcl )*;
 	
@@ -73,14 +89,15 @@
 	servername = hostname; # add cloak
 	target     = nickname | servername;
 	channelid  = ( 0x41..0x5a | digit_ ){5};
-	chanstring = 0x01..0x07 | 0x08..0x09 | 0x0b..0x0c | 0x0e..0x1f | 0x21..0x2b | 0x2d..0x39 | 0x3b..0xff;
+	chanstring = extend - (0 | 7 | '\r' | '\n' | SPACE | "," | ":" ); # any octet except NUL, BELL, CR, LF, " ", "," and ":"
 	channel    = ( "#" | "+" | ( "!" channelid ) | "&" ) chanstring ( ":" chanstring )?;
 	ip4addr    = digit_{1,3} "." digit_{1,3} "." digit_{1,3} "." digit_{1,3};
 	ip6addr    = ( hexdigit+ ( ":" hexdigit+ ){7} ) | ( "0:0:0:0:0:" ( "0" | "FFFF"i ) ":" ip4addr );
 	hostaddr   = ip4addr | ip6addr;
 	host       = hostname | hostaddr;
 	targetmask = ( "$" | "#" ) mask;
-	msgto      = channel | ( user ( "%" host )? "@" servername ) | ( user "%" host ) | targetmask | nickname | ( nickname "!" user "@" host );
+	msgto      = channel @msgto_channel_finish
+                     | ( user ( "%" host )? "@" servername ) @msgto_user_finish | ( user "%" host ) @msgto_user_finish | targetmask | nickname @msgto_user_finish | ( nickname "!" user "@" host ) @msgto_user_finish ;
 	msgtarget  = msgto ( "," msgto )*;
 	
 	prefix     = servername >strbegin $stradd %servername_finish | 
@@ -95,6 +112,7 @@
         
 	# instantiate machine rules
 	main:= message;
+        message_type := msgto;
 }%%
 
 module FBSDBot
@@ -103,28 +121,41 @@ module FBSDBot
     
       %% write data;
     
-      def self.parse(data)
+      class << self
+        def parse_message(data)
         
-        result = {}
-        buf = ""
+          result = {}
+          buf = ""
         
-        %% write init;
-        %% write exec;
+          %% write init;
+          %% write exec;
         
-        if $DEBUG
-          Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
+          if $DEBUG
+            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
+          end
+        
+          result
         end
         
-        result
-      end
+        def target_type(data)
+          result = nil
+          
+          %% write init;
+          cs = irc_en_message_type;
+          %% write exec;
+
+          if $DEBUG
+            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
+          end
+          
+          result
+        end
+        
       
-      def self.parse_msg_target(data)
-        %% write init;
-        cs = 
-      end
-    end
-  end
-end
+      end # class << self
+    end # Parser
+  end # IRC
+end # FBSDBot
 
 
 %% write data;

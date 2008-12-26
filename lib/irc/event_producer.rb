@@ -44,7 +44,7 @@ module FBSDBot
       
       def parse_line(line)
         Log.debug :incoming => line
-        result = Parser.parse(line)
+        result = Parser.parse_message(line)
         
         if result
           hash_to_event(result)
