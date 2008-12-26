@@ -28,17 +28,9 @@ end
  
 op.parse!(ARGV)
 
-<<<<<<< HEAD:lib/options_parser.rb
-unless ARGV.empty?
-  config_file = ARGV.first
-  $config.merge!(YAML.load_file(config_file))
-  puts "Loaded config."
-end
-=======
 config = YAML.load_file(ARGV.first || "#{File.dirname(__FILE__)}/../bin/bot.conf.example")
 $config = config.merge(opts)
 puts "Loaded config."
->>>>>>> eff663b9ac015641e67a7169a95f7927bfaa5457:lib/options_parser.rb
 
 p $config
 
