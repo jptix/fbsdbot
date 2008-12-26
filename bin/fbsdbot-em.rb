@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-$botdir = File.expand_path(File.dirname(__FILE__) + '/..') + '/'
-$LOAD_PATH << $botdir
+$LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/..')
 require 'lib/boot'
+require 'lib/options_parser'
 
 EventMachine::run {
   FBSDBot::IRC::EMCore.connect(
