@@ -84,6 +84,10 @@ module FBSDBot
             }
           end
           
+          def change_nick(nick)
+            send_raw(NICK, nick)
+          end
+          
           private
           
           def login

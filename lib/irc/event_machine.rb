@@ -56,13 +56,15 @@ module FBSDBot
         
         case(event)
         when EndOfMotdEvent
-          puts event.inspect
+          join_channels("#bot-test.no")
+        when NicknameInUseEvent
+          change_nick Helpers::NickObfusicator.run(@args[:nick])
         end
       end
      
       def unbind
         @connected = false
-        Log.info("Worker id##{self.object_id}(#{@args[:host]}): quiting normally")
+        Log.info("Disconnected", self)
         succeed(self) # send status to handle if this is good or bad, this might not allways be a good thing.. 
       end
       
