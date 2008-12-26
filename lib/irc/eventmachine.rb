@@ -3,6 +3,7 @@ module FBSDBot
     class EMCore < EventMachine::Connection
       attr_reader :args
       include EventMachine::Deferrable
+      include Commands
 
       MaxRawLength = 400
       MaxMsgLength = 300
@@ -42,13 +43,8 @@ module FBSDBot
       def dispatch_message(line)
         client_out = @buffer.empty? ? line : @buffer + line
         @buffer = "" # important, reset buffer!
-        
+                
         p :dispatch => client_out
-        
-        
-        
-        # generate a callback with message
-        #succeed(self, :message => client_out)
       end
 
       

@@ -1,6 +1,7 @@
 puts "Starting bot..."
 
 # CORE
+
 require 'digest/sha1'
 require 'pp'
 require 'yaml'
@@ -15,7 +16,7 @@ require "lib/action"
 require 'lib/modules'
 require 'lib/hooks'
 #require 'lib/pluginbase'
-require 'lib/auth'
+#require 'lib/auth'
 require 'lib/irc/eventmachine.rb'
 
 config_file = (ARGV.size > 0) ? File.expand_path(ARGF.file.path) : $botdir + 'bin/bot.conf'
