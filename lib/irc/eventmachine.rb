@@ -52,12 +52,11 @@ module FBSDBot
           p e.inspect
         end
       end
-
-      
+     
       def unbind
         @connected = false
         Log.info("Worker id##{self.object_id}(#{@args[:host]}): quiting normally")
-        succeed(self) # send status to handle if this is good or bad, good in this case.. 
+        succeed(self) # send status to handle if this is good or bad, this might not allways be a good thing.. 
       end
       
     end
