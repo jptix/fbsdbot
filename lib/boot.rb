@@ -8,7 +8,6 @@ require 'yaml'
 # GEMS
 require 'rubygems'
 require 'active_record'
-require "treetop"
 require "ruby-debug"
 
 require "lib/action"
