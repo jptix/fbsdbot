@@ -2,22 +2,22 @@ require "optparse"
 require "yaml"
 
 # defaults
-$config = {:port => 6667}
+opts = {:port => 6667}
  
 op = OptionParser.new do |o|
   
   o.banner = "Usage: #{$0} [options] [config file]"
   
   o.on "-n", "--nick=nick", "A nick to use" do |nick|
-    $config[:nick] = nick
+    opts[:nick] = nick
   end
 
   o.on "-h", "--host=host", "An IRC server." do |host|
-    $config[:host] = host
+    opts[:host] = host
   end
   
   o.on "-p", "--port=port", Integer, "A port." do |port|
-    $config[:port] = port
+    opts[:port] = port
   end
   
   o.on "--help", "You're looking at it." do
@@ -28,11 +28,9 @@ end
  
 op.parse!(ARGV)
 
-unless ARGV.empty?
-  config_file = ARGV.first
-  $config.merge!(YAML.load_file(config_file))
-  puts "Loaded config."
-end
+config = YAML.load_file(ARGV.first || "#{File.dirname(__FILE__)}/../bin/bot.conf.example")
+$config = config.merge(opts)
+puts "Loaded config."
 
 p $config
 
