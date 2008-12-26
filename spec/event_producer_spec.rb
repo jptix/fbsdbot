@@ -14,7 +14,7 @@ describe "EventProducer" do
     event.should be_channel
     
     event.should respond_to(:reply)
-    @conn.should_receive(:send_message).with("jptix", "hello")
+    @conn.should_receive(:send_message).with("#bot-test.no", "hello")
     event.reply("hello")
   end
   
