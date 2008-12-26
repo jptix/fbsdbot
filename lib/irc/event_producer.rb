@@ -6,6 +6,7 @@ require "#{File.dirname(__FILE__)}/events/end_of_motd_event"
 require "#{File.dirname(__FILE__)}/events/join_event"
 require "#{File.dirname(__FILE__)}/events/names_event"
 require "#{File.dirname(__FILE__)}/events/ping_event"
+require "#{File.dirname(__FILE__)}/events/nickname_in_use_event"
 
 
 module FBSDBot
@@ -47,6 +48,8 @@ module FBSDBot
           create EndOfMotdEvent, hash
         when '353'
           create NamesEvent, hash
+        when '433'
+          create NicknameInUseEvent, hash
         else
           puts "unknown event for #{hash.inspect}"
         end

@@ -34,9 +34,9 @@ module FBSDBot
     def run
       $stdout.sync = true
       @irc = IRC::Connection.new(@nick, @host, :port => @port, :real_name => @ircname )
-      @irc.add_callback(:nickname_in_use) {|event|	@irc.ch_nick( FBSDBot::Helpers::NickObfusicator.run(@irc.nick) ) }
+      @irc.add_callback(:nickname_in_use) {|event| @irc.change_nick( FBSDBot::Helpers::NickObfusicator.run(@irc.nick) ) }
       @irc.add_callback(:end_of_motd) do |event|
-        @config['channels'].each do |ch|
+        @config[:channels].each do |ch|
           @irc.join_channel(ch)
           puts "Joined channel: #{ch}"
         end

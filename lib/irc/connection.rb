@@ -65,6 +65,10 @@ module FBSDBot
         @socket.send_pong who
       end
       
+      def change_nick(new_nick)
+        @socket.send_nick new_nick
+      end
+      
       private
       
       def execute_callbacks(event)
