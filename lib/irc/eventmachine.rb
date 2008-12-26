@@ -1,3 +1,5 @@
+require 'lib/irc/commands.rb'
+
 module FBSDBot
   module IRC
     class EMCore < EventMachine::Connection

@@ -50,6 +50,13 @@ module FBSDBot
                 channel
               } # need to map to get rid of the passwords
           end
+          
+          def send_raw(*arguments)
+            if arguments.last.include?(Space) || arguments.last[0] == ?: then
+              arguments[-1] = ":#{arguments.last}"
+            end
+            write_with_eol(arguments.join(Space))
+          end
 
           def send_message(recipient, message)
             @socket.send_privmsg(message, recipient)
