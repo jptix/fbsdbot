@@ -108,6 +108,6 @@ module FBSDBot
         send_data data
       end
 
-    end
-  end
-end
+    end # Commands
+  end # IRC
+end # FBSDBot
