@@ -39,17 +39,24 @@ module FBSDBot
       
       def receive_data(data)
         data.each_line(EOL) do |line|
-          line =~ EXP_EOL ? dispatch_message(line) : @buffer << line
+          line =~ EXP_EOL ? produce_event(line) : @buffer << line
         end
       end
 
-      def dispatch_message(line)
+      def produce_event(line)
         message = @buffer.empty? ? line : @buffer + line
         @buffer = "" # important, reset buffer!
 
-        e = @event_producer.parse_line(line)
-        if e.is_a?(Event)
-          p e.inspect
+        handle_event(@event_producer.parse_line(line))
+      end
+      
+      def handle_event(event)
+        return if event.nil?
+        raise TypeError, "Not passed an Event.class" unless event.is_a?(Event)
+        
+        case(event)
+        when EndOfMotdEvent
+          puts event.inspect
         end
       end
      

@@ -46,11 +46,8 @@ module FBSDBot
         Log.debug :incoming => line
         result = Parser.parse(line)
         
-        if result
-          hash_to_event(result)
-        else
-          warn "ignoring: #{line.inspect}"
-        end
+        return hash_to_event(result) if result
+        return nil
       end
       
       def disconnect_event
@@ -79,6 +76,7 @@ module FBSDBot
           return create(event_class, hash)
         else
           Log.warn "unknown ctcp type #{type.inspect}"
+          return nil
         end
       end
 

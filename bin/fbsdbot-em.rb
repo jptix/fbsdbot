@@ -3,6 +3,7 @@
 $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/..')
 require 'lib/boot'
 require 'lib/options_parser'
+require 'lib/irc/event_machine'
 
 EventMachine::run {
   FBSDBot::IRC::EMCore.connect(
