@@ -11,9 +11,10 @@ describe "EventProducer" do
     event.should be_instance_of(PrivateMessageEvent)
     event.type.should == :private_message
     event.message.should == "æ ø å"
+    event.should be_channel
     
     event.should respond_to(:reply)
-    @conn.should_receive(:send_message).with("jptix", "hello")
+    @conn.should_receive(:send_message).with("#bot-test.no", "hello")
     event.reply("hello")
   end
   

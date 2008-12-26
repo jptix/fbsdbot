@@ -11,7 +11,8 @@ module FBSDBot
     end
 
     def reply(string)
-      @connection.send_message @nick, string.to_s
+      who = self.channel? ? @to : @nick
+      @connection.send_message who, string.to_s
     end
     
   end

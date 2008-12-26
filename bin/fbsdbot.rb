@@ -3,6 +3,8 @@
  
 $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/..')
 require 'lib/boot'
+require "lib/irc/connection"
+
 require "lib/options_parser" # creates $config
 
 

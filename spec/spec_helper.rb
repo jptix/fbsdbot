@@ -10,4 +10,8 @@ Debugger.settings[:autoeval] = true
 Debugger.settings[:autolist] = 1
 
 
-
+def parse_message(string)
+  res = IRC::Parser.parse_message(string)
+  res.should_not be_empty
+  res
+end

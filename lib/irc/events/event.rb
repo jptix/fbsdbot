@@ -14,7 +14,7 @@ module FBSDBot
     end
     
     def channel?
-      @to && @to[0,1] == "#"
+      @to && IRC::Parser.target_type(@to) == :channel
     end
     
     def inspect
