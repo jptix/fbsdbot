@@ -43,13 +43,13 @@ module FBSDBot
       end
       
       def parse_line(line)
-        p :incoming => line
+        Log.debug :incoming => line
         result = Parser.parse(line)
         
         if result
           hash_to_event(result)
         else
-          puts "ignoring: #{line.inspect}"
+          warn "ignoring: #{line.inspect}"
         end
       end
       
@@ -70,7 +70,7 @@ module FBSDBot
         when 'PRIVMSG'
           create_privmsg(hash)
         else
-          puts "unknown event for #{hash.inspect}"
+          Log.warn "unknown event for #{hash.inspect}"
         end
       end
       
@@ -78,7 +78,7 @@ module FBSDBot
         if event_class = CTCP_COMMANDS[type]
           return create(event_class, hash)
         else
-          puts "unknown ctcp type #{type.inspect}"
+          Log.warn "unknown ctcp type #{type.inspect}"
         end
       end
 

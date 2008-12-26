@@ -27,7 +27,7 @@ module FBSDBot
       @ircname = @config[:ircname].nil? ? "FBSDBot running on Ruby #{RUBY_VERSION}" : @config['ircname']
 
       @start_time = Time.now
-      puts "Starting bot..."
+      Log.info "starting bot..."
       
       @auth = FBSDBot::Authentication.new
       load_plugins
@@ -41,7 +41,7 @@ module FBSDBot
       @irc.add_callback(:end_of_motd) do |event|
         @config[:channels].each do |ch|
           @irc.join_channel(ch)
-          puts "Joined channel: #{ch}"
+          Log.info "joined channel: #{ch}"
         end
       end
 
