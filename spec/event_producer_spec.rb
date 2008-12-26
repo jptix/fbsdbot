@@ -15,7 +15,6 @@ describe "EventProducer" do
     event.should respond_to(:reply)
     @conn.should_receive(:send_message).with("jptix", "hello")
     event.reply("hello")
-    
   end
   
   it "should create the correct event when receiving a ping" do
@@ -30,6 +29,25 @@ describe "EventProducer" do
     event.should be_instance_of(CTCPActionEvent)
     event.to.should == "#bot-test.no"
     event.message.should == "foo"
+  end
+  
+  it "should create the correct event for ctcp version" do
+    event = @ep.parse_line ":jptix!markus@81.167.229.37 PRIVMSG testbot20 :\001VERSION\001\r\n"
+    event.should be_instance_of(CTCPVersionEvent)
+    event.nick.should == 'jptix'
+    
+    event.should respond_to(:reply)
+    @conn.should_receive(:send_notice).with("jptix", "\001VERSION hello\001")
+    event.reply "hello"
+  end
+  
+  it "should create the correct event for a notice" do
+    event = @ep.parse_line ":jptix!markus@81.167.229.37 NOTICE testbot20 :foo\r\n"
+    event.should be_instance_of(NoticeEvent)
+    event.should be_kind_of(Replyable)
+    event.nick.should == 'jptix'
+    event.to.should == 'testbot20'
+    event.message.should == 'foo'
   end
   
   it "should return the correct event when receiving end-of-motd" do

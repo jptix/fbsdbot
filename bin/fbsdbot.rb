@@ -37,13 +37,13 @@ module FBSDBot
       $stdout.sync = true
       @irc = IRC::Connection.new(@nick, @host, :port => @port, :real_name => @ircname )
       @irc.add_callback(:nickname_in_use) {|event| @irc.change_nick( FBSDBot::Helpers::NickObfusicator.run(@irc.nick) ) }
+      
       @irc.add_callback(:end_of_motd) do |event|
         @config[:channels].each do |ch|
           @irc.join_channel(ch)
           puts "Joined channel: #{ch}"
         end
       end
-      $stdout.sync = false
 
       @irc.add_callback(:private_message) do |event|
         if event.message =~ /^!(\S+)/ or event.nick == @irc.nick
@@ -62,6 +62,10 @@ module FBSDBot
       @irc.add_callback(:join) {|event| FBSDBot::Plugin.find_plugins(:on_join, event) }
       @irc.add_callback(:part) {|event| FBSDBot::Plugin.find_plugins(:on_part, event) }
       @irc.add_callback(:quit) {|event| FBSDBot::Plugin.find_plugins(:on_quit, event) }
+      
+      @irc.add_callback(:ctcp_version) do |event|
+        event.reply "FBSDBot v#{VERSION} - running on #{RUBY_VERSION}"
+      end
 
       @irc.connect
       @irc.join

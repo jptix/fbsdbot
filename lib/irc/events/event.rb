@@ -13,6 +13,9 @@ module FBSDBot
       @message && @message[0,1] == "!"
     end
     
+    def channel?
+      @to && @to[0,1] == "#"
+    end
     
     def inspect
       ivars = instance_variables - %w[@connection]

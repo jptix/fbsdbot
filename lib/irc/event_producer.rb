@@ -1,4 +1,5 @@
 require "#{File.dirname(__FILE__)}/events/event"
+require "#{File.dirname(__FILE__)}/events/replyable"
 require "#{File.dirname(__FILE__)}/events/private_message_event"
 require "#{File.dirname(__FILE__)}/events/ctcp_events"
 require "#{File.dirname(__FILE__)}/events/disconnect_event"
@@ -8,6 +9,7 @@ require "#{File.dirname(__FILE__)}/events/names_event"
 require "#{File.dirname(__FILE__)}/events/ping_event"
 require "#{File.dirname(__FILE__)}/events/nickname_in_use_event"
 require "#{File.dirname(__FILE__)}/events/end_of_names_event"
+require "#{File.dirname(__FILE__)}/events/notice_event"
 
 
 module FBSDBot
@@ -17,6 +19,7 @@ module FBSDBot
       COMMANDS = {
         'PING' => PingEvent,
         'JOIN' => JoinEvent,
+        'NOTICE' => NoticeEvent,
         '376'  => EndOfMotdEvent,
         '353'  => NamesEvent,
         '433'  => NicknameInUseEvent,
@@ -40,6 +43,7 @@ module FBSDBot
       end
       
       def parse_line(line)
+        p :incoming => line
         result = Parser.parse(line)
         
         if result
