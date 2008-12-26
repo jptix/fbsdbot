@@ -29,7 +29,6 @@ end
 op.parse!(ARGV)
 
 unless ARGV.empty?
-  debugger
   config_file = ARGV.first
   $config.merge!(YAML.load_file(config_file))
   puts "Loaded config."
