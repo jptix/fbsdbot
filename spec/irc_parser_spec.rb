@@ -49,6 +49,8 @@ describe "FBSDBot::IRC::Parser" do
   
   it "should parse a PING request" do
     val = parse("PING :irc.homelien.no\r\n")
+    val[:command].should == 'PING'
+    val[:params].should == %w[irc.homelien.no]
   end
   
   it "should should parse messages with colons" do

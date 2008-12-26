@@ -15,10 +15,6 @@ module FBSDBot
       @to[0,1] == "#"
     end
     
-    def command?
-      @message[0,1] == "!"
-    end
-    
     def reply(string)
       @connection.send_message @nick, string.to_s
     end

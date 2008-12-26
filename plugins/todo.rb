@@ -65,7 +65,7 @@ class TODOApp
 end
    
 @td = TODOApp.new   
-@file = $botdir + 'todo.yaml'
+@file = 'todo.yaml'
 @started = false
 
 def on_join(action)

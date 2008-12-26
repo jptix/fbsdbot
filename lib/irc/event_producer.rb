@@ -13,14 +13,31 @@ module FBSDBot
   module IRC
     class EventProducer
       
-      User = Struct.new(:nick, :hostmask)
+      COMMANDS = {
+        'PING' => PingEvent,
+        'JOIN' => JoinEvent,
+        '376'  => EndOfMotdEvent,
+        '353'  => NamesEvent,
+        '433'  => NicknameInUseEvent,
+      }
+      
+      CTCP_COMMANDS = {
+        'VERSION'    => CTCPVersionEvent,
+        'PING'       => CTCPPingEvent,
+        'CLIENTINFO' => CTCPClientInfoEvent,
+        'ACTION'     => CTCPActionEvent,
+        'FINGER'     => CTCPFingerEvent,
+        'TIME'       => CTCPTimeEvent,
+        'DCC'        => CTCPDccEvent,
+        'ERRMSG'     => CTCPErrorMessageEvent,
+        'PLAY'       => CTCPPlayEvent
+      }
 
       def initialize(connection)
         @conn = connection
       end
       
       def parse_line(line)
-        p :incoming => line
         result = Parser.parse(line)
         
         if result
@@ -37,58 +54,37 @@ module FBSDBot
       private
       
       def hash_to_event(hash)
-        case hash[:command]
+        command = hash[:command]
+        
+        if event_class = COMMANDS[command]
+          return create(event_class, hash)
+        end
+        
+        case command
         when 'PRIVMSG'
           create_privmsg(hash)
-        when 'PING'
-          create PingEvent, hash
-        when 'JOIN'
-          create JoinEvent, hash
-        when '376'
-          create EndOfMotdEvent, hash
-        when '353'
-          create NamesEvent, hash
-        when '433'
-          create NicknameInUseEvent, hash
         else
           puts "unknown event for #{hash.inspect}"
         end
       end
       
+      def create_ctcp(type, hash)
+        if event_class = CTCP_COMMANDS[type]
+          return create(event_class, hash)
+        else
+          puts "unknown ctcp type #{type.inspect}"
+        end
+      end
+
       def create_privmsg(hash)
-        case hash[:params].first
-        when /\x01(.+?)\x01/
+        case hash[:params].last
+        when /\x01([A-Z]+)/
           create_ctcp($1, hash)
         else
           create PrivateMessageEvent, hash
         end
       end
-      
-      def create_ctcp(type, hash)
-        case type
-        when 'VERSION'
-          create CTCPVersionEvent, hash
-        when 'PING'
-          create CTCPPingEvent, hash
-        when 'CLIENTINFO'
-          create CTCPClientInfoEvent, hash
-        when 'ACTION'
-          create CTCPActionEvent, hash
-        when 'FINGER'
-          create CTCPFingerEvent, hash
-        when 'TIME'
-          create CTCPTimeEvent, hash
-        when 'DCC'
-          create CTCPDccEvent, hash
-        when 'ERRMSG'
-          create CTCPErrorMessageEvent, hash
-        when 'PLAY'
-          create CTCPPlayEvent, hash
-        else
-          raise "unknown ctcp type #{type.inspect}"
-        end
-      end
-      
+            
       def create(type, opts = {})
         type.new(@conn, opts)
       end

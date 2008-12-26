@@ -9,6 +9,11 @@ module FBSDBot
       @type ||= self.class.name.snake_case[/::(.+?)_event/, 1].to_sym
     end
     
+    def command?
+      @message && @message[0,1] == "!"
+    end
+    
+    
     def inspect
       ivars = instance_variables - %w[@connection]
       str = "#<#{self.class.name}(:#{type}):0x#{self.hash.to_s(16)}"
