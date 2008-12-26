@@ -1,15 +1,17 @@
-require "#{File.dirname(__FILE__)}/events/event"
-require "#{File.dirname(__FILE__)}/events/replyable"
-require "#{File.dirname(__FILE__)}/events/private_message_event"
-require "#{File.dirname(__FILE__)}/events/ctcp_events"
-require "#{File.dirname(__FILE__)}/events/disconnect_event"
-require "#{File.dirname(__FILE__)}/events/end_of_motd_event"
-require "#{File.dirname(__FILE__)}/events/join_event"
-require "#{File.dirname(__FILE__)}/events/names_event"
-require "#{File.dirname(__FILE__)}/events/ping_event"
-require "#{File.dirname(__FILE__)}/events/nickname_in_use_event"
-require "#{File.dirname(__FILE__)}/events/end_of_names_event"
-require "#{File.dirname(__FILE__)}/events/notice_event"
+require "lib/irc/events/event"
+require "lib/irc/events/replyable"
+require "lib/irc/events/private_message_event"
+require "lib/irc/events/ctcp_events"
+require "lib/irc/events/disconnect_event"
+require "lib/irc/events/end_of_motd_event"
+require "lib/irc/events/join_event"
+require "lib/irc/events/names_event"
+require "lib/irc/events/ping_event"
+require "lib/irc/events/nickname_in_use_event"
+require "lib/irc/events/end_of_names_event"
+require "lib/irc/events/notice_event"
+require "lib/irc/events/quit_event"
+require "lib/irc/events/part_event"
 
 
 module FBSDBot
@@ -17,13 +19,15 @@ module FBSDBot
     class EventProducer
       
       COMMANDS = {
-        'PING' => PingEvent,
-        'JOIN' => JoinEvent,
+        'PING'   => PingEvent,
+        'JOIN'   => JoinEvent,
+        'PART'   => PartEvent,
         'NOTICE' => NoticeEvent,
-        '376'  => EndOfMotdEvent,
-        '353'  => NamesEvent,
-        '433'  => NicknameInUseEvent,
-        '366'  => EndOfNamesEvent,
+        'QUIT'   => QuitEvent,
+        '376'    => EndOfMotdEvent,
+        '353'    => NamesEvent,
+        '433'    => NicknameInUseEvent,
+        '366'    => EndOfNamesEvent,
       }
       
       CTCP_COMMANDS = {

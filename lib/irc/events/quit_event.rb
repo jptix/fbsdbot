@@ -1,14 +1,14 @@
 module FBSDBot
-  class JoinEvent < Event
+  class QuitEvent < Event
 
-    attr_reader :nick, :user, :host, :channel
+    attr_reader :nick, :host, :user, :message
     
     def initialize(conn, opts = {})
       super(conn)
       @nick    = opts[:nick]
-      @user    = opts[:user]
       @host    = opts[:host]
-      @channel = opts[:params].first
+      @user    = opts[:user]
+      @message = opts[:params].first
     end
     
   end
