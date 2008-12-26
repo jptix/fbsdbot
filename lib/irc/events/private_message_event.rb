@@ -20,7 +20,7 @@ module FBSDBot
     end
     
     def reply(string)
-      @connection.send_message @to, string.to_s
+      @connection.send_message @nick, string.to_s
     end
     
   end

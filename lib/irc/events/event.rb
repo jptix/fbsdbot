@@ -1,9 +1,6 @@
 module FBSDBot
   class Event
 
-    User = Struct.new(:nick, :user, :host)
-
-
     def initialize(connection)
       @connection = connection
     end
