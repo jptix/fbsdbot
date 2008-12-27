@@ -5,7 +5,6 @@ require 'yaml'
 
 # GEMS
 require 'rubygems'
-require "ruby-debug"
 require "eventmachine"
 
 require "lib/logger"
