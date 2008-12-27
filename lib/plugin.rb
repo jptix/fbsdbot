@@ -14,9 +14,10 @@ module FBSDBot
         class_eval do
           names.each do |name|
             define_method(name) do |*args|
-              case args.size
-              when 0: instance_variable_get("@#{name}")
-              else    instance_variable_set("@#{name}", [*args])
+              if args.size == 0
+                instance_variable_get("@#{name}")
+              else
+                instance_variable_set("@#{name}", [*args])
               end
             end
           end
@@ -47,18 +48,13 @@ module FBSDBot
            commands(commands)
          end
         
-        
         Log.debug(@event_handlers, self)
         @registered_plugins[name.to_sym] = plugin
       end
 
       def send_event(event)
-        event_type = event.type
-        
-        if event.command?
-          event_type = "cmd_#{event.command}"
-        end
-        
+        event_type = event.command? ? "cmd_#{event.command}" : event.type
+
         @event_handlers[event_type].each do |handler|
           handler.send "on_#{event_type}", event
         end
