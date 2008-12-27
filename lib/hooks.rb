@@ -40,7 +40,6 @@ module FBSDBot
       p = new
       p.instance_eval(&block)
       p.instance_eval { name(name) }
-      
       Plugin.registered_plugins[name.to_sym] = p
     end
     
