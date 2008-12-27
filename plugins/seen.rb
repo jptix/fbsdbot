@@ -126,7 +126,7 @@ FBSDBot::Plugin.define("seen") {
     @logger.log_event(action.nick, nil, :quit, action.message)
   end
 
-  def on_msg_seen(action)
+  def on_cmd_seen(action)
     @logger.seen_nick(action, action.message)
   end
 

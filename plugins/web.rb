@@ -94,15 +94,15 @@ FBSDBot::Plugin.define("web") {
   # = Action Hooks =
   # ==================
 
-  def on_msg_google(action)
+  def on_cmd_google(action)
     action.reply @web.google(action.message)
   end
 
-  def on_msg_calc(action)
+  def on_cmd_calc(action)
     action.reply @web.calc(action.message)
   end
 
-  def on_msg_wp(action)
+  def on_cmd_wp(action)
     action.reply @web.wp(action.message)
   end
 

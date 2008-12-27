@@ -317,7 +317,7 @@ FBSDBot::Plugin.define "rss" do
     @started = true
   end
 
-  def on_msg_rss(action)
+  def on_cmd_rss(action)
     cmd = action.message.split
     case cmd.shift
     when 'subscribe'

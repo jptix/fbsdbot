@@ -3,7 +3,7 @@ FBSDBot::Plugin.define "AuthHandler" do
   author "Daniel Bond"
   version "0.0.2"
 
-  def on_msg_auth(a)
+  def on_cmd_auth(a)
     return unless a.type == :privmsg
     return a.reply("Allready authenticated, use !logout to log out")	if( a.auth?)
 
@@ -15,13 +15,13 @@ FBSDBot::Plugin.define "AuthHandler" do
     a.reply("Not authenticated!")
   end
 
-  def on_msg_logout(a)
+  def on_cmd_logout(a)
     return a.reply("Not authenticated anyhowly?")	unless a.auth?
     a.auth.logout(a)
     a.reply("User logged out")
   end
 
-  def on_msg_changepass(a)
+  def on_cmd_changepass(a)
     return unless a.type == :privmsg
     return a.reply("Not authed") unless a.auth?
     return a.syntax("!changepass <pass (6-50chars)>") unless a.message.match(/^.*?changepass (.+){6,50}/)
@@ -29,16 +29,16 @@ FBSDBot::Plugin.define "AuthHandler" do
     a.reply("Password changed!")
   end
 
-  def on_msg_join(a)
+  def on_cmd_join(a)
     return a.say("to where?") unless a.message.match(/^(\S+)/)
     a.join($1)
   end
 
-  def on_msg_notice(a)
+  def on_cmd_notice(a)
     a.notice("Mr_Bond", a.message)
   end
 
-  def on_msg_op(a)
+  def on_cmd_op(a)
     return a.reply("Not authed") unless a.auth?
     if a.channel.nil?
       if a.message.match(/^#(\S)/)

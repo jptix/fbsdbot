@@ -79,7 +79,7 @@ FBSDBot::Plugin.define('todo') {
     @started = true
   end
 
-  def on_msg_todo(action)
+  def on_cmd_todo(action)
     if action.message =~ (/del (\d+)/)
       @td.del(action.nick, $1.to_i) == nil ? action.reply("Not found.") : action.reply("Ok, deleted todo.")
     else
@@ -88,7 +88,7 @@ FBSDBot::Plugin.define('todo') {
     end
   end
 
-  def on_msg_todos(action)
+  def on_cmd_todos(action)
     todo_string = @td.list(action.nick).enum_with_index.map { |todo, i| "%y#{i+1}%n: #{todo.text}" }.join(" %r|%n ")
     if todo_string.empty?
       action.reply "Your TODO list is empty."

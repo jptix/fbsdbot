@@ -115,19 +115,19 @@ FBSDBot::Plugin.define("freebsd") {
   # = Action Hooks =
   # ==================
 
-  def on_msg_whatis(action)
+  def on_cmd_whatis(action)
     action.reply @freebsd.whatis(action.message)
   end
 
-  def on_msg_man(action)
+  def on_cmd_man(action)
     @freebsd.man(action, action.message)
   end
 
-  def on_msg_ports(action)
+  def on_cmd_ports(action)
     @freebsd.ports(action, action.message)
   end
 
-  def on_msg_doc(action)
+  def on_cmd_doc(action)
     @freebsd.doc(action, action.message)
   end
 }
