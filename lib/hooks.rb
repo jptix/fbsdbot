@@ -37,7 +37,6 @@ module FBSDBot
     end
 
     def self.define(name, &block)
-      @name = name
       p = new
       p.instance_eval(&block)
       p.instance_eval { name(name) }
