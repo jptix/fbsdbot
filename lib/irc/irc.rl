@@ -1,4 +1,4 @@
-# IRC Ragel parser - compile with `ragel -R irc.rl -o parser.rb`
+# IRC Ragel parser - compile with `ragel -R rfc2812.rl -o parser.rb`
 
 %%{
 	machine irc;

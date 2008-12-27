@@ -13,6 +13,6 @@ desc 'Compile the Ragel parser'
 task :compile_parser do
   chdir "#{File.dirname(__FILE__)}/lib/irc" 
   print "Compiling..."
-  sh "ragel -R irc.rl -o parser.rb"
+  sh "ragel -R rfc2812 -o parser.rb"
   puts "done!"
 end
