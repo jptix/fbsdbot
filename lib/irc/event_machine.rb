@@ -36,7 +36,6 @@ module FBSDBot
       
       def connection_completed
         @connected = true
-        Log.info("Sending login information", self)
         login
       end
       

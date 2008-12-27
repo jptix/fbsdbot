@@ -89,6 +89,7 @@ module FBSDBot
       private
 
       def login
+        Log.info("Sending login information", self)
         send_raw(NICK, @args[:nick])
         send_raw(USER, @args[:username], 0, "*", @args[:realname])
       end

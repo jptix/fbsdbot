@@ -14,17 +14,6 @@ module FBSDBot
       end
 
     end
-    class Hostmask
-      attr :exp
-      def initialize(hostmask)
-        @hostmask = hostmask
-      end
-      def match(exp)
-        @exp = Regexp.new("^" + exp.gsub('*','.+?') + "$")
-        return true	if( @exp.match(@hostmask) )
-        false
-      end
-    end
   end
 
 
