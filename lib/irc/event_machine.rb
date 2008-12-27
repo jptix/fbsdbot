@@ -4,7 +4,7 @@ require 'lib/irc/event_constants'
 module FBSDBot
   module IRC
     class EMCore < EventMachine::Connection
-      attr_reader :args
+      attr_reader :args, :start_time
       include EventMachine::Deferrable
       include Commands
       include Constants
@@ -63,6 +63,9 @@ module FBSDBot
           join_channels(*@args[:channels])
         when NicknameInUseEvent
           change_nick Helpers::NickObfusicator.run(@args[:nick])
+        else
+          ## CREATE cases above for events we don't want plugins to be able to handle
+          Plugin.find_plugins(event)
         end
       end
      

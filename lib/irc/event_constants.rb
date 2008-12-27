@@ -2,7 +2,11 @@ module FBSDBot
   module IRC
     module Constants
       EOL     = "\r\n".freeze
+      
       EXP_EOL = /#{EOL}$/.freeze
+      
+      LIMIT_MESSAGE = 300.freeze
+      
       # A single space character
       Space   = " ".freeze
       # AWAY command

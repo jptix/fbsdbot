@@ -4,11 +4,13 @@ FBSDBot::Plugin.define("corecommands") {
   commands %w{uptime commands}
 
   def on_msg_uptime(action)
-    action.reply "I've been running for #{FBSDBot.seconds_to_s((Time.now - $bot.start_time).to_i)}, during which I have processed #{$bot.command_count} command#{$bot.command_count > 1 ? 's' : ''}."
+    action.reply "I've been running for #{FBSDBot.seconds_to_s((Time.now - action.worker.start_time).to_i)}"
   end
 
   def on_msg_commands(action)
-    action.reply "My commands are: " + $bot.commands.join(", ")
+    FBSDBot::Plugin.registered_plugins.each do |ident,p|
+      action.reply "#{p} available commands: #{p.commands.join(", ")}"
+    end
   end
 
   def on_ctcp_version(action)

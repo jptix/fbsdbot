@@ -1,7 +1,7 @@
 module FBSDBot
   module Replyable
 
-    attr_reader :to, :message, :nick
+    attr_reader :to, :message, :nick, :user, :host
     
     def setup(opts)
       @to, @message  = opts[:params]
@@ -12,7 +12,7 @@ module FBSDBot
 
     def reply(string)
       who = self.channel? ? @to : @nick
-      @connection.send_message who, string.to_s
+      @worker.send_privmsg string.to_s, who
     end
     
   end
