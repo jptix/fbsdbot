@@ -14,5 +14,4 @@ FBSDBot::Plugin.define("corecommands") {
   def on_ctcp_version(action)
     action.reply "running FBSDBot v#{FBSDBot::VERSION} - on Ruby v#{RUBY_VERSION}"
   end
-
 }

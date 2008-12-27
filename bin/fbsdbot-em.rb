@@ -5,7 +5,13 @@ require 'lib/boot'
 require 'lib/options_parser'
 require 'lib/irc/event_machine'
 
-EventMachine::run {
+EventMachine::run {  
+  require 'lib/corecommands'
+  Log.info "Loaded plugins:"
+  FBSDBot::Plugin.list_plugins
+
+  ### TODO: load the other plugins..
+  
   FBSDBot::IRC::EMCore.connect(
     :host     => $config[:host],
     :nick     => $config[:nick],

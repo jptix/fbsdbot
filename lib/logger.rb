@@ -48,7 +48,7 @@ module FBSDBot
       return unless LOG_LEVELS[type] >= LOG_LEVELS[@level]
       
       msg = msg.inspect if Hash === msg
-      @out.puts "#{Time.now.strftime("%F %T")} #{obj} :: #{type} - #{msg}"
+      @out.puts "#{Time.now.strftime("%F %T")} (#{type}) #{obj} :: #{msg}"
     end
   end
 end

@@ -33,14 +33,19 @@ module FBSDBot
     end
 
     def self.list_plugins
-      @registered_plugins.each {|i,p| puts "  - #{i} (#{p.version}) by: #{p.author}"}
+      @registered_plugins.each {|i,p| Log.info "Written by #{p.author}", p}
     end
 
     def self.define(name, &block)
       @name = name
       p = new
       p.instance_eval(&block)
+      p.instance_eval { name(name) }
       Plugin.registered_plugins[name.to_sym] = p
+    end
+    
+    def to_s
+        "#<FBSDBot::Plugin: #{@name}, #{@version}>"
     end
 
     def self.find_plugins(name, event)
@@ -57,7 +62,7 @@ module FBSDBot
     end
 
     extend PluginSugar
-    def_field :author, :version, :commands
+    def_field :name, :author, :version, :commands
   end
 
 end
