@@ -47,13 +47,16 @@ module FBSDBot
         "#<FBSDBot::Plugin: #{@name}, #{@version}>"
     end
 
-    def self.find_plugins(name, event)
+     def self.find_plugins(event)
       found = false
       @registered_plugins.each do |i,p|
-        if p.respond_to?(name)
-          $bot.command_count += 1 if event.command?
-          p.send(name,event)
-          found = true
+        case(event)
+          when PrivateMessageEvent            
+            if event.message =~ /^!(\S+)/ && p.respond_to?("on_msg_#{$1}")
+              p.send("on_msg_#{$1}", event)
+            elsif p.respond_to?(:on_msg)
+              p.send(:on_msg, event) 
+            end
         end
       end
 

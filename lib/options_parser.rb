@@ -30,8 +30,7 @@ op.parse!(ARGV)
 
 config = YAML.load_file(ARGV.first || "#{File.dirname(__FILE__)}/../bin/bot.conf.example")
 $config = config.merge(opts)
-puts "Loaded config."
+Log.info "Loaded config.", config
 
-p $config
 
 

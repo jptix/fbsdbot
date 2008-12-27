@@ -34,7 +34,7 @@ module FBSDBot
       # cuts the message-text into pieces of a maximum size
       # (or until the next newline if shorter)
       def normalize_message(message, limit=nil, &block)
-        message.scan(/[^\n\r]{1,#{limit||@limit[:message_length]}}/, &block)
+        message.scan(/[^\n\r]{1,#{limit||LIMIT_MESSAGE}}/, &block)
       end
 
       # sends a privmsg to given user or channel (or multiple)
@@ -42,6 +42,7 @@ module FBSDBot
       # into multiple messages.
 
       def send_privmsg(message, *recipients)
+        Log.info("sending privmsg '#{message}' to '#{recipients}'")
         normalize_message(message) { |message|
           recipients.each { |recipient|
             send_raw(PRIVMSG, recipient, message)

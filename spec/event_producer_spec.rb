@@ -78,7 +78,7 @@ describe "EventProducer" do
     event.channel.should == "#bot-test.no"
     event.server.should == "irc.homelien.no"
   end
-  
+    
   it "should create the correct event when someone quits" do
     event = @ep.parse_line ":tesvbot20!~FBSDBot@nextgentel.com QUIT :Remote host closed the connection\r\n"
     event.should be_instance_of(QuitEvent)

@@ -1,8 +1,10 @@
 module FBSDBot
   class Event
 
-    def initialize(connection)
-      @connection = connection
+    attr_reader :worker
+
+    def initialize(worker)
+      @worker = worker
     end
     
     def type
@@ -25,7 +27,6 @@ module FBSDBot
       end
       
       str << '>'
-    end
-    
+    end    
   end
 end
