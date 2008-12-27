@@ -38,7 +38,7 @@ describe "EventProducer" do
     event.nick.should == 'jptix'
     
     event.should respond_to(:reply)
-    @conn.should_receive(:send_notice).with("jptix", "\001VERSION hello\001")
+    @conn.should_receive(:send_notice).with("\001VERSION hello\001", "jptix")
     event.reply "hello"
   end
   
