@@ -43,12 +43,11 @@ describe "EventProducer" do
   end
   
   it "should create the correct event for motd lines" do
-    
-  end
-  
-  it "should show instance variables for event.inspect" do
-    event = @ep.parse_line ":irc.homelien.no 372 testbot20 :- We do not allow bots per se, but if your bot behaves properly and\r\n"
-    event.inspect.should =~ /^#<FBSDBot::MotdEvent\(:motd\):0x[0-9a-f]{6} @server=\"irc.homelien.no\">$/
+    event = @ep.parse_line ":irc.homelien.no 372 testbot20 :- This is \002irc.homelien.no\002 on \002EFnet\002, the world's oldest living\r\n"
+    event.should be_instance_of(MotdEvent)
+    event.to.should == "testbot20"
+    event.server.should == "irc.homelien.no"
+    event.message.should == "- This is \002irc.homelien.no\002 on \002EFnet\002, the world's oldest living"
   end
   
   it "should create the correct event for a notice" do
