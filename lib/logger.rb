@@ -47,7 +47,7 @@ module FBSDBot
     def log(type, msg, obj)
       return unless LOG_LEVELS[type] >= LOG_LEVELS[@level]
       
-      msg = msg.inspect if Hash === msg
+      msg = msg.inspect if [Hash, Array].include?(msg.class)
       @out.puts "#{Time.now.strftime("%F %T")} (#{type}) #{obj} :: #{msg}"
     end
   end
