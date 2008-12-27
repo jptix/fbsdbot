@@ -17,7 +17,7 @@ require "lib/irc/events/part_event"
 module FBSDBot
   module IRC
     class EventProducer
-      
+
       COMMANDS = {
         'PING'   => PingEvent,
         'JOIN'   => JoinEvent,
@@ -29,7 +29,7 @@ module FBSDBot
         '433'    => NicknameInUseEvent,
         '366'    => EndOfNamesEvent,
       }
-      
+
       CTCP_COMMANDS = {
         'VERSION'    => CTCPVersionEvent,
         'PING'       => CTCPPingEvent,
@@ -45,7 +45,7 @@ module FBSDBot
       def initialize(worker)
         @conn = worker
       end
-      
+
       def parse_line(line)
         Log.debug :incoming => line
         result = Parser.parse_message(line)
@@ -53,20 +53,20 @@ module FBSDBot
         return hash_to_event(result) if result
         return nil
       end
-      
+
       def disconnect_event
         create DisconnectEvent
       end
-      
+
       private
-      
+
       def hash_to_event(hash)
         command = hash[:command]
-        
+
         if event_class = COMMANDS[command]
           return create(event_class, hash)
         end
-        
+
         case command
         when 'PRIVMSG'
           create_privmsg(hash)
@@ -74,7 +74,7 @@ module FBSDBot
           Log.warn "unknown event for #{hash.inspect}"
         end
       end
-      
+
       def create_ctcp(type, hash)
         if event_class = CTCP_COMMANDS[type]
           return create(event_class, hash)
@@ -92,11 +92,11 @@ module FBSDBot
           create PrivateMessageEvent, hash
         end
       end
-            
+
       def create(type, opts = {})
         type.new(@conn, opts)
       end
-      
+
     end # EventProducer
   end # IRC
 end # FBSDBot
