@@ -1,7 +1,6 @@
 FBSDBot::Plugin.define("corecommands") {
   author "jp_tix"
   version "0.0.1"
-  commands %w{uptime commands}
 
   def on_cmd_uptime(event)
     event.reply "I've been running for #{FBSDBot.seconds_to_s((Time.now - event.worker.start_time).to_i)}"

@@ -28,14 +28,23 @@ module FBSDBot
       def define(name, &block)
         plugin = new
         plugin.instance_eval(&block)
-        plugin.instance_eval { name(name) }
         
+        commands = []
         
         (plugin.methods - Object.methods).each do |method|
-          if method.to_s =~ /on_(.+)/
+          method = method.to_s # will be symbols in 1.9
+          
+          if method =~ /on_(.+)/
             @event_handlers[$1] << plugin
+            commands << $1 if method =~ /on_cmd_(.+)/
           end
         end
+        
+        plugin.instance_eval do
+           name(name) 
+           commands(commands)
+         end
+        
         
         Log.debug(@event_handlers, self)
         @registered_plugins[name.to_sym] = plugin
