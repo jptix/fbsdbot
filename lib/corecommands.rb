@@ -13,7 +13,7 @@ FBSDBot::Plugin.define("corecommands") {
     end
   end
 
-  def on_ctcp_version(action)
+  def on_ctcp_version(event)
     event.reply "running FBSDBot v#{FBSDBot::VERSION} - on Ruby v#{RUBY_VERSION}"
   end
 }
