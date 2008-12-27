@@ -1,14 +1,26 @@
 module FBSDBot
+  
+  # abstract superclass 
   class Event
 
     attr_reader :worker
 
+    def self.type
+      return @type if defined?(@type)
+      
+      if ev = name.snake_case[/::(.+?)_event/, 1]
+        @type = ev.to_sym
+      else
+        @type = name.snake_case.to_sym
+      end
+    end
+    
     def initialize(worker)
       @worker = worker
     end
     
     def type
-      @type ||= self.class.name.snake_case[/::(.+?)_event/, 1].to_sym
+      self.class.type
     end
     
     def command?

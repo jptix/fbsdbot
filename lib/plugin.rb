@@ -48,7 +48,6 @@ module FBSDBot
            commands(commands)
          end
         
-        Log.debug(@event_handlers, self)
         @registered_plugins[name.to_sym] = plugin
       end
 
