@@ -2,7 +2,8 @@ module FBSDBot
 
   class Plugin
     @registered_plugins = {}
-
+    @event_handlers = Hash.new { |h, k| h[k] = [] }
+    
     class << self
       attr_reader :registered_plugins
       private :new
@@ -25,10 +26,19 @@ module FBSDBot
       end
 
       def define(name, &block)
-        p = new
-        p.instance_eval(&block)
-        p.instance_eval { name(name) }
-        Plugin.registered_plugins[name.to_sym] = p
+        plugin = new
+        plugin.instance_eval(&block)
+        plugin.instance_eval { name(name) }
+        
+        
+        (plugin.methods - Object.methods).each do |method|
+          if method.to_s =~ /on_(.+)/
+            @event_handlers[$1] << plugin
+          end
+        end
+        
+        Log.debug(@event_handlers, self)
+        @registered_plugins[name.to_sym] = plugin
       end
 
       def find_plugins(event)

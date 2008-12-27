@@ -4,7 +4,7 @@ FBSDBot::Plugin.define("corecommands") {
   commands %w{uptime commands}
 
   def on_msg_uptime(event)
-    action.reply "I've been running for #{FBSDBot.seconds_to_s((Time.now - action.worker.start_time).to_i)}"
+    event.reply "I've been running for #{FBSDBot.seconds_to_s((Time.now - action.worker.start_time).to_i)}"
   end
 
   def on_msg_commands(event)
