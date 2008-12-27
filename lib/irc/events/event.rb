@@ -15,6 +15,11 @@ module FBSDBot
       @message && @message[0,1] == "!"
     end
     
+    def command
+      return unless command?
+      @message[/!(\w+)/, 1]
+    end
+    
     def channel?
       @to && IRC::Parser.target_type(@to) == :channel
     end
