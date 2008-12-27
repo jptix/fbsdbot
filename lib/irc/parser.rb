@@ -1,7 +1,7 @@
 # line 1 "irc.rl"
 # IRC Ragel parser - compile with `ragel -R irc.rl -o parser.rb`
 
-# line 116 "irc.rl"
+# line 72 "irc.rl"
 
 
 module FBSDBot
@@ -1024,7 +1024,7 @@ class << self
 end
 self.irc_en_message_type = 124;
 
-# line 123 "irc.rl"
+# line 79 "irc.rl"
     
       class << self
         def parse_message(data)
@@ -1039,7 +1039,7 @@ begin
 	pe ||= data.length
 	cs = irc_start
 end
-# line 131 "irc.rl"
+# line 87 "irc.rl"
           
 # line 1045 "parser.rb"
 begin
@@ -1125,95 +1125,69 @@ begin
 when 0 then
 # line 6 "irc.rl"
 		begin
-
-                buf = ""
-        		end
+ buf = "" 		end
 # line 6 "irc.rl"
 when 1 then
-# line 10 "irc.rl"
+# line 7 "irc.rl"
 		begin
-
-                buf << data[p]
-        		end
-# line 10 "irc.rl"
+ buf << data[p] 		end
+# line 7 "irc.rl"
 when 2 then
-# line 14 "irc.rl"
+# line 8 "irc.rl"
 		begin
-
-                result[:command] = buf
-        		end
-# line 14 "irc.rl"
+ result[:command] = buf 		end
+# line 8 "irc.rl"
 when 3 then
-# line 18 "irc.rl"
+# line 9 "irc.rl"
 		begin
-
-                result[:server] = buf
-        		end
-# line 18 "irc.rl"
+ result[:server] = buf 		end
+# line 9 "irc.rl"
 when 4 then
-# line 22 "irc.rl"
+# line 10 "irc.rl"
 		begin
-
-                result[:nick] = buf
-        		end
-# line 22 "irc.rl"
+ result[:nick] = buf 		end
+# line 10 "irc.rl"
 when 5 then
-# line 26 "irc.rl"
+# line 11 "irc.rl"
 		begin
-
-                result[:user] = buf
-        		end
-# line 26 "irc.rl"
+ result[:user] = buf 		end
+# line 11 "irc.rl"
 when 6 then
-# line 30 "irc.rl"
+# line 12 "irc.rl"
 		begin
-
-                result[:host] = buf
-        		end
-# line 30 "irc.rl"
+ result[:host] = buf 		end
+# line 12 "irc.rl"
 when 7 then
-# line 34 "irc.rl"
+# line 13 "irc.rl"
 		begin
-
-                params = []
-        		end
-# line 34 "irc.rl"
+ params = [] 		end
+# line 13 "irc.rl"
 when 8 then
-# line 38 "irc.rl"
+# line 14 "irc.rl"
 		begin
-
-                params << ""
-        		end
-# line 38 "irc.rl"
+ params << "" 		end
+# line 14 "irc.rl"
 when 9 then
-# line 42 "irc.rl"
+# line 15 "irc.rl"
 		begin
-
-                params.last << data[p]
-        		end
-# line 42 "irc.rl"
+ params.last << data[p] 		end
+# line 15 "irc.rl"
 when 10 then
-# line 46 "irc.rl"
+# line 16 "irc.rl"
 		begin
-
-                result[:params] = params
-        		end
-# line 46 "irc.rl"
+ result[:params] = params 		end
+# line 16 "irc.rl"
 when 11 then
-# line 50 "irc.rl"
+# line 17 "irc.rl"
 		begin
-
-                result = :channel
-        		end
-# line 50 "irc.rl"
+ result = :channel 		end
+# line 17 "irc.rl"
 when 12 then
-# line 54 "irc.rl"
+# line 18 "irc.rl"
 		begin
-
-                result = :user
-        		end
-# line 54 "irc.rl"
-# line 1217 "parser.rb"
+ result = :user 		end
+# line 18 "irc.rl"
+# line 1191 "parser.rb"
 			end # action switch
 		end
 	end
@@ -1239,7 +1213,7 @@ when 12 then
 	end
 	end
 	end
-# line 132 "irc.rl"
+# line 88 "irc.rl"
         
           if $DEBUG
             Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
@@ -1252,16 +1226,16 @@ when 12 then
           result = nil
           
           
-# line 1256 "parser.rb"
+# line 1230 "parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = irc_start
 end
-# line 144 "irc.rl"
+# line 100 "irc.rl"
           cs = irc_en_message_type;
           
-# line 1265 "parser.rb"
+# line 1239 "parser.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -1345,95 +1319,69 @@ begin
 when 0 then
 # line 6 "irc.rl"
 		begin
-
-                buf = ""
-        		end
+ buf = "" 		end
 # line 6 "irc.rl"
 when 1 then
-# line 10 "irc.rl"
+# line 7 "irc.rl"
 		begin
-
-                buf << data[p]
-        		end
-# line 10 "irc.rl"
+ buf << data[p] 		end
+# line 7 "irc.rl"
 when 2 then
-# line 14 "irc.rl"
+# line 8 "irc.rl"
 		begin
-
-                result[:command] = buf
-        		end
-# line 14 "irc.rl"
+ result[:command] = buf 		end
+# line 8 "irc.rl"
 when 3 then
-# line 18 "irc.rl"
+# line 9 "irc.rl"
 		begin
-
-                result[:server] = buf
-        		end
-# line 18 "irc.rl"
+ result[:server] = buf 		end
+# line 9 "irc.rl"
 when 4 then
-# line 22 "irc.rl"
+# line 10 "irc.rl"
 		begin
-
-                result[:nick] = buf
-        		end
-# line 22 "irc.rl"
+ result[:nick] = buf 		end
+# line 10 "irc.rl"
 when 5 then
-# line 26 "irc.rl"
+# line 11 "irc.rl"
 		begin
-
-                result[:user] = buf
-        		end
-# line 26 "irc.rl"
+ result[:user] = buf 		end
+# line 11 "irc.rl"
 when 6 then
-# line 30 "irc.rl"
+# line 12 "irc.rl"
 		begin
-
-                result[:host] = buf
-        		end
-# line 30 "irc.rl"
+ result[:host] = buf 		end
+# line 12 "irc.rl"
 when 7 then
-# line 34 "irc.rl"
+# line 13 "irc.rl"
 		begin
-
-                params = []
-        		end
-# line 34 "irc.rl"
+ params = [] 		end
+# line 13 "irc.rl"
 when 8 then
-# line 38 "irc.rl"
+# line 14 "irc.rl"
 		begin
-
-                params << ""
-        		end
-# line 38 "irc.rl"
+ params << "" 		end
+# line 14 "irc.rl"
 when 9 then
-# line 42 "irc.rl"
+# line 15 "irc.rl"
 		begin
-
-                params.last << data[p]
-        		end
-# line 42 "irc.rl"
+ params.last << data[p] 		end
+# line 15 "irc.rl"
 when 10 then
-# line 46 "irc.rl"
+# line 16 "irc.rl"
 		begin
-
-                result[:params] = params
-        		end
-# line 46 "irc.rl"
+ result[:params] = params 		end
+# line 16 "irc.rl"
 when 11 then
-# line 50 "irc.rl"
+# line 17 "irc.rl"
 		begin
-
-                result = :channel
-        		end
-# line 50 "irc.rl"
+ result = :channel 		end
+# line 17 "irc.rl"
 when 12 then
-# line 54 "irc.rl"
+# line 18 "irc.rl"
 		begin
-
-                result = :user
-        		end
-# line 54 "irc.rl"
-# line 1437 "parser.rb"
+ result = :user 		end
+# line 18 "irc.rl"
+# line 1385 "parser.rb"
 			end # action switch
 		end
 	end
@@ -1459,7 +1407,7 @@ when 12 then
 	end
 	end
 	end
-# line 146 "irc.rl"
+# line 102 "irc.rl"
 
           if $DEBUG
             Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
