@@ -11,10 +11,11 @@ module FBSDBot
         class_eval do
           names.each do |name|
             define_method(name) do |*args|
-              if args.size == 0
-                instance_variable_get("@#{name}")
+              case args.size
+              when 0 then instance_variable_get("@#{name}")
+              when 1 then instance_variable_set("@#{name}", args.first)
               else
-                instance_variable_set("@#{name}", [*args])
+                instance_variable_set("@#{name}", args)
               end
             end
           end
