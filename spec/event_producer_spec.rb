@@ -2,7 +2,7 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "EventProducer" do
   before(:each) do
-    @conn = mock("Connection")
+    @conn = mock("EMCore")
     @ep = FBSDBot::IRC::EventProducer.new(@conn)
   end
 
@@ -14,7 +14,7 @@ describe "EventProducer" do
     event.should be_channel
     
     event.should respond_to(:reply)
-    @conn.should_receive(:send_message).with("#bot-test.no", "hello")
+    @conn.should_receive(:send_privmsg).with("hello","#bot-test.no")
     event.reply("hello")
   end
   
@@ -40,6 +40,12 @@ describe "EventProducer" do
     event.should respond_to(:reply)
     @conn.should_receive(:send_notice).with("jptix", "\001VERSION hello\001")
     event.reply "hello"
+  end
+  
+  it "should show instance variables for event.inspect" do
+    event = @ep.parse_line ":jptix!markus@nextgentel.com PRIVMSG testbot20 :\001VERSION\001\r\n"
+    event.inspect.should =~ /^#<FBSDBot::CTCPVersionEvent\(:ctcp_version\):0x[0-9a-f]{6} @message=\"\\001VERSION\\001\" @to=\"testbot20\" @user=\"markus\" @nick=\"jptix\" @host=\"nextgentel.com\">$/
+    event.inspect
   end
   
   it "should create the correct event for a notice" do

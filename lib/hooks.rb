@@ -51,12 +51,16 @@ module FBSDBot
       found = false
       @registered_plugins.each do |i,p|
         case(event)
+          
           when PrivateMessageEvent            
             if event.message =~ /^!(\S+)/ && p.respond_to?("on_msg_#{$1}")
               p.send("on_msg_#{$1}", event)
             elsif p.respond_to?(:on_msg)
               p.send(:on_msg, event) 
             end
+            
+          when CTCPVersionEvent
+            p.send(:on_ctcp_version, event)
         end
       end
 

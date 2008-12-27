@@ -27,7 +27,7 @@ module FBSDBot
     end
     
     def reply(string)
-      @connection.send_notice @nick, "\x01VERSION #{string}\x01"
+      @worker.send_notice @nick, "\x01VERSION #{string}\x01"
     end
   end
   
