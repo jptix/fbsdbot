@@ -42,10 +42,13 @@ describe "EventProducer" do
     event.reply "hello"
   end
   
+  it "should create the correct event for motd lines" do
+    
+  end
+  
   it "should show instance variables for event.inspect" do
-    event = @ep.parse_line ":jptix!markus@nextgentel.com PRIVMSG testbot20 :\001VERSION\001\r\n"
-    event.inspect.should =~ /^#<FBSDBot::CTCPVersionEvent\(:ctcp_version\):0x[0-9a-f]{6} @message=\"\\001VERSION\\001\" @to=\"testbot20\" @user=\"markus\" @nick=\"jptix\" @host=\"nextgentel.com\">$/
-    event.inspect
+    event = @ep.parse_line ":irc.homelien.no 372 testbot20 :- We do not allow bots per se, but if your bot behaves properly and\r\n"
+    event.inspect.should =~ /^#<FBSDBot::MotdEvent\(:motd\):0x[0-9a-f]{6} @server=\"irc.homelien.no\">$/
   end
   
   it "should create the correct event for a notice" do
