@@ -38,7 +38,7 @@ module FBSDBot
           method = method.to_s # will be symbols in 1.9
           
           if method =~ /on_(.+)/
-            @event_handlers[$1] << plugin
+            @event_handlers[$1.to_sym] << plugin
             commands << $1 if method =~ /on_cmd_(.+)/
           end
         end
@@ -53,7 +53,7 @@ module FBSDBot
       end
 
       def send_event(event)
-        event_type = event.command? ? "cmd_#{event.command}" : event.type
+        event_type = event.command? ? "cmd_#{event.command}".to_sym : event.type
 
         @event_handlers[event_type].each do |handler|
           handler.send "on_#{event_type}", event
