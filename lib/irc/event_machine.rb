@@ -1,4 +1,5 @@
 require 'lib/irc/event_commands'
+require 'lib/irc/event_constants'
 
 module FBSDBot
   module IRC
