@@ -12,7 +12,7 @@ module FBSDBot
     end
     
     def command?
-      @message && @message[0,1] == "!"
+      defined?(@message) && @message[0,1] == "!"
     end
     
     def command
