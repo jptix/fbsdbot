@@ -1,15 +1,18 @@
 require "rubygems"
 require "spec"
-require "ruby-debug"
 require "#{File.dirname(__FILE__)}/../lib/boot"
 
+begin
+  require "ruby-debug"
+  Debugger.settings[:autoeval] = true
+  Debugger.settings[:autolist] = 1
+rescue LoadError
+  puts "install ruby-debug if you want to use the debugger"
+end
 
 include FBSDBot
 
 Log.level = :fatal
-
-Debugger.settings[:autoeval] = true
-Debugger.settings[:autolist] = 1
 
 
 def parse_message(string)
