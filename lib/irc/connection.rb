@@ -100,11 +100,3 @@ module FBSDBot
     end # Connection
   end # IRC
 end # FBSDBot
-
-if __FILE__ == $0
-  conn = FBSDBot::IRC::Connection.new('utf8v2', 'irc.freenode.net')
-  conn.add_callback(:raw_message)     { |line| p line }
-  conn.add_callback(:private_message) { |from, to, msg| p :from => from, :to => to, :msg => msg }
-  conn.connect
-  conn.join
-end

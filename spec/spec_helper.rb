@@ -6,6 +6,8 @@ require "#{File.dirname(__FILE__)}/../lib/boot"
 
 include FBSDBot
 
+Log.level = :fatal
+
 Debugger.settings[:autoeval] = true
 Debugger.settings[:autolist] = 1
 
