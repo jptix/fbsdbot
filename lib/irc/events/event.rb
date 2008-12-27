@@ -37,13 +37,14 @@ module FBSDBot
     end
     
     def inspect
-      ivars = instance_variables - %w[@worker]
+      ivars = (instance_variables - %w[@worker]).sort
       str = "#<#{self.class.name}(:#{type}):0x#{self.hash.to_s(16)}"
       ivars.each do |ivar| 
         str << " #{ivar}=#{instance_variable_get(ivar).inspect}"
       end
       
       str << '>'
-    end    
+    end
+    
   end
 end
