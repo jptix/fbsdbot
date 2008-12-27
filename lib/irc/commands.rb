@@ -85,6 +85,35 @@ module FBSDBot
         }
       end
       
+  
+      # same as privmsg except it's formatted for ACTION
+      def send_action(message, *recipients)
+        normalize_message(message) { |message|
+          recipients.each { |recipient|
+            send_raw(PRIVMSG, recipient, "\001ACTION #{message}\001")
+          }
+        }
+      end
+  
+      # sends a notice to receiver (or multiple if receiver is array of receivers)
+      # formatted=true allows usage of ![]-format commands (see IRCmessage.getFormatted)
+      # messages containing newline automatically get splitted up into multiple messages.
+      # Too long messages will be tokenized into fitting sized messages (see @limit[:message_length])
+      def send_notice(message, *recipients)
+        normalize_message(message) { |message|
+          recipients.each { |recipient|
+            send_raw(NOTICE, recipient, message)
+          }
+        }
+      end
+  
+      # send a ping
+      def send_ping(*args)
+        send_raw(PING, *args)
+      end
+
+      ## stop
+
       def send_pong(*args)
         send_raw(PONG, *args)
       end
