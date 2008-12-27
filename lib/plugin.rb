@@ -3,9 +3,6 @@ module FBSDBot
   class Plugin
     include FBSDBot::Helpers
     
-    @registered_plugins = {}
-    @event_handlers = Hash.new { |h, k| h[k] = [] }
-    
     class << self
       attr_reader :registered_plugins
       private :new
@@ -22,6 +19,11 @@ module FBSDBot
             end
           end
         end
+      end
+      
+      def reset!
+        @registered_plugins = {}
+        @event_handlers = Hash.new { |h, k| h[k] = [] }
       end
 
       def list_plugins
@@ -65,6 +67,7 @@ module FBSDBot
       "#<FBSDBot::Plugin: #{@name}, #{@version}>"
     end
 
+    reset!
     def_field :name, :author, :version, :commands
   end
 
