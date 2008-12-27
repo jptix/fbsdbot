@@ -1,16 +1,3 @@
-class Array
-  def random
-    self[rand(self.size - 1)]
-  end
-end
-
-class String
-  def random
-    self[rand(self.size - 1)].chr
-  end
-end
-
-
 module FBSDBot
 
   module Plugins

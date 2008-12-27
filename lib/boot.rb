@@ -8,7 +8,6 @@ require 'rubygems'
 require "eventmachine"
 
 require "lib/logger"
-require "lib/action"
 require "lib/string"
 require 'lib/modules'
 require 'lib/hooks'
