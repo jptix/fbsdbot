@@ -3,6 +3,7 @@ require "lib/irc/events/replyable"
 require "lib/irc/events/private_message_event"
 require "lib/irc/events/ctcp_events"
 require "lib/irc/events/disconnect_event"
+require "lib/irc/events/motd_event"
 require "lib/irc/events/end_of_motd_event"
 require "lib/irc/events/join_event"
 require "lib/irc/events/names_event"
@@ -24,6 +25,7 @@ module FBSDBot
         'PART'   => PartEvent,
         'NOTICE' => NoticeEvent,
         'QUIT'   => QuitEvent,
+        '372'    => MotdEvent,
         '376'    => EndOfMotdEvent,
         '353'    => NamesEvent,
         '433'    => NicknameInUseEvent,

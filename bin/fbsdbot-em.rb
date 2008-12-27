@@ -5,6 +5,8 @@ require 'lib/boot'
 require 'lib/options_parser'
 require 'lib/irc/event_machine'
 
+Log.level = :warn
+
 EventMachine::run {  
   require 'lib/corecommands'
   Log.info "Loaded plugins:"
