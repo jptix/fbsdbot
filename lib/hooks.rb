@@ -60,7 +60,10 @@ module FBSDBot
             end
             
           when CTCPVersionEvent
-            p.send(:on_ctcp_version, event)
+            Log.debug("Handling version event", event)
+            p.send(:on_ctcp_version, event) if p.respond_to?(:on_ctcp_version)
+          else
+            Log.debug("find_plugins: no plugins respond", event)
         end
       end
 
