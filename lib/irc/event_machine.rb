@@ -13,7 +13,6 @@ module FBSDBot
         args[:port]     ||= 6667
         args[:username] ||= args[:nick]
         args[:realname] ||= args[:nick]
-        args[:channels] ||= args[:channels]
          
         EventMachine::connect( args[:host], args[:port], self) do |instance| 
           instance.instance_eval {
@@ -32,6 +31,7 @@ module FBSDBot
         @start_time = Time.now
         @buffer = ""
         @connected = false
+        @shutdown = false
       end
       
       def connection_completed
@@ -41,14 +41,26 @@ module FBSDBot
       end
       
       def receive_data(data)
+        lines = 0
         data.each_line(EOL) do |line|
-          line =~ EXP_EOL ? produce_event(line) : @buffer << line
+          next if line == EOL
+          if line =~ EXP_EOL 
+            lines += 1 
+            produce_event(line) 
+          else
+            @buffer << line
+          end
         end
+        
+        lines
       end
 
       def produce_event(line)
         message = @buffer.empty? ? line : @buffer + line
         @buffer = "" # important, reset buffer!
+        
+        # for tests only.. TODO: improve this
+        @event_producer = EventProducer.new(nil) if(@event_producer.nil?)
 
         handle_event(@event_producer.parse_line(message))
       end
@@ -71,6 +83,7 @@ module FBSDBot
       def unbind
         @connected = false
         Log.info("Disconnected", self)
+        reconnect(@args[:host], @args[:port]) unless(@shutdown)
         succeed(self) # send status to handle if this is good or bad, this might not allways be a good thing.. 
       end
       

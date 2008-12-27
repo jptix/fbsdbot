@@ -1,8 +1,7 @@
 require 'lib/irc/event_constants'
 
 module FBSDBot
-  module IRC
-    
+  module IRC    
     module Commands
       include Constants
 

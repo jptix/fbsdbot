@@ -45,7 +45,7 @@ module FBSDBot
       }
 
       def initialize(worker)
-        @conn = worker
+        @worker = worker
       end
 
       def parse_line(line)
@@ -96,7 +96,7 @@ module FBSDBot
       end
 
       def create(type, opts = {})
-        type.new(@conn, opts)
+        type.new(@worker, opts)
       end
 
     end # EventProducer

@@ -3,7 +3,7 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 describe "EventProducer" do
   before(:each) do
     @conn = mock("EMCore")
-    @ep = FBSDBot::IRC::EventProducer.new(@conn)
+    @ep = IRC::EventProducer.new(@conn)
   end
 
   it "should create the correct event when receiving a private message" do
