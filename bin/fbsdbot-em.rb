@@ -5,7 +5,7 @@ require 'lib/boot'
 require 'lib/options_parser'
 require 'lib/irc/event_machine'
 
-Log.level = :debug
+Log.level = :info
 
 EventMachine::run {  
   require 'lib/corecommands'
