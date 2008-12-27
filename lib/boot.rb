@@ -8,8 +8,8 @@ require 'rubygems'
 require "eventmachine"
 
 require "lib/logger"
-require "lib/string"
-require 'lib/modules'
+require "lib/core_ext/string"
+require 'lib/helpers'
 require 'lib/plugin'
 require 'lib/irc/parser'
 require 'lib/irc/event_producer'

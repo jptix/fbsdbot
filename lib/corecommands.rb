@@ -3,7 +3,7 @@ FBSDBot::Plugin.define("corecommands") {
   version "0.0.1"
 
   def on_cmd_uptime(event)
-    event.reply "I've been running for #{FBSDBot.seconds_to_s((Time.now - event.worker.start_time).to_i)}"
+    event.reply "I've been running for #{ seconds_to_s((Time.now - event.worker.start_time).to_i) }"
   end
 
   def on_cmd_commands(event)

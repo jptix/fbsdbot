@@ -1,6 +1,8 @@
 module FBSDBot
 
   class Plugin
+    include FBSDBot::Helpers
+    
     @registered_plugins = {}
     @event_handlers = Hash.new { |h, k| h[k] = [] }
     

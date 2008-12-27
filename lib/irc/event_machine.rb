@@ -72,7 +72,7 @@ module FBSDBot
         when EndOfMotdEvent
           join_channels(*@args[:channels])
         when NicknameInUseEvent
-          change_nick Helpers::NickObfusicator.run(@args[:nick])
+          change_nick Helpers.obfuscate_nick(@args[:nick])
         else
           ## CREATE cases above for events we don't want plugins to be able to handle
           Plugin.send_event event
