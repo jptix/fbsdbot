@@ -20,7 +20,7 @@ module FBSDBot
     end
     
     def inspect
-      ivars = instance_variables - %w[@connection]
+      ivars = instance_variables - %w[@worker]
       str = "#<#{self.class.name}(:#{type}):0x#{self.hash.to_s(16)}"
       ivars.each do |ivar| 
         str << " #{ivar}=#{instance_variable_get(ivar).inspect}"

@@ -8,7 +8,7 @@ module FBSDBot
     end
     
     def pong
-      @connection.send_pong @to
+      @worker.send_pong @to
     end
     
   end

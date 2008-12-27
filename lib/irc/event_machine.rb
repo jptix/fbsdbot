@@ -19,7 +19,6 @@ module FBSDBot
           instance.instance_eval {
             @args = args
             @event_producer = EventProducer.new(self)
-           # @callbacks = Hash.new { |h, k| h[k] = [] }
             Log.info("Connecting to server", self)
           }
         end
