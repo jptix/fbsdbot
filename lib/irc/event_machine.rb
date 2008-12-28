@@ -57,9 +57,6 @@ module FBSDBot
       def produce_event(line)
         message = @buffer.empty? ? line : @buffer + line
         @buffer = "" # important, reset buffer!
-        
-        # for tests only.. TODO: improve this
-        @event_producer = EventProducer.new(nil) if(@event_producer.nil?)
 
         handle_event(@event_producer.parse_line(message))
       end
