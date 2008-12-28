@@ -5,7 +5,7 @@ module FBSDBot
     module Commands
       include Constants
 
-      def join_channels(*chans)
+      def send_join(*chans)
         chans.map { |channel, password|
           if password then
             send_raw(JOIN, channel, password)
@@ -14,6 +14,21 @@ module FBSDBot
           end
           channel
         } # need to map to get rid of the passwords
+      end
+      
+      # part specified channels
+      # returns the channels parted from.
+      def send_part(reason=nil, *channels)
+        if channels.empty?
+          channels = [reason]
+          reason   = nil
+        end # FIXME: leave this overloading in place or remove?
+        reason ||= "leaving"
+
+        # some servers still can't process lists of channels in part
+        channels.each { |channel|
+          send_raw(PART, channel, reason)
+        } # each returns receiver
       end
 
       def connected?
@@ -34,6 +49,15 @@ module FBSDBot
       # (or until the next newline if shorter)
       def normalize_message(message, limit=nil, &block)
         message.scan(/[^\n\r]{1,#{limit||LIMIT_MESSAGE}}/, &block)
+      end
+      
+      # Give Op to user in channel
+      # User can be a nick or IRC::User, either one or an array.
+      def send_multiple_mode(channel, pre, flag, targets)
+        (0...targets.length).step(12) { |i|
+          slice = targets[i,12]
+          send_raw(MODE, channel, "#{pre}#{flag*slice.length}", *slice)
+        }
       end
 
       # sends a privmsg to given user or channel (or multiple)
@@ -70,19 +94,91 @@ module FBSDBot
           }
         }
       end
+      
+      # set your status to away with reason 'reason'
+      def send_away(reason=nil)
+        return back if reason.nil?
+        send_raw(AWAY, reason)
+      end
+      
+      # reset your away status to back
+      def send_back
+        send_raw(AWAY)
+      end
+      
+      # Send a "who" to channel/user
+      def send_who(target)
+        send_raw(WHO, target)
+      end
+  
+      # Send a "whois" to server
+      def send_whois(nick)
+        send_raw(WHOIS, nick)
+      end
+  
+      # send the quit message to the server
+      def send_quit(reason="leaving")
+        send_raw(QUIT, reason)
+      end
   
       # send a ping
       def send_ping(*args)
         send_raw(PING, *args)
       end
-
-      ## stop
+      
+      # Give Op to user in channel
+      # User can be a nick or IRC::User, either one or an array.
+      def send_op(channel, *users)
+        send_multiple_mode(channel, '+', 'o', users)
+      end
+  
+      # Take Op from user in channel
+      # User can be a nick or IRC::User, either one or an array.
+      def send_deop(channel, *users)
+        send_multiple_mode(channel, '-', 'o', users)
+      end
+  
+      # Give voice to user in channel
+      # User can be a nick or IRC::User, either one or an array.
+      def send_voice(channel, *users)
+        send_multiple_mode(channel, '+', 'v', users)
+      end
+  
+      # Take voice from user in channel.
+      # User can be a nick or IRC::User, either one or an array.
+      def send_devoice(channel, *users)
+        send_multiple_mode(channel, '-', 'v', users)
+      end
+  
+      # Set ban in channel to mask
+      def send_ban(channel, *masks)
+        send_multiple_mode(channel, '+', 'b', masks)
+      end
+  
+      # Remove ban in channel to mask
+      def send_unban(channel, *masks)
+        send_multiple_mode(channel, '-', 'b', masks)
+      end
+      
+      # kick user in channel with reason
+      def send_kick(user, channel, reason)
+        send_raw(KICK, channel, user, reason)
+      end
+      
+      # send a mode command to a channel
+      def send_mode(channel, *mode)
+        if mode.empty? then
+          send_raw(MODE, channel)
+        else
+          send_raw(MODE, channel, *mode)
+        end
+      end
 
       def send_pong(*args)
         send_raw(PONG, *args)
       end
 
-      def change_nick(nick)
+      def send_nick(nick)
         send_raw(NICK, nick)
       end
 
