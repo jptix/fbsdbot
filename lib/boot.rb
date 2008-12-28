@@ -9,6 +9,7 @@ require "eventmachine"
 
 require "lib/logger"
 require "lib/core_ext/string"
+require "lib/core_ext/boolean"
 require 'lib/helpers'
 require 'lib/plugin'
 require 'lib/irc/parser'
