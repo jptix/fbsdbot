@@ -133,6 +133,48 @@ describe "EventProducer" do
     event.user.host.should == "marvin.home.ip6.danielbond.org"
     event.real_name.should == "DB5868-RIPE"
   end
+
+  it "should create the correct event when receiving RPL_WHOISSERVER (312)" do
+    event = @ep.parse_line ":irc.homelien.no 312 testbot20 Mr_Bond irc.homelien.no :Who Cares\r\n"
+    event.should be_instance_of(WhoisServerEvent)
+    event.to.should == "testbot20"
+    event.server.should == "irc.homelien.no"
+    event.nick.should == "Mr_Bond"
+    event.user_info.should == "Who Cares"
+  end
+  
+  it "should create the correct event when receiving RPL_WHOISOPERATOR (313)" do
+    pending
+  end
+  
+  it "should create the correct event when receiving RPL_WHOISIDLE (317)" do
+    event = @ep.parse_line ":irc.homelien.no 317 testbot20 Mr_Bond 70 1230158255 :seconds idle, signon time\r\n"
+    event.should be_instance_of(WhoisIdleEvent)
+    event.nick.should == "Mr_Bond"
+    event.seconds.should == "70"
+    event.server.should == "irc.homelien.no"
+    event.to.should == "testbot20"
+  end
+  
+  it "should create the correct event when receiving RPL_ENDOFWHOIS (318)" do
+    event = @ep.parse_line ":irc.homelien.no 318 testbot20 Mr_Bond :End of /WHOIS list.\r\n"
+    event.should be_instance_of(EndOfWhoisEvent)
+    event.server.should == "irc.homelien.no"
+    event.to.should == "testbot20"
+    event.nick.should == "Mr_Bond"
+    event.message.should == "End of /WHOIS list."
+  end
+  
+  it "should create the correct event when receiving RPL_WHOISCHANNELS (319)" do
+    event = @ep.parse_line(":irc.homelien.no 319 testbot20 Mr_Bond :#unixhelp @#bot-test.no \r\n")
+    event.should be_instance_of(WhoisChannelsEvent)
+    event.server.should == "irc.homelien.no"
+    event.to.should == "testbot20"
+    event.nick.should == "Mr_Bond"
+    event.channel_string.should == "#unixhelp @#bot-test.no "
+  end
+
+
   
 end
 
