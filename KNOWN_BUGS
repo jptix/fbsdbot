@@ -1,1 +1,1 @@
-* Bot does not handle reconnect/disconnect/quit well yet.
+* Possible error if bot cannot reach server it's connecting to.
