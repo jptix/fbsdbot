@@ -1,7 +1,7 @@
-# line 1 "irc.rl"
-# IRC Ragel parser - compile with `ragel -R irc.rl -o parser.rb`
+# line 1 "rfc2812"
+# IRC Ragel parser - compile with `ragel -R rfc2812 -o parser.rb`
 
-# line 72 "irc.rl"
+# line 72 "rfc2812"
 
 
 module FBSDBot
@@ -1024,7 +1024,7 @@ class << self
 end
 self.irc_en_message_type = 124;
 
-# line 79 "irc.rl"
+# line 79 "rfc2812"
     
       class << self
         def parse_message(data)
@@ -1039,7 +1039,7 @@ begin
 	pe ||= data.length
 	cs = irc_start
 end
-# line 87 "irc.rl"
+# line 87 "rfc2812"
           
 # line 1045 "parser.rb"
 begin
@@ -1123,70 +1123,70 @@ begin
 			_acts += 1
 			case _irc_actions[_acts - 1]
 when 0 then
-# line 6 "irc.rl"
+# line 6 "rfc2812"
 		begin
  buf = "" 		end
-# line 6 "irc.rl"
+# line 6 "rfc2812"
 when 1 then
-# line 7 "irc.rl"
+# line 7 "rfc2812"
 		begin
  buf << data[p] 		end
-# line 7 "irc.rl"
+# line 7 "rfc2812"
 when 2 then
-# line 8 "irc.rl"
+# line 8 "rfc2812"
 		begin
  result[:command] = buf 		end
-# line 8 "irc.rl"
+# line 8 "rfc2812"
 when 3 then
-# line 9 "irc.rl"
+# line 9 "rfc2812"
 		begin
  result[:server] = buf 		end
-# line 9 "irc.rl"
+# line 9 "rfc2812"
 when 4 then
-# line 10 "irc.rl"
+# line 10 "rfc2812"
 		begin
  result[:nick] = buf 		end
-# line 10 "irc.rl"
+# line 10 "rfc2812"
 when 5 then
-# line 11 "irc.rl"
+# line 11 "rfc2812"
 		begin
  result[:user] = buf 		end
-# line 11 "irc.rl"
+# line 11 "rfc2812"
 when 6 then
-# line 12 "irc.rl"
+# line 12 "rfc2812"
 		begin
  result[:host] = buf 		end
-# line 12 "irc.rl"
+# line 12 "rfc2812"
 when 7 then
-# line 13 "irc.rl"
+# line 13 "rfc2812"
 		begin
  params = [] 		end
-# line 13 "irc.rl"
+# line 13 "rfc2812"
 when 8 then
-# line 14 "irc.rl"
+# line 14 "rfc2812"
 		begin
  params << "" 		end
-# line 14 "irc.rl"
+# line 14 "rfc2812"
 when 9 then
-# line 15 "irc.rl"
+# line 15 "rfc2812"
 		begin
  params.last << data[p] 		end
-# line 15 "irc.rl"
+# line 15 "rfc2812"
 when 10 then
-# line 16 "irc.rl"
+# line 16 "rfc2812"
 		begin
  result[:params] = params 		end
-# line 16 "irc.rl"
+# line 16 "rfc2812"
 when 11 then
-# line 17 "irc.rl"
+# line 17 "rfc2812"
 		begin
  result = :channel 		end
-# line 17 "irc.rl"
+# line 17 "rfc2812"
 when 12 then
-# line 18 "irc.rl"
+# line 18 "rfc2812"
 		begin
  result = :user 		end
-# line 18 "irc.rl"
+# line 18 "rfc2812"
 # line 1191 "parser.rb"
 			end # action switch
 		end
@@ -1213,7 +1213,7 @@ when 12 then
 	end
 	end
 	end
-# line 88 "irc.rl"
+# line 88 "rfc2812"
         
           if $DEBUG
             Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
@@ -1232,7 +1232,7 @@ begin
 	pe ||= data.length
 	cs = irc_start
 end
-# line 100 "irc.rl"
+# line 100 "rfc2812"
           cs = irc_en_message_type;
           
 # line 1239 "parser.rb"
@@ -1317,70 +1317,70 @@ begin
 			_acts += 1
 			case _irc_actions[_acts - 1]
 when 0 then
-# line 6 "irc.rl"
+# line 6 "rfc2812"
 		begin
  buf = "" 		end
-# line 6 "irc.rl"
+# line 6 "rfc2812"
 when 1 then
-# line 7 "irc.rl"
+# line 7 "rfc2812"
 		begin
  buf << data[p] 		end
-# line 7 "irc.rl"
+# line 7 "rfc2812"
 when 2 then
-# line 8 "irc.rl"
+# line 8 "rfc2812"
 		begin
  result[:command] = buf 		end
-# line 8 "irc.rl"
+# line 8 "rfc2812"
 when 3 then
-# line 9 "irc.rl"
+# line 9 "rfc2812"
 		begin
  result[:server] = buf 		end
-# line 9 "irc.rl"
+# line 9 "rfc2812"
 when 4 then
-# line 10 "irc.rl"
+# line 10 "rfc2812"
 		begin
  result[:nick] = buf 		end
-# line 10 "irc.rl"
+# line 10 "rfc2812"
 when 5 then
-# line 11 "irc.rl"
+# line 11 "rfc2812"
 		begin
  result[:user] = buf 		end
-# line 11 "irc.rl"
+# line 11 "rfc2812"
 when 6 then
-# line 12 "irc.rl"
+# line 12 "rfc2812"
 		begin
  result[:host] = buf 		end
-# line 12 "irc.rl"
+# line 12 "rfc2812"
 when 7 then
-# line 13 "irc.rl"
+# line 13 "rfc2812"
 		begin
  params = [] 		end
-# line 13 "irc.rl"
+# line 13 "rfc2812"
 when 8 then
-# line 14 "irc.rl"
+# line 14 "rfc2812"
 		begin
  params << "" 		end
-# line 14 "irc.rl"
+# line 14 "rfc2812"
 when 9 then
-# line 15 "irc.rl"
+# line 15 "rfc2812"
 		begin
  params.last << data[p] 		end
-# line 15 "irc.rl"
+# line 15 "rfc2812"
 when 10 then
-# line 16 "irc.rl"
+# line 16 "rfc2812"
 		begin
  result[:params] = params 		end
-# line 16 "irc.rl"
+# line 16 "rfc2812"
 when 11 then
-# line 17 "irc.rl"
+# line 17 "rfc2812"
 		begin
  result = :channel 		end
-# line 17 "irc.rl"
+# line 17 "rfc2812"
 when 12 then
-# line 18 "irc.rl"
+# line 18 "rfc2812"
 		begin
  result = :user 		end
-# line 18 "irc.rl"
+# line 18 "rfc2812"
 # line 1385 "parser.rb"
 			end # action switch
 		end
@@ -1407,7 +1407,7 @@ when 12 then
 	end
 	end
 	end
-# line 102 "irc.rl"
+# line 102 "rfc2812"
 
           if $DEBUG
             Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result

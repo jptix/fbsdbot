@@ -15,6 +15,12 @@ describe "Plugin" do
       plugin.name.should == 'foobar' 
     end
   end
+  
+  describe "#def_field" do
+    it "should description" do
+      
+    end
+  end
 
   describe "#reset" do
     it "should remove all registered plugins / event handlers" do
