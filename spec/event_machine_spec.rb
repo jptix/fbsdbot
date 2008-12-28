@@ -21,14 +21,13 @@ describe "IRC::EMCore" do
     end
     
     it "should send lines to event_producer with terminating EOL" do
+      m = mock('event_producer')
+      m.should_receive(:parse_line).with("bar\r\n")
+      
+      @core.instance_variable_set("@event_producer", m)
       @core.receive_data("")
       @core.receive_data(EOL)
-      @core.receive_data("bar\r\n")
-      
-      m = mock('event_producer')
-      @core.instance_variable_set("@event_producer", m)
-      m.should_receive(:parse_line).with("bar\r\n")
-
+      @core.receive_data("\r\nbar\r\n")
     end
   end
   
