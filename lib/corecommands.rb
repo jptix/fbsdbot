@@ -15,4 +15,19 @@ FBSDBot::Plugin.define("corecommands") {
   def on_ctcp_version(event)
     event.reply "running FBSDBot v#{FBSDBot::VERSION} - on Ruby v#{RUBY_VERSION}"
   end
+  
+  def on_cmd_identify(event)
+    # if event.channel?
+    #   return event.reply("You must identify in private.")
+    # end
+     
+    pass = event.message.split(' ')[1]
+    return event.reply("usage: !identify <password>") if pass.nil?
+    
+    if event.user.identify(pass)
+      event.reply "Ok."
+    else
+      event.reply "Incorrect password."
+    end
+  end
 }
