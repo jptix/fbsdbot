@@ -12,9 +12,12 @@ module FBSDBot
       end
     end
 
-    def reply(string)
+    def reply_to
       who = channel? ? @to : @user.nick
-      @worker.send_privmsg string.to_s, who
+    end
+
+    def reply(string)
+      @worker.send_privmsg string.to_s, reply_to
     end
     
   end
