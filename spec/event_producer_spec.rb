@@ -123,5 +123,16 @@ describe "EventProducer" do
     event.server.should == "irc.homelien.no"
   end
   
+  it "should create the correct event when receiving RPL_WHOISUSER" do
+    event = @ep.parse_line ":irc.homelien.no 311 testbot20 Mr_Bond ~db marvin.home.ip6.danielbond.org * :DB5868-RIPE\r\n"
+    event.should be_instance_of(WhoisUserEvent)
+    event.to.should == "testbot20"
+    event.server.should == "irc.homelien.no"
+    event.user.nick.should == "Mr_Bond"
+    event.user.user.should == "~db"
+    event.user.host.should == "marvin.home.ip6.danielbond.org"
+    event.real_name.should == "DB5868-RIPE"
+  end
+  
 end
 
