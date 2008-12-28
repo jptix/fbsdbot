@@ -7,7 +7,8 @@ module FBSDBot
       :info  => 1,
       :warn  => 2,
       :error => 3,
-      :fatal => 4
+      :fatal => 4,
+      :off   => nil
     }
 
     def initialize
@@ -45,6 +46,8 @@ module FBSDBot
     private
     
     def log(type, msg, obj)
+      return if @level == :off
+      
       this_level    = LOG_LEVELS[type]
       current_level = LOG_LEVELS[@level]
       

@@ -23,6 +23,11 @@ describe "Logger" do
     stdout, stderr = capture(:both) { hit_logger }
     stderr.split("\n").size.should == 3
   end
+  
+  it "should not log anything if level is set to :off" do
+    @log.level = :off
+    out = capture(:stderr) { hit_logger }.should == ""
+  end
 
   
 end
