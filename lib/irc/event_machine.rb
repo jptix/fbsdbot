@@ -24,7 +24,7 @@ module FBSDBot
       end
       
       def to_s
-        "<Worker ##{object_id}::(#{@connected ? "C" : "D"}:#{@args[:host]})>"
+        "Worker:#{@args[:host]}[c#{connected?.tiny_s}:r#{reconnect?.tiny_s}]"
       end
       
       def post_init
@@ -83,7 +83,6 @@ module FBSDBot
         reconnect(@args[:host], @args[:port]) unless(@shutdown)
         succeed(self) # send status to handle if this is good or bad, this might not allways be a good thing.. 
       end
-      
     end
   end
 end

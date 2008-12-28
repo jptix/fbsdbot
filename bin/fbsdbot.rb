@@ -16,6 +16,8 @@ EventMachine::run {
   require 'lib/authentication'
   Log.info "Loaded plugins:"
   FBSDBot::Plugin.list_plugins
+  
+  Log.info "Starting Workers:"
 
   ### TODO: load the other plugins..
   

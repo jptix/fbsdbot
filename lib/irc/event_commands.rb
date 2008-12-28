@@ -34,6 +34,10 @@ module FBSDBot
       def connected?
         @connected
       end
+      
+      def reconnect?
+        !@shutdown
+      end
 
       def send_identify(password)
         send_raw(NS, "IDENTIFY #{password}")
@@ -118,7 +122,9 @@ module FBSDBot
   
       # send the quit message to the server
       def send_quit(reason="leaving")
+        @shutdown = true # good idea to do this first..
         send_raw(QUIT, reason)
+        close_connection_after_writing # after telling the server, we can just close the connection.
       end
   
       # send a ping
