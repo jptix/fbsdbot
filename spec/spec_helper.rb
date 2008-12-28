@@ -1,5 +1,6 @@
 require "rubygems"
 require "spec"
+require "stringio"
 require "#{File.dirname(__FILE__)}/../lib/boot"
 
 begin
@@ -19,4 +20,35 @@ def parse_message(string)
   res = IRC::Parser.parse_message(string)
   res.should_not be_empty
   res
+end
+
+# helper to capture $stdout/$stderr output in specs
+def capture(io, &block)
+  last_level = Log.level
+  Log.level = :debug
+  
+  out = StringIO.new
+  old, reset = nil
+  
+  case io
+  when :stdout
+    old = $stdout
+    $stdout = out
+    reset = proc { $stdout = old }
+  when :stderr
+    old = $stderr
+    $stderr = out
+    reset = proc { $stderr = old }
+  else
+    raise "bad argument #{io.inspect}"
+  end
+  
+  begin
+    yield
+  ensure
+    reset.call
+    Log.level = last_level
+  end
+  
+  out.string
 end
