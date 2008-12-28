@@ -5,8 +5,9 @@ module FBSDBot
     module Commands
       include Constants
 
-      def send_join(*chans)
-        chans.map { |channel, password|
+      def send_join(*channels)
+        return if channels[0].nil?
+        channels.map { |channel, password|
           if password then
             send_raw(JOIN, channel, password)
           else
