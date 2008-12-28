@@ -15,13 +15,13 @@ describe "Logger" do
   end
   
   it "should print to $stdout if level is below :warn" do
-    out = capture(:stdout) { hit_logger }
-    out.split("\n").size.should == 2
+    stdout, stderr = capture(:both) { hit_logger }
+    stdout.split("\n").size.should == 2
   end
 
   it "should print to $stderr if level is above :warn" do
-    out = capture(:stderr) { hit_logger }
-    out.split("\n").size.should == 3
+    stdout, stderr = capture(:both) { hit_logger }
+    stderr.split("\n").size.should == 3
   end
 
   

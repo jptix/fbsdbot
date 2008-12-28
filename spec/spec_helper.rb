@@ -35,10 +35,18 @@ def capture(io, &block)
     old = $stdout
     $stdout = out
     reset = proc { $stdout = old }
+    retval = proc { out.string }
   when :stderr
     old = $stderr
     $stderr = out
     reset = proc { $stderr = old }
+    retval = proc { out.string }
+  when :both
+    old = [$stdout, $stderr]
+    $stdout = out
+    $stderr = out2 = StringIO.new
+    reset = proc { $stdout, $stderr = old }
+    retval = proc { [out.string, out2.string]}
   else
     raise "bad argument #{io.inspect}"
   end
@@ -50,5 +58,5 @@ def capture(io, &block)
     Log.level = last_level
   end
   
-  out.string
+  retval.call
 end
