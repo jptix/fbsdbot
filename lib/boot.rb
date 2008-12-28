@@ -19,3 +19,8 @@ require 'lib/user'
 require 'lib/yaml_user_store'
 
 Log = FBSDBot::Logger.new
+
+module FBSDBot
+  VERSION = "0.1"
+end
+
