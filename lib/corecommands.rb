@@ -21,7 +21,7 @@ FBSDBot::Plugin.define("corecommands") {
     #   return event.reply("You must identify in private.")
     # end
      
-    pass = event.message.split(' ')[1]
+    pass = event.message.split(' ', 2)[1] # support passwords with spaces
     return event.reply("usage: !identify <password>") if pass.nil?
     
     if event.user.identify(pass)
