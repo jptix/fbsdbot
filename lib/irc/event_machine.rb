@@ -75,7 +75,7 @@ module FBSDBot
           change_nick Helpers.obfuscate_nick(@args[:nick])
         else
           ## CREATE cases above for events we don't want plugins to be able to handle
-          Plugin.send_event event
+          Plugin.run_event event
         end
       end
      

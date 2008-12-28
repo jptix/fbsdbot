@@ -54,7 +54,7 @@ module FBSDBot
         @registered_plugins[name.to_sym] = plugin
       end
 
-      def send_event(event)
+      def run_event(event)
         event_type = event.command? ? "cmd_#{event.command}".to_sym : event.type
 
         @event_handlers[event_type].each do |handler|
