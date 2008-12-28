@@ -28,6 +28,15 @@ describe "Logger" do
     @log.level = :off
     out = capture(:stderr) { hit_logger }.should == ""
   end
+  
+  it "should call inspect on the passed in object if it's not a string" do
+    obj = [1,2,3]
+    out = capture(:stdout) do
+      @log.debug(obj)
+    end
+    
+    out.should include(obj.inspect)
+  end
 
   
 end

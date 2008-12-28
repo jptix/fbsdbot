@@ -54,8 +54,7 @@ module FBSDBot
       return unless this_level >= current_level
       
       out = this_level >= LOG_LEVELS[:warn] ? $stderr : $stdout
-      
-      msg = msg.inspect if [Hash, Array].include?(msg.class)
+      msg = msg.inspect unless msg.respond_to?(:to_str)
       out.puts "#{Time.now.strftime("%F %T")} (#{type}) #{obj} :: #{msg}"
     end
   end
