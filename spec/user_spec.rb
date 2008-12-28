@@ -38,7 +38,11 @@ describe "User" do
   
   describe "#save" do
     it "should save the user to the datastore" do
+      nick, user, host = "jptix", "markus", "example.com"
+      u = User.new(nick, user, host)
+      u.save
       
+      User.datastore.fetch(u.string).should == u
     end
   end
   
@@ -47,7 +51,7 @@ describe "User" do
       nick, user, host = "jptix", "markus", "example.com"
       user = User.new(nick, user, host)
       user.password = "foo"
-      User.datastore.save(user)
+      user.save
       
       identified_user = user.identify("foo")
       
@@ -62,7 +66,7 @@ describe "User" do
       nick, user, host = "jptix", "markus", "example.com"
       user = User.new(nick, user, host)
       user.password = "foo"
-      User.datastore.save(user)
+      user.save
 
       user.identify('bar').should be_nil
     end

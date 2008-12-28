@@ -13,6 +13,7 @@ end
 
 EventMachine::run {  
   require 'lib/corecommands'
+  require 'lib/authentication'
   Log.info "Loaded plugins:"
   FBSDBot::Plugin.list_plugins
 

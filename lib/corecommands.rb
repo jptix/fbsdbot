@@ -16,18 +16,4 @@ FBSDBot::Plugin.define("corecommands") {
     event.reply "running FBSDBot v#{FBSDBot::VERSION} - on Ruby v#{RUBY_VERSION}"
   end
   
-  def on_cmd_identify(event)
-    # if event.channel?
-    #   return event.reply("You must identify in private.")
-    # end
-     
-    pass = event.message.split(' ', 2)[1] # support passwords with spaces
-    return event.reply("usage: !identify <password>") if pass.nil?
-    
-    if event.user.identify(pass)
-      event.reply "Ok."
-    else
-      event.reply "Incorrect password."
-    end
-  end
 }
