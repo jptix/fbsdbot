@@ -14,10 +14,16 @@ FBSDBot::Plugin.define(:authentication) do
     end
   end
   
-  def add(event, nick)
+  def add(event, args)
     return event.reply("You can't do that!") unless event.user.bot_master?
-    return event.reply("usage: !auth add <nick>") if nick.empty?
-    event.worker.send_whois(nick) 
+    @nick, @pass = args
+    p :args => args, :nick => @nick, :pass => @pass
+    if [@nick, @pass].any? { |e| e.nil? }
+      return event.reply("usage: !auth add <nick> <pass>") 
+    end
+    
+    @to = event.reply_to
+    event.worker.send_whois(@nick)
   end
 
   def whoami(event)
@@ -35,10 +41,25 @@ FBSDBot::Plugin.define(:authentication) do
     when /^!auth whoami/
       whoami(event)
     when /^!auth add(.*)$/
-      add(event, $1.strip)
+      add(event, $1.strip.split(' '))
     else
       event.reply "usage: !auth [identify|whoami|add] <args>"
     end
   end
   
+  def on_whois_user(event)
+    @whois = event.user
+  end
+  
+  def on_end_of_whois(event)
+    if @whois
+      @whois.password = @pass
+      @whois.save
+      event.worker.send_privmsg("Saved #{@whois}", @to)
+      @whois = nil
+    else
+      event.worker.send_privmsg("No such user.", @to)
+    end
+  end
+
 end
