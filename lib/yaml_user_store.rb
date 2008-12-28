@@ -44,6 +44,7 @@ module FBSDBot
       nick, user, host = $config[:master].values_at(:nick, :user, :host)
       master = User.new(nick, user, host)
       master.password = $config[:master][:password]
+      master.set_flag(:bot_master)
       save(master)
     end
     

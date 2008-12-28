@@ -8,18 +8,19 @@ module FBSDBot
       @mask |= flag_for_key(key)
     end
     
-    def unset_flag(sym)
+    def unset_flag(key)
       @mask &= flag_for_key(key)
+    end
+    
+    def has_flag?(key)
+      flag = flag_for_key(key)
+      @mask & flag == flag
     end
     
     private
     
-    def has_flag?(sym)
-      @mask & flag == flag
-    end
-    
-    def flag_for_symbol(key)
-      flag = FLAGS[key]
+    def flag_for_key(key)
+      flag = self.class::FLAGS[key]
       raise "bad flag #{key.inspect}" unless flag
       
       flag

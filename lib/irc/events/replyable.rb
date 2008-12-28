@@ -5,11 +5,15 @@ module FBSDBot
     
     def setup(opts)
       @to, @message  = opts[:params]
-      @user          = fetch_user(*opts.values_at(:nick, :user, :host))
+      
+      args = opts.values_at(:nick, :user, :host)
+      unless args.include?(nil)
+        @user = fetch_user(*args)
+      end
     end
 
     def reply(string)
-      who = self.channel? ? @to : @user.nick
+      who = channel? ? @to : @user.nick
       @worker.send_privmsg string.to_s, who
     end
     

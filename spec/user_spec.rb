@@ -36,6 +36,12 @@ describe "User" do
     end
   end
   
+  describe "#save" do
+    it "should save the user to the datastore" do
+      
+    end
+  end
+  
   describe "#identify" do
     it "should identify the user with the given password" do
       nick, user, host = "jptix", "markus", "example.com"
@@ -46,6 +52,7 @@ describe "User" do
       identified_user = user.identify("foo")
       
       identified_user.should be_instance_of(User)
+      identified_user.should be_identified
       identified_user.nick.should == user.nick
       identified_user.user.should == user.user
       identified_user.host.should == user.host
@@ -59,7 +66,6 @@ describe "User" do
 
       user.identify('bar').should be_nil
     end
-    
   end
   
 end

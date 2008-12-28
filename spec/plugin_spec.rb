@@ -67,6 +67,9 @@ describe "Plugin" do
       conn = mock("conn", :null_object => true)
       opts = {
         :params => ["#bot-test.no", "!foo"],
+        :nick   => 'foo',
+        :user   => 'bar', 
+        :host   => 'baz'
       }
       e = PrivateMessageEvent.new(conn, opts)
       

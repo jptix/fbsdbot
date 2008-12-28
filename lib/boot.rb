@@ -13,7 +13,8 @@ require 'lib/helpers'
 require 'lib/plugin'
 require 'lib/irc/parser'
 require 'lib/irc/event_producer'
-require "lib/user"
+require 'lib/bitmask'
+require 'lib/user'
 require 'lib/yaml_user_store'
 
 Log = FBSDBot::Logger.new
