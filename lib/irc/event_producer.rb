@@ -73,7 +73,7 @@ module FBSDBot
         when 'PRIVMSG'
           create_privmsg(hash)
         else
-          Log.warn "unknown event for #{hash.inspect}"
+          Log.warn "unknown event for #{hash.inspect}", @worker
         end
       end
 
@@ -81,7 +81,7 @@ module FBSDBot
         if event_class = CTCP_COMMANDS[type]
           return create(event_class, hash)
         else
-          Log.warn "unknown ctcp type #{type.inspect}"
+          Log.warn "unknown ctcp type #{type.inspect}", @worker
           return nil
         end
       end

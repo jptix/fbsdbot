@@ -15,6 +15,8 @@ EventMachine::run {
   require 'lib/corecommands'
   Log.info "Loaded plugins:"
   FBSDBot::Plugin.list_plugins
+  
+  Log.info "Starting Workers:"
 
   ### TODO: load the other plugins..
   
