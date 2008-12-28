@@ -5,11 +5,12 @@ require 'yaml'
 
 # GEMS
 require 'rubygems'
-require "eventmachine"
+require 'eventmachine'
 
-require "lib/logger"
+require 'lib/logger'
 require "lib/core_ext/string"
-require "lib/core_ext/boolean"
+require 'lib/core_ext/boolean'
+require 'lib/exceptions'
 require 'lib/helpers'
 require 'lib/plugin'
 require 'lib/irc/parser'
