@@ -1,5 +1,6 @@
 module FBSDBot
   class Logger
+    attr_reader :level
 
     LOG_LEVELS = {
       :debug => 0,
@@ -9,8 +10,7 @@ module FBSDBot
       :fatal => 4
     }
 
-    def initialize(out = $stderr)
-      @out = out
+    def initialize
       @level = :debug
     end
     
@@ -45,10 +45,15 @@ module FBSDBot
     private
     
     def log(type, msg, obj)
-      return unless LOG_LEVELS[type] >= LOG_LEVELS[@level]
+      this_level    = LOG_LEVELS[type]
+      current_level = LOG_LEVELS[@level]
+      
+      return unless this_level >= current_level
+      
+      out = this_level >= LOG_LEVELS[:warn] ? $stderr : $stdout 
       
       msg = msg.inspect if [Hash, Array].include?(msg.class)
-      @out.puts "#{Time.now.strftime("%F %T")} (#{type}) #{obj} :: #{msg}"
+      out.puts "#{Time.now.strftime("%F %T")} (#{type}) #{obj} :: #{msg}"
     end
   end
 end
