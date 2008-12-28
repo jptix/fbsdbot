@@ -46,5 +46,12 @@ module FBSDBot
       str << '>'
     end
     
+    private
+    
+    def fetch_user(nick, user, host)
+      # this can be used to fetch from datastore
+      User.new(nick, user, host)
+    end
+    
   end
 end

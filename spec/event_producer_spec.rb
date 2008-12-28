@@ -34,8 +34,12 @@ describe "EventProducer" do
   
   it "should create the correct event for ctcp version" do
     event = @ep.parse_line ":jptix!markus@nextgentel.com PRIVMSG testbot20 :\001VERSION\001\r\n"
+    
     event.should be_instance_of(CTCPVersionEvent)
-    event.nick.should == 'jptix'
+    
+    event.user.nick.should == 'jptix'
+    event.user.user.should == 'markus'
+    event.user.host.should == 'nextgentel.com'
     
     event.should respond_to(:reply)
     @conn.should_receive(:send_notice).with("\001VERSION hello\001", "jptix")
@@ -52,9 +56,14 @@ describe "EventProducer" do
   
   it "should create the correct event for a notice" do
     event = @ep.parse_line ":jptix!markus@nextgentel.com NOTICE testbot20 :foo\r\n"
+    
     event.should be_instance_of(NoticeEvent)
     event.should be_kind_of(Replyable)
-    event.nick.should == 'jptix'
+    
+    event.user.nick.should == 'jptix'
+    event.user.user.should == 'markus'
+    event.user.host.should == 'nextgentel.com'
+    
     event.to.should == 'testbot20'
     event.message.should == 'foo'
   end
@@ -90,18 +99,18 @@ describe "EventProducer" do
   it "should create the correct event when someone quits" do
     event = @ep.parse_line ":tesvbot20!~FBSDBot@nextgentel.com QUIT :Remote host closed the connection\r\n"
     event.should be_instance_of(QuitEvent)
-    event.nick.should == "tesvbot20"
-    event.user.should == "~FBSDBot"
-    event.host.should == "nextgentel.com"
+    event.user.nick.should == "tesvbot20"
+    event.user.user.should == "~FBSDBot"
+    event.user.host.should == "nextgentel.com"
     event.message.should == "Remote host closed the connection"
   end
   
   it "should create the correct event when someone joins a channel" do
     event = @ep.parse_line ":jptix!markus@nextgentel.com PART #bot-test.no :bye\r\n"
     event.should be_instance_of(PartEvent)
-    event.nick.should == "jptix"
-    event.host.should == "nextgentel.com"
-    event.user.should == "markus"
+    event.user.nick.should == "jptix"
+    event.user.host.should == "nextgentel.com"
+    event.user.user.should == "markus"
     event.channel.should == "#bot-test.no"
     event.message.should == "bye"
   end
