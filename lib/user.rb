@@ -11,6 +11,10 @@ module FBSDBot
       def datastore
         @@datastore ||= YAMLUserStore.new('fbsdbot-userstore.yml')
       end
+      
+      def cache
+        @@cache ||= Hash.new { |hash, key| p :key => key; hash[key] = User.new(*key.split(/[!@]/)) }
+      end
     end
     
     def initialize(nick, user, host)

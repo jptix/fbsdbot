@@ -62,6 +62,7 @@ module FBSDBot
       end
       
       def handle_event(event)
+        Log.debug(:handle_event => event)
         return if event.nil?
         raise TypeError, "Not passed an Event.class" unless event.is_a?(Event)
         

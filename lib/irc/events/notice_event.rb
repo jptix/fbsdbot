@@ -4,7 +4,12 @@ module FBSDBot
     
     def initialize(conn, opts = {})
       super(conn)
-      setup(opts)
+      @to, @message = opts[:params]
+      
+      args = opts.values_at(:nick, :user, :host)
+      unless args.include?(nil)
+        @user = fetch_user(args)
+      end
     end
     
   end

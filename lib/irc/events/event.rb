@@ -49,8 +49,8 @@ module FBSDBot
     private
     
     def fetch_user(nick, user, host)
-      u = User.new(nick, user, host)
-      User.datastore.fetch(u.string) || u
+      string = "#{nick}!#{user}@#{host}"
+      User.datastore.fetch(string) || User.cache[string]
     end
     
   end
