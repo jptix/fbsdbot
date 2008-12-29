@@ -144,7 +144,12 @@ describe "EventProducer" do
   end
   
   it "should create the correct event when receiving RPL_WHOISOPERATOR (313)" do
-    pending
+    event = @ep.parse_line ":irc.homelien.no 313 testbot20 Mr_Bond :is an IRC Operator\r\n"
+    event.should be_instance_of(WhoisOperatorEvent)
+    event.nick.should == "Mr_Bond"
+    event.to.should == "testbot20"
+    event.server.should == "irc.homelien.no"
+    event.message.should == "is an IRC Operator"
   end
   
   it "should create the correct event when receiving RPL_WHOISIDLE (317)" do

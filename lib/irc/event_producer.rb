@@ -19,6 +19,7 @@ require "lib/irc/events/whois_user_event"
 require "lib/irc/events/whois_server_event"
 require "lib/irc/events/whois_idle_event"
 require "lib/irc/events/whois_channels_event"
+require "lib/irc/events/whois_operator_event"
 
 
 module FBSDBot
@@ -28,6 +29,7 @@ module FBSDBot
       COMMANDS = {
         '311'    => WhoisUserEvent,
         '312'    => WhoisServerEvent,
+        '313'    => WhoisOperatorEvent,
         '317'    => WhoisIdleEvent,
         '318'    => EndOfWhoisEvent,
         '319'    => WhoisChannelsEvent,
