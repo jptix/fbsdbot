@@ -1,7 +1,7 @@
-require 'lib/irc/event_constants'
+require 'lib/irc/constants'
 
 module FBSDBot
-  module IRC    
+  module IRC
     module Commands
       include Constants
 
@@ -16,7 +16,7 @@ module FBSDBot
           channel
         } # need to map to get rid of the passwords
       end
-      
+
       # part specified channels
       # returns the channels parted from.
       def send_part(reason=nil, *channels)
@@ -193,8 +193,8 @@ module FBSDBot
 
       def login
         Log.info("Sending login information", self)
-        send_raw(NICK, @args[:nick])
-        send_raw(USER, @args[:username], 0, "*", @args[:realname])
+        send_raw(NICK, @handler.nick)
+        send_raw(USER, @handler.username, 0, "*", @handler.realname)
       end
 
       def send_raw(*arguments)

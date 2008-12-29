@@ -1,12 +1,12 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
-require 'lib/irc/event_machine'
+require 'lib/irc/em_worker'
 
 include IRC::Constants
 
-describe "IRC::EMCore" do
+describe "IRC::EMWorker" do
 
   before(:each) do
-    @core = IRC::EMCore.new(nil)
+    @core = IRC::EMWorker.new(nil)
   end
   
   describe "'receive_data'" do
