@@ -1,109 +1,93 @@
 FBSDBot::Plugin.define(:authentication) do
   version "0.1"
 
+  RX_FLAGS = {
+    'i' => Regexp::IGNORECASE,
+    'x' => Regexp::EXTENDED,
+  }
   #
   #  hooks
-  # 
+  #
 
   def on_cmd_auth(event)
     case event.message
-    when /^!auth identify(.*)$/
-      identify(event, $1.strip)
     when /^!auth whoami/
       whoami(event)
     when /^!auth add(.*)$/
-      add(event, $1.strip.split(' '))
+      add(event, $1.strip)
     when /^!auth set(.*)$/
       set(event, $1.strip)
     when /^!auth list(.*)/
       list(event, $1.strip)
     else
-      event.reply "usage: !auth [identify|whoami|add|list|set] <args>"
+      event.reply "usage: !auth [whoami|add|list|set] <args>"
     end
   end
-  
-  def on_whois_user(event)
-    @whois = event.user
-  end
-  
-  def on_end_of_whois(event)
-    return event.worker.send_privmsg("No such user.", @to) unless @whois
 
-    @whois.password = @pass
-    @whois.save
-    event.worker.send_privmsg("Saved #{@whois}", @to)
-    @whois = nil
-  end
-
-  # 
+  #
   # commands
-  # 
+  #
 
-  def identify(event, pass)
-    # if event.channel?
-    #   return event.reply("You must identify in private.")
-    # end
-    return event.reply("usage: !auth identify <password>") if pass.empty?
-  
-    if event.user.identify(pass)
-      event.reply "Ok."
-    else
-      event.reply "Incorrect password."
+  def add(event, pattern)
+    return event.reply("You can't do that!") unless event.user.admin?
+    if pattern.nil?
+      return event.reply("usage: !auth add <regexp>")
     end
-  end
-  
-  def add(event, args)
-    return event.reply("You can't do that!") unless event.user.bot_master?
-    @nick, @pass = args
-    if [@nick, @pass].any? { |e| e.nil? }
-      return event.reply("usage: !auth add <nick> <pass>") 
+
+    return event.reply("Invalid regexp") unless pattern =~ %r{\A/(.*)/([imx]*)\z}
+
+    begin
+      ptrn, flags = $1, $2.split(//)
+      f = flags.inject(0) do |flags, char|
+        flags |= RX_FLAGS[char] if RX_FLAGS[char]
+        flags
+      end
+
+      re = Regexp.new(ptrn, f)
+    rescue
+      event.reply "Invalid regexp #{pattern.inspect}"
     end
-    
-    @to = event.reply_to
-    event.worker.send_whois(@nick)
+
+    u = FBSDBot::User.new(nil, nil, nil)
+    u.hostmask_exp = re
+    u.save
+
+    event.reply "Added user for #{re.inspect}"
   end
-  
+
   def whoami(event)
-    if event.user.identified?
-      event.reply "You're #{event.user.nick} (#{event.user})! Woo!"
-    else
-      event.reply "You're just an object (#{event.user}) to me."
-    end
+    event.reply "#{event.user} :: #{event.user.hostmask} :: #{event.user.hostmask_exp}"
   end
-  
+
   def list(event, what)
-    return event.reply("You can't do that!") unless event.user.bot_master?
-    return event.reply("usage: !auth list [all|identified]") unless what =~ /^all|identified$/
+    return event.reply("You can't do that!") unless event.user.admin?
 
-    case what
-    when "all"
-      users = FBSDBot::User.datastore.fetch_all
-    when "identified"
-      users = FBSDBot::User.datastore.fetch_identified
-    else
-      Log.warn("unknown arg: #{what.inspect}", self)
-    end
-
-    event.reply users.map { |e| e.string }.join(", ")
+    users = FBSDBot::User.datastore.fetch_all
+    event.reply users.map { |e| e.hostmask }.join(", ")
   end
-  
+
   def set(event, args)
-    return event.reply("You can't do that!") unless event.user.bot_master?
-    
-    unless args =~ /^(\w+) (bot_master|channel_master)/
-      return event.reply("usage: !auth set <nick> [bot_master|channel_master]")
+    return event.reply("You can't do that!") unless event.user.admin?
+
+    unless args =~ /^(\w+) (admin|user)/
+      return event.reply("usage: !auth set <nick> [admin|user]")
     end
-    
-    nick, flag = $1, $2.to_sym
+
+    nick, flag = $1, $2
     user = FBSDBot::User.datastore.fetch_all.find { |e| e.nick == nick }
     unless user
-      return event.reply("User not found. Use `!auth add <nick> <pass>`")
+      return event.reply("User not found. Use `!auth add <nick> /regexp/`")
     end
-    
-    user.set_flag(flag)
+
+    case flag
+    when 'admin'
+      user.set_flag(:admin)
+    when 'user'
+      user.unset_flag(:admin) if user.admin?
+    end
     user.save
-    
-    event.reply "User is now a #{flag}."
+
+    event.reply "User is now #{flag}"
   end
 
 end

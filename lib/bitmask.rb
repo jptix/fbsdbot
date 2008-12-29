@@ -5,16 +5,16 @@ module FBSDBot
   module BitMask
 
     def set_flag(key)
-      @mask |= flag_for_key(key)
+      @bitmask |= flag_for_key(key)
     end
     
     def unset_flag(key)
-      @mask &= flag_for_key(key)
+      @bitmask ^= flag_for_key(key)
     end
     
     def has_flag?(key)
       flag = flag_for_key(key)
-      @mask & flag == flag
+      @bitmask & flag == flag
     end
     
     private

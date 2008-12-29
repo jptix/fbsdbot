@@ -6,27 +6,33 @@ module FBSDBot
     def initialize(file)
       @file = file
       create_file unless File.exist?(@file)
-      @data = YAML.load_file(@file) || {}
+      @data = YAML.load_file(@file) || []
       
       save_master ### FIXME
     end
     
     def save(user)
       check_type user
-      @data[user.string] = user
+      @data << user
+      @data.uniq!
       persist
     end
    
-    def fetch(user_string)
-      @data[user_string]
+    def fetch(opts = {})
+      Log.warn(:fetching => opts)
+      if user = opts[:user]
+        @data.find { |u| u =~ user  }
+      elsif rx = opts[:regexp]
+        @data.find { |u| u.hostmask =~ rx }
+      elsif hm = opts[:hostmask]
+        @data.find { |u| u.hostmask == hm || u.hostmask_exp =~ hm }
+      else
+        raise "bad parameters: #{opts.inspect}"
+      end
     end
     
     def fetch_all
-      @data.values
-    end
-    
-    def fetch_identified
-      fetch_all.select { |u| u.identified?  }
+      @data
     end
     
     private
@@ -48,11 +54,14 @@ module FBSDBot
     
     def save_master
       return unless $config && $config[:master]
+      rx = $config[:master][:hostmask_exp]
       
-      nick, user, host = $config[:master].values_at(:nick, :user, :host)
-      master = User.new(nick, user, host)
-      master.password = $config[:master][:password]
-      master.set_flag(:bot_master)
+      return if fetch(:regexp => rx)
+      
+      master = User.new(nil, nil, nil)
+      master.hostmask_exp = rx
+      master.set_flag(:admin)
+      Log.debug(:master => master)
       save(master)
     end
     

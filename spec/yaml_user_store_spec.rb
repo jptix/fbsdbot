@@ -22,11 +22,16 @@ describe "YAMLUserStore" do
   end
   
   describe "#fetch" do
-    it "should fetch previously saved users" do
+    it "should fetch previously saved users by regexp" do
       u = User.new("foo", "bar", "baz")
       @ds.save(u)
-      
-      @ds.fetch(u.string).should == u
+      @ds.fetch(:regexp => /foo!(\w+)@baz/).should == u
+    end
+
+    it "should fetch previously saved user by object" do
+      u = User.new("foo", "bar", "baz")
+      @ds.save(u)
+      @ds.fetch(:user => u).should == u
     end
   end
   
@@ -36,24 +41,8 @@ describe "YAMLUserStore" do
       @ds.save(u)
       
       all = @ds.fetch_all
-      all.should be_instance_of(Array)
+      all.should be_kind_of(Array)
       all.size.should == 1
     end
   end
-  
-  describe "#fetch_identified" do
-    it "should fetch all identified users" do
-      identified_user = User.new("foo", "bar", "baz")
-      identified_user.set_flag(:identified)
-      @ds.save(identified_user)
-      
-      normal_user = User.new("a", "b", "c")
-      @ds.save(normal_user)
-      
-      users = @ds.fetch_identified
-      users.size.should == 1
-      users.shift.should == identified_user
-    end
-  end
-  
 end

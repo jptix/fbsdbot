@@ -2,6 +2,15 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "User" do
 
+  before(:each) do
+    @file = 'test-fbsdbot-userstore.yml'
+    User.datastore = YAMLUserStore.new(@file)
+  end
+  
+  after(:each) do
+    FileUtils.rm(@file)
+  end
+
   describe ".datastore" do
     it "should return the default datastore" do
       User.datastore.class.should == YAMLUserStore
@@ -19,56 +28,46 @@ describe "User" do
     end
   end
   
-  describe "#string" do
-    it "should return the user's attributes as one string" do
+  describe "#hostmask" do
+    it "should return the user's hostmask as one string" do
       nick, user, host = "jptix", "markus", "example.com"
       u = User.new(nick, user, host)
-      u.string.should == "jptix!markus@example.com"
+      u.hostmask.should == "jptix!markus@example.com"
     end
   end
 
-  describe "#password=" do
-    it "should set the password to the SHA1 of the given string" do
-      nick, user, host = "jptix", "markus", "example.com"
-      u = User.new(nick, user, host)
-      u.password = 'foo'
-      u.password.should == Digest::SHA1.hexdigest('foo')
-    end
-  end
-  
   describe "#save" do
     it "should save the user to the datastore" do
       nick, user, host = "jptix", "markus", "example.com"
       u = User.new(nick, user, host)
       u.save
       
-      User.datastore.fetch(u.string).should == u
+      User.datastore.fetch(:hostmask => u.hostmask).should == u
     end
   end
   
-  describe "#identify" do
-    it "should identify the user with the given password" do
+  describe "#[un]set_flag" do
+    it "should set or unset the specified flag" do
       nick, user, host = "jptix", "markus", "example.com"
-      user = User.new(nick, user, host)
-      user.password = "foo"
-      user.save
-      
-      identified_user = user.identify("foo")
-      
-      identified_user.should be_instance_of(User)
-      identified_user.should be_identified
-      identified_user.nick.should == user.nick
-      identified_user.user.should == user.user
-      identified_user.host.should == user.host
-    end
-    
-    it "should not identify the user if the password is wrong" do
-      nick, user, host = "jptix", "markus", "example.com"
-      user = User.new(nick, user, host)
-      user.password = "foo"
-      user.save
+      u = User.new(nick, user, host)
+      u.save
 
-      user.identify('bar').should be_nil
+      # just admin
+      u.set_flag(:admin)
+      u.has_flag?(:admin).should be_true
+      
+      u.unset_flag(:admin)
+      u.has_flag?(:admin).should be_false
+    end
+  end
+  
+  describe "=~" do
+    it "should compare the user's hostmask with the given user's hostmask regexp" do
+      nick, user, host = "jptix", "markus", "example.com"
+      u = User.new(nick, user, host)
+      
+      other = User.new(nick, user, host)
+      other.hostmask_exp = /jptix!/
     end
   end
   
