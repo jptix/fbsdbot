@@ -21,13 +21,13 @@ namespace :compile_parser do
   
   task :c do
     chdir "#{File.dirname(__FILE__)}/lib/irc/ext" 
+    sh "ruby extconf.rb"
     sh "make clean"
     
     print "Compiling parser..."
     sh "ragel -C c_parser.rl -o parser.c"
     puts "done!"
     
-    sh "ruby extconf.rb"
     sh "make"
   end
 end

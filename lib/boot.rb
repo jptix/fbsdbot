@@ -18,7 +18,7 @@ require 'lib/plugin'
 
 require 'lib/irc/network_handler'
 require 'lib/irc/event_producer'
-require 'lib/irc/parser'
+require (ENV['BOT_C_EXT'] == '1' ? 'lib/irc/ext/parser' : 'lib/irc/parser')
 
 
 Log = FBSDBot::Logger.new
