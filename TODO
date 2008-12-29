@@ -9,3 +9,7 @@ TODO:
 * Make bot FiSH ( http://fish.sekure.us ) -Compatible so users can use bot securely.
 * Plugins should have an easy way to check if the user has special privileges.
 
+
+* Control different connections:
+	- Make network based (EFnet, Freenode etc..), make sure only one instance per Network.
+	- Make sure nothing is left behind when one instance is disconnceted
