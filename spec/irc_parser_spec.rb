@@ -21,7 +21,7 @@ describe "FBSDBot::IRC::Parser" do
   
   it "should parse notices" do
     val = parse_message("NOTICE AUTH :*** Looking up your hostname...\r\n")
-    val[:command].should == 'NTICE'
+    val[:command].should == 'NOTICE'
   end
   
   it "should parse a host name prefix" do
