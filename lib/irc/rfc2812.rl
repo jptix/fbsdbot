@@ -1,24 +1,6 @@
-# IRC Ragel parser - compile with `ragel -R rfc2812.rl -o parser.rb`
-
 %%{
 	machine irc;
 
-        action strbegin { buf = "" }
-        action stradd { buf << fc }
-        action command_finish { result[:command] = buf }
-        action servername_finish { result[:server] = buf }
-        action nickname_finish { result[:nick] = buf }
-        action user_finish { result[:user] = buf }
-        action host_finish { result[:host] = buf }
-        action params_begin { params = [] }
-        action param_begin { params << "" }
-        action param_add { params.last << fc }
-        action params_finish { result[:params] = params }
-        action msgto_channel_finish { result = :channel }
-        action msgto_user_finish { result = :user }
-        action msgto_begin { result = nil }
-        action msgto_mask_finish { result = :targetmask }
-        
 	SPACE      = " ";
 	crlf       = "\r" "\n";
 	letter   = 0x41..0x5a | 0x61..0x7a;
@@ -60,61 +42,13 @@
 	             ( nickname >strbegin $stradd %nickname_finish ( ( "!" user >strbegin $stradd %user_finish )? "@" host >strbegin $stradd %host_finish)? );
 	         
 	command    = letter+ | digit_{3};
-        params1    = ( ( SPACE middle >param_begin $param_add ){,14} ( SPACE ":" trailing >param_begin $param_add)? );
-        params2    = ( ( SPACE middle >param_begin $param_add){14} ( SPACE ":"? trailing >param_begin $param_add)? );
+        params1    = ( ( SPACE middle >param_begin $param_add %param_finish){,14} ( SPACE ":" trailing >param_begin $param_add %param_finish)? );
+        params2    = ( ( SPACE middle >param_begin $param_add %param_finish){14} ( SPACE ":"? trailing >param_begin $param_add %param_finish)? );
         params     = (params1 %params_finish | params2 %params_finish ) >params_begin;
 	message    = ( ":" prefix SPACE )? command >strbegin $stradd %command_finish params? crlf;
 
         
 	# instantiate machine rules
 	main:= message;
-        message_type := msgto;
+    message_type := msgto;
 }%%
-
-module FBSDBot
-  module IRC
-    module Parser
-    
-      %% write data;
-    
-      class << self
-        def parse_message(data)
-        
-          result = {}
-          buf = ""
-        
-          %% write init;
-          %% write exec;
-        
-          if $DEBUG
-            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
-          end
-        
-          result
-        end
-        
-        def target_type(data)
-          result = nil
-          
-          %% write init;
-          cs = irc_en_message_type;
-          %% write exec;
-
-          if $DEBUG
-            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
-          end
-          
-          result
-        end
-        
-      
-      end # class << self
-    end # Parser
-  end # IRC
-end # FBSDBot
-
-
-if __FILE__ == $0
-   FBSDBot::IRC::Parser.parse(STDIN.read)
-end
-

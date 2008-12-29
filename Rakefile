@@ -10,11 +10,26 @@ Spec::Rake::SpecTask.new do |t|
 end
 
 desc 'Compile the Ragel parser'
-task :compile_parser do
-  chdir "#{File.dirname(__FILE__)}/lib/irc" 
-  print "Compiling..."
-  sh "ragel -R rfc2812 -o parser.rb"
-  puts "done!"
+
+namespace :compile_parser do
+  task :ruby do
+    chdir "#{File.dirname(__FILE__)}/lib/irc" 
+    print "Compiling..."
+    sh "ragel -R rb_parser.rl -o parser.rb"
+    puts "done!"
+  end
+  
+  task :c do
+    chdir "#{File.dirname(__FILE__)}/lib/irc/ext" 
+    sh "make clean"
+    
+    print "Compiling parser..."
+    sh "ragel -C c_parser.rl -o parser.c"
+    puts "done!"
+    
+    sh "ruby extconf.rb"
+    sh "make"
+  end
 end
 
 task :default => :spec

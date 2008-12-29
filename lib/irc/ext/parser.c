@@ -1,33 +1,31 @@
-# line 1 "rb_parser.rl"
-# ruby parser - compile with `ragel -R rb_parser.rl -o parser.rb`
+#line 1 "c_parser.rl"
+// IRC Ragel parser - compile with `ragel -C rfc2812.rl -o ext/parser.c`
 
-# line 24 "rb_parser.rl"
+#include <ruby.h>
+
+#line 27 "c_parser.rl"
 
 
-module FBSDBot
-  module IRC
-    module Parser
-    
-      
-# line 13 "parser.rb"
-class << self
-	attr_accessor :_irc_actions
-	private :_irc_actions, :_irc_actions=
-end
-self._irc_actions = [
+
+void hash_insert(VALUE hash, char* key, VALUE val)
+{
+	VALUE key_sym = ID2SYM(rb_intern(key));
+	rb_hash_aset(hash, key_sym, val);
+}
+
+
+
+#line 19 "parser.c"
+static const char _irc_actions[] = {
 	0, 1, 1, 1, 3, 1, 4, 1, 
 	5, 1, 6, 1, 9, 1, 10, 1, 
 	12, 1, 13, 2, 0, 1, 2, 2, 
 	7, 2, 3, 4, 2, 8, 9, 2, 
 	10, 11, 3, 2, 7, 11, 3, 8, 
 	10, 11
-]
+};
 
-class << self
-	attr_accessor :_irc_key_offsets
-	private :_irc_key_offsets, :_irc_key_offsets=
-end
-self._irc_key_offsets = [
+static const short _irc_key_offsets[] = {
 	0, 0, 7, 9, 11, 13, 14, 19, 
 	23, 28, 32, 37, 41, 46, 50, 55, 
 	59, 64, 68, 73, 77, 82, 86, 91, 
@@ -68,13 +66,9 @@ self._irc_key_offsets = [
 	2696, 2715, 2722, 2734, 2748, 2762, 2768, 2770, 
 	2772, 2784, 2796, 2808, 2820, 2832, 2844, 2856, 
 	2868, 2880, 2892, 2904, 2916, 2928, 2940
-]
+};
 
-class << self
-	attr_accessor :_irc_trans_keys
-	private :_irc_trans_keys, :_irc_trans_keys=
-end
-self._irc_trans_keys = [
+static const char _irc_trans_keys[] = {
 	58, 48, 57, 65, 90, 97, 122, 48, 
 	57, 48, 57, 13, 32, 10, 0, 10, 
 	13, 32, 58, 0, 10, 13, 32, 0, 
@@ -444,13 +438,9 @@ self._irc_trans_keys = [
 	0, 10, 13, 32, 33, 37, 45, 64, 
 	48, 57, 65, 125, 0, 10, 13, 32, 
 	33, 37, 64, 0
-]
+};
 
-class << self
-	attr_accessor :_irc_single_lengths
-	private :_irc_single_lengths, :_irc_single_lengths=
-end
-self._irc_single_lengths = [
+static const char _irc_single_lengths[] = {
 	0, 1, 0, 0, 2, 1, 5, 4, 
 	5, 4, 5, 4, 5, 4, 5, 4, 
 	5, 4, 5, 4, 5, 4, 5, 4, 
@@ -491,13 +481,9 @@ self._irc_single_lengths = [
 	7, 1, 8, 2, 2, 0, 0, 0, 
 	8, 8, 8, 8, 8, 8, 8, 8, 
 	8, 8, 8, 8, 8, 8, 7
-]
+};
 
-class << self
-	attr_accessor :_irc_range_lengths
-	private :_irc_range_lengths, :_irc_range_lengths=
-end
-self._irc_range_lengths = [
+static const char _irc_range_lengths[] = {
 	0, 3, 1, 1, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -538,13 +524,9 @@ self._irc_range_lengths = [
 	6, 3, 2, 6, 6, 3, 1, 1, 
 	2, 2, 2, 2, 2, 2, 2, 2, 
 	2, 2, 2, 2, 2, 2, 0
-]
+};
 
-class << self
-	attr_accessor :_irc_index_offsets
-	private :_irc_index_offsets, :_irc_index_offsets=
-end
-self._irc_index_offsets = [
+static const short _irc_index_offsets[] = {
 	0, 0, 5, 7, 9, 12, 14, 20, 
 	25, 31, 36, 42, 47, 53, 58, 64, 
 	69, 75, 80, 86, 91, 97, 102, 108, 
@@ -585,13 +567,9 @@ self._irc_index_offsets = [
 	2219, 2233, 2238, 2249, 2258, 2267, 2271, 2273, 
 	2275, 2286, 2297, 2308, 2319, 2330, 2341, 2352, 
 	2363, 2374, 2385, 2396, 2407, 2418, 2429
-]
+};
 
-class << self
-	attr_accessor :_irc_indicies
-	private :_irc_indicies, :_irc_indicies=
-end
-self._irc_indicies = [
+static const short _irc_indicies[] = {
 	2, 0, 3, 3, 1, 4, 1, 5, 
 	1, 6, 7, 1, 8, 1, 1, 1, 
 	1, 1, 10, 9, 1, 1, 12, 13, 
@@ -897,13 +875,9 @@ self._irc_indicies = [
 	352, 151, 1, 1, 1, 1, 334, 157, 
 	353, 158, 353, 353, 151, 1, 1, 1, 
 	1, 334, 157, 158, 151, 0
-]
+};
 
-class << self
-	attr_accessor :_irc_trans_targs
-	private :_irc_trans_targs, :_irc_trans_targs=
-end
-self._irc_trans_targs = [
+static const short _irc_trans_targs[] = {
 	2, 0, 37, 40, 3, 4, 5, 6, 
 	221, 7, 36, 7, 5, 8, 9, 9, 
 	10, 11, 11, 12, 13, 13, 14, 15, 
@@ -949,13 +923,9 @@ self._irc_trans_targs = [
 	195, 182, 303, 231, 305, 306, 307, 308, 
 	309, 310, 311, 312, 313, 314, 315, 316, 
 	317, 318
-]
+};
 
-class << self
-	attr_accessor :_irc_trans_actions
-	private :_irc_trans_actions, :_irc_trans_actions=
-end
-self._irc_trans_actions = [
+static const char _irc_trans_actions[] = {
 	19, 0, 0, 19, 1, 1, 34, 22, 
 	0, 28, 0, 11, 31, 13, 28, 11, 
 	13, 28, 11, 13, 28, 11, 13, 28, 
@@ -1001,439 +971,352 @@ self._irc_trans_actions = [
 	0, 0, 17, 17, 17, 17, 17, 17, 
 	17, 17, 17, 17, 17, 17, 17, 17, 
 	17, 17
-]
+};
 
-class << self
-	attr_accessor :irc_start
-end
-self.irc_start = 1;
-class << self
-	attr_accessor :irc_first_final
-end
-self.irc_first_final = 221;
-class << self
-	attr_accessor :irc_error
-end
-self.irc_error = 0;
+static const int irc_start = 1;
+static const int irc_first_final = 221;
+static const int irc_error = 0;
 
-class << self
-	attr_accessor :irc_en_main
-end
-self.irc_en_main = 1;
-class << self
-	attr_accessor :irc_en_message_type
-end
-self.irc_en_message_type = 124;
+static const int irc_en_main = 1;
+static const int irc_en_message_type = 124;
 
-# line 31 "rb_parser.rl"
-    
-      class << self
-        def parse_message(data)
-        
-          result = {}
-          buf = ""
-        
-          
-# line 1038 "parser.rb"
-begin
-	p ||= 0
-	pe ||= data.length
-	cs = irc_start
-end
-# line 39 "rb_parser.rl"
-          
-# line 1046 "parser.rb"
-begin
-	_klen, _trans, _keys, _acts, _nacts = nil
-	_goto_level = 0
-	_resume = 10
-	_eof_trans = 15
-	_again = 20
-	_test_eof = 30
-	_out = 40
-	while true
-	_trigger_goto = false
-	if _goto_level <= 0
-	if p == pe
-		_goto_level = _test_eof
-		next
-	end
-	if cs == 0
-		_goto_level = _out
-		next
-	end
-	end
-	if _goto_level <= _resume
-	_keys = _irc_key_offsets[cs]
-	_trans = _irc_index_offsets[cs]
-	_klen = _irc_single_lengths[cs]
-	_break_match = false
+#line 38 "c_parser.rl"
+
+
+VALUE parse_message(VALUE self, VALUE data)
+{
+	int cs = 0;
+	char *p = RSTRING_PTR(data);
+	char *pe = p + RSTRING_LEN(data);
 	
-	begin
-	  if _klen > 0
-	     _lower = _keys
-	     _upper = _keys + _klen - 1
-
-	     loop do
-	        break if _upper < _lower
-	        _mid = _lower + ( (_upper - _lower) >> 1 )
-
-	        if data[p] < _irc_trans_keys[_mid]
-	           _upper = _mid - 1
-	        elsif data[p] > _irc_trans_keys[_mid]
-	           _lower = _mid + 1
-	        else
-	           _trans += (_mid - _keys)
-	           _break_match = true
-	           break
-	        end
-	     end # loop
-	     break if _break_match
-	     _keys += _klen
-	     _trans += _klen
-	  end
-	  _klen = _irc_range_lengths[cs]
-	  if _klen > 0
-	     _lower = _keys
-	     _upper = _keys + (_klen << 1) - 2
-	     loop do
-	        break if _upper < _lower
-	        _mid = _lower + (((_upper-_lower) >> 1) & ~1)
-	        if data[p] < _irc_trans_keys[_mid]
-	          _upper = _mid - 2
-	        elsif data[p] > _irc_trans_keys[_mid+1]
-	          _lower = _mid + 2
-	        else
-	          _trans += ((_mid - _keys) >> 1)
-	          _break_match = true
-	          break
-	        end
-	     end # loop
-	     break if _break_match
-	     _trans += _klen
-	  end
-	end while false
-	_trans = _irc_indicies[_trans]
-	cs = _irc_trans_targs[_trans]
-	if _irc_trans_actions[_trans] != 0
-		_acts = _irc_trans_actions[_trans]
-		_nacts = _irc_actions[_acts]
-		_acts += 1
-		while _nacts > 0
-			_nacts -= 1
-			_acts += 1
-			case _irc_actions[_acts - 1]
-when 0 then
-# line 6 "rb_parser.rl"
-		begin
- buf = "" 		end
-# line 6 "rb_parser.rl"
-when 1 then
-# line 7 "rb_parser.rl"
-		begin
- buf << data[p] 		end
-# line 7 "rb_parser.rl"
-when 2 then
-# line 8 "rb_parser.rl"
-		begin
- result[:command] = buf 		end
-# line 8 "rb_parser.rl"
-when 3 then
-# line 9 "rb_parser.rl"
-		begin
- result[:server] = buf 		end
-# line 9 "rb_parser.rl"
-when 4 then
-# line 10 "rb_parser.rl"
-		begin
- result[:nick] = buf 		end
-# line 10 "rb_parser.rl"
-when 5 then
-# line 11 "rb_parser.rl"
-		begin
- result[:user] = buf 		end
-# line 11 "rb_parser.rl"
-when 6 then
-# line 12 "rb_parser.rl"
-		begin
- result[:host] = buf 		end
-# line 12 "rb_parser.rl"
-when 7 then
-# line 13 "rb_parser.rl"
-		begin
- params = [] 		end
-# line 13 "rb_parser.rl"
-when 8 then
-# line 14 "rb_parser.rl"
-		begin
- params << "" 		end
-# line 14 "rb_parser.rl"
-when 9 then
-# line 15 "rb_parser.rl"
-		begin
- params.last << data[p] 		end
-# line 15 "rb_parser.rl"
-when 10 then
-# line 16 "rb_parser.rl"
-		begin
-		end
-# line 16 "rb_parser.rl"
-when 11 then
-# line 17 "rb_parser.rl"
-		begin
- result[:params] = params 		end
-# line 17 "rb_parser.rl"
-when 12 then
-# line 18 "rb_parser.rl"
-		begin
- result = :channel 		end
-# line 18 "rb_parser.rl"
-when 13 then
-# line 19 "rb_parser.rl"
-		begin
- result = :user 		end
-# line 19 "rb_parser.rl"
-# line 1197 "parser.rb"
-			end # action switch
-		end
-	end
-	if _trigger_goto
-		next
-	end
-	end
-	if _goto_level <= _again
-	if cs == 0
-		_goto_level = _out
-		next
-	end
-	p += 1
-	if p != pe
-		_goto_level = _resume
-		next
-	end
-	end
-	if _goto_level <= _test_eof
-	end
-	if _goto_level <= _out
-		break
-	end
-	end
-	end
-# line 40 "rb_parser.rl"
-        
-          if $DEBUG
-            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
-          end
-        
-          result
-        end
-        
-        def target_type(data)
-          result = nil
-          
-          
-# line 1236 "parser.rb"
-begin
-	p ||= 0
-	pe ||= data.length
-	cs = irc_start
-end
-# line 52 "rb_parser.rl"
-          cs = irc_en_message_type;
-          
-# line 1245 "parser.rb"
-begin
-	_klen, _trans, _keys, _acts, _nacts = nil
-	_goto_level = 0
-	_resume = 10
-	_eof_trans = 15
-	_again = 20
-	_test_eof = 30
-	_out = 40
-	while true
-	_trigger_goto = false
-	if _goto_level <= 0
-	if p == pe
-		_goto_level = _test_eof
-		next
-	end
-	if cs == 0
-		_goto_level = _out
-		next
-	end
-	end
-	if _goto_level <= _resume
-	_keys = _irc_key_offsets[cs]
-	_trans = _irc_index_offsets[cs]
-	_klen = _irc_single_lengths[cs]
-	_break_match = false
+	VALUE result = rb_hash_new();
+	VALUE params = Qnil;
+	char *buf = 0;
 	
-	begin
-	  if _klen > 0
-	     _lower = _keys
-	     _upper = _keys + _klen - 1
+	
+#line 998 "parser.c"
+	{
+	cs = irc_start;
+	}
+#line 51 "c_parser.rl"
+	
+#line 1004 "parser.c"
+	{
+	int _klen;
+	unsigned int _trans;
+	const char *_acts;
+	unsigned int _nacts;
+	const char *_keys;
 
-	     loop do
-	        break if _upper < _lower
-	        _mid = _lower + ( (_upper - _lower) >> 1 )
+	if ( p == pe )
+		goto _test_eof;
+	if ( cs == 0 )
+		goto _out;
+_resume:
+	_keys = _irc_trans_keys + _irc_key_offsets[cs];
+	_trans = _irc_index_offsets[cs];
 
-	        if data[p] < _irc_trans_keys[_mid]
-	           _upper = _mid - 1
-	        elsif data[p] > _irc_trans_keys[_mid]
-	           _lower = _mid + 1
-	        else
-	           _trans += (_mid - _keys)
-	           _break_match = true
-	           break
-	        end
-	     end # loop
-	     break if _break_match
-	     _keys += _klen
-	     _trans += _klen
-	  end
-	  _klen = _irc_range_lengths[cs]
-	  if _klen > 0
-	     _lower = _keys
-	     _upper = _keys + (_klen << 1) - 2
-	     loop do
-	        break if _upper < _lower
-	        _mid = _lower + (((_upper-_lower) >> 1) & ~1)
-	        if data[p] < _irc_trans_keys[_mid]
-	          _upper = _mid - 2
-	        elsif data[p] > _irc_trans_keys[_mid+1]
-	          _lower = _mid + 2
-	        else
-	          _trans += ((_mid - _keys) >> 1)
-	          _break_match = true
-	          break
-	        end
-	     end # loop
-	     break if _break_match
-	     _trans += _klen
-	  end
-	end while false
-	_trans = _irc_indicies[_trans]
-	cs = _irc_trans_targs[_trans]
-	if _irc_trans_actions[_trans] != 0
-		_acts = _irc_trans_actions[_trans]
-		_nacts = _irc_actions[_acts]
-		_acts += 1
-		while _nacts > 0
-			_nacts -= 1
-			_acts += 1
-			case _irc_actions[_acts - 1]
-when 0 then
-# line 6 "rb_parser.rl"
-		begin
- buf = "" 		end
-# line 6 "rb_parser.rl"
-when 1 then
-# line 7 "rb_parser.rl"
-		begin
- buf << data[p] 		end
-# line 7 "rb_parser.rl"
-when 2 then
-# line 8 "rb_parser.rl"
-		begin
- result[:command] = buf 		end
-# line 8 "rb_parser.rl"
-when 3 then
-# line 9 "rb_parser.rl"
-		begin
- result[:server] = buf 		end
-# line 9 "rb_parser.rl"
-when 4 then
-# line 10 "rb_parser.rl"
-		begin
- result[:nick] = buf 		end
-# line 10 "rb_parser.rl"
-when 5 then
-# line 11 "rb_parser.rl"
-		begin
- result[:user] = buf 		end
-# line 11 "rb_parser.rl"
-when 6 then
-# line 12 "rb_parser.rl"
-		begin
- result[:host] = buf 		end
-# line 12 "rb_parser.rl"
-when 7 then
-# line 13 "rb_parser.rl"
-		begin
- params = [] 		end
-# line 13 "rb_parser.rl"
-when 8 then
-# line 14 "rb_parser.rl"
-		begin
- params << "" 		end
-# line 14 "rb_parser.rl"
-when 9 then
-# line 15 "rb_parser.rl"
-		begin
- params.last << data[p] 		end
-# line 15 "rb_parser.rl"
-when 10 then
-# line 16 "rb_parser.rl"
-		begin
-		end
-# line 16 "rb_parser.rl"
-when 11 then
-# line 17 "rb_parser.rl"
-		begin
- result[:params] = params 		end
-# line 17 "rb_parser.rl"
-when 12 then
-# line 18 "rb_parser.rl"
-		begin
- result = :channel 		end
-# line 18 "rb_parser.rl"
-when 13 then
-# line 19 "rb_parser.rl"
-		begin
- result = :user 		end
-# line 19 "rb_parser.rl"
-# line 1396 "parser.rb"
-			end # action switch
-		end
-	end
-	if _trigger_goto
-		next
-	end
-	end
-	if _goto_level <= _again
-	if cs == 0
-		_goto_level = _out
-		next
-	end
-	p += 1
-	if p != pe
-		_goto_level = _resume
-		next
-	end
-	end
-	if _goto_level <= _test_eof
-	end
-	if _goto_level <= _out
-		break
-	end
-	end
-	end
-# line 54 "rb_parser.rl"
+	_klen = _irc_single_lengths[cs];
+	if ( _klen > 0 ) {
+		const char *_lower = _keys;
+		const char *_mid;
+		const char *_upper = _keys + _klen - 1;
+		while (1) {
+			if ( _upper < _lower )
+				break;
 
-          if $DEBUG
-            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
-          end
-          
-          result
-        end
-        
-      
-      end # class << self
-    end # Parser
-  end # IRC
-end # FBSDBot
+			_mid = _lower + ((_upper-_lower) >> 1);
+			if ( (*p) < *_mid )
+				_upper = _mid - 1;
+			else if ( (*p) > *_mid )
+				_lower = _mid + 1;
+			else {
+				_trans += (_mid - _keys);
+				goto _match;
+			}
+		}
+		_keys += _klen;
+		_trans += _klen;
+	}
+
+	_klen = _irc_range_lengths[cs];
+	if ( _klen > 0 ) {
+		const char *_lower = _keys;
+		const char *_mid;
+		const char *_upper = _keys + (_klen<<1) - 2;
+		while (1) {
+			if ( _upper < _lower )
+				break;
+
+			_mid = _lower + (((_upper-_lower) >> 1) & ~1);
+			if ( (*p) < _mid[0] )
+				_upper = _mid - 2;
+			else if ( (*p) > _mid[1] )
+				_lower = _mid + 2;
+			else {
+				_trans += ((_mid - _keys)>>1);
+				goto _match;
+			}
+		}
+		_trans += _klen;
+	}
+
+_match:
+	_trans = _irc_indicies[_trans];
+	cs = _irc_trans_targs[_trans];
+
+	if ( _irc_trans_actions[_trans] == 0 )
+		goto _again;
+
+	_acts = _irc_actions + _irc_trans_actions[_trans];
+	_nacts = (unsigned int) *_acts++;
+	while ( _nacts-- > 0 )
+	{
+		switch ( *_acts++ )
+		{
+	case 0:
+#line 8 "c_parser.rl"
+	{ buf = p; }
+	break;
+	case 1:
+#line 9 "c_parser.rl"
+	{}
+	break;
+	case 2:
+#line 10 "c_parser.rl"
+	{ hash_insert(result, "command", rb_str_new(buf, p - buf)); }
+	break;
+	case 3:
+#line 11 "c_parser.rl"
+	{ hash_insert(result, "server", rb_str_new(buf, p - buf)); }
+	break;
+	case 4:
+#line 12 "c_parser.rl"
+	{ hash_insert(result, "nick", rb_str_new(buf, p - buf)); }
+	break;
+	case 5:
+#line 13 "c_parser.rl"
+	{ hash_insert(result, "user", rb_str_new(buf, p - buf)); }
+	break;
+	case 6:
+#line 14 "c_parser.rl"
+	{ hash_insert(result, "host", rb_str_new(buf, p - buf)); }
+	break;
+	case 7:
+#line 15 "c_parser.rl"
+	{ params = rb_ary_new(); }
+	break;
+	case 8:
+#line 16 "c_parser.rl"
+	{ buf = p; }
+	break;
+	case 9:
+#line 17 "c_parser.rl"
+	{ }
+	break;
+	case 10:
+#line 18 "c_parser.rl"
+	{ rb_ary_push(params, rb_str_new(buf, p - buf)); }
+	break;
+	case 11:
+#line 19 "c_parser.rl"
+	{ hash_insert(result, "params", params); }
+	break;
+	case 12:
+#line 20 "c_parser.rl"
+	{ result = ID2SYM(rb_intern("channel")); }
+	break;
+	case 13:
+#line 21 "c_parser.rl"
+	{ result = ID2SYM(rb_intern("user")); }
+	break;
+#line 1134 "parser.c"
+		}
+	}
+
+_again:
+	if ( cs == 0 )
+		goto _out;
+	if ( ++p != pe )
+		goto _resume;
+	_test_eof: {}
+	_out: {}
+	}
+#line 52 "c_parser.rl"
+	
+	return result;
+}
+
+VALUE target_type(VALUE self, VALUE data)
+{
+	int cs = 0;
+	char *p = RSTRING_PTR(data);
+	char *pe = p + RSTRING_LEN(data);
+	
+	char *buf = 0;
+	VALUE result, params = Qnil;
+	
+	
+#line 1161 "parser.c"
+	{
+	cs = irc_start;
+	}
+#line 66 "c_parser.rl"
+	cs = irc_en_message_type;
+	
+#line 1168 "parser.c"
+	{
+	int _klen;
+	unsigned int _trans;
+	const char *_acts;
+	unsigned int _nacts;
+	const char *_keys;
+
+	if ( p == pe )
+		goto _test_eof;
+	if ( cs == 0 )
+		goto _out;
+_resume:
+	_keys = _irc_trans_keys + _irc_key_offsets[cs];
+	_trans = _irc_index_offsets[cs];
+
+	_klen = _irc_single_lengths[cs];
+	if ( _klen > 0 ) {
+		const char *_lower = _keys;
+		const char *_mid;
+		const char *_upper = _keys + _klen - 1;
+		while (1) {
+			if ( _upper < _lower )
+				break;
+
+			_mid = _lower + ((_upper-_lower) >> 1);
+			if ( (*p) < *_mid )
+				_upper = _mid - 1;
+			else if ( (*p) > *_mid )
+				_lower = _mid + 1;
+			else {
+				_trans += (_mid - _keys);
+				goto _match;
+			}
+		}
+		_keys += _klen;
+		_trans += _klen;
+	}
+
+	_klen = _irc_range_lengths[cs];
+	if ( _klen > 0 ) {
+		const char *_lower = _keys;
+		const char *_mid;
+		const char *_upper = _keys + (_klen<<1) - 2;
+		while (1) {
+			if ( _upper < _lower )
+				break;
+
+			_mid = _lower + (((_upper-_lower) >> 1) & ~1);
+			if ( (*p) < _mid[0] )
+				_upper = _mid - 2;
+			else if ( (*p) > _mid[1] )
+				_lower = _mid + 2;
+			else {
+				_trans += ((_mid - _keys)>>1);
+				goto _match;
+			}
+		}
+		_trans += _klen;
+	}
+
+_match:
+	_trans = _irc_indicies[_trans];
+	cs = _irc_trans_targs[_trans];
+
+	if ( _irc_trans_actions[_trans] == 0 )
+		goto _again;
+
+	_acts = _irc_actions + _irc_trans_actions[_trans];
+	_nacts = (unsigned int) *_acts++;
+	while ( _nacts-- > 0 )
+	{
+		switch ( *_acts++ )
+		{
+	case 0:
+#line 8 "c_parser.rl"
+	{ buf = p; }
+	break;
+	case 1:
+#line 9 "c_parser.rl"
+	{}
+	break;
+	case 2:
+#line 10 "c_parser.rl"
+	{ hash_insert(result, "command", rb_str_new(buf, p - buf)); }
+	break;
+	case 3:
+#line 11 "c_parser.rl"
+	{ hash_insert(result, "server", rb_str_new(buf, p - buf)); }
+	break;
+	case 4:
+#line 12 "c_parser.rl"
+	{ hash_insert(result, "nick", rb_str_new(buf, p - buf)); }
+	break;
+	case 5:
+#line 13 "c_parser.rl"
+	{ hash_insert(result, "user", rb_str_new(buf, p - buf)); }
+	break;
+	case 6:
+#line 14 "c_parser.rl"
+	{ hash_insert(result, "host", rb_str_new(buf, p - buf)); }
+	break;
+	case 7:
+#line 15 "c_parser.rl"
+	{ params = rb_ary_new(); }
+	break;
+	case 8:
+#line 16 "c_parser.rl"
+	{ buf = p; }
+	break;
+	case 9:
+#line 17 "c_parser.rl"
+	{ }
+	break;
+	case 10:
+#line 18 "c_parser.rl"
+	{ rb_ary_push(params, rb_str_new(buf, p - buf)); }
+	break;
+	case 11:
+#line 19 "c_parser.rl"
+	{ hash_insert(result, "params", params); }
+	break;
+	case 12:
+#line 20 "c_parser.rl"
+	{ result = ID2SYM(rb_intern("channel")); }
+	break;
+	case 13:
+#line 21 "c_parser.rl"
+	{ result = ID2SYM(rb_intern("user")); }
+	break;
+#line 1298 "parser.c"
+		}
+	}
+
+_again:
+	if ( cs == 0 )
+		goto _out;
+	if ( ++p != pe )
+		goto _resume;
+	_test_eof: {}
+	_out: {}
+	}
+#line 68 "c_parser.rl"
+	
+	return result;
+}
 
 
-if __FILE__ == $0
-   FBSDBot::IRC::Parser.parse_message(STDIN.read)
-end
+void Init_parser() {
+	VALUE FBSDBot = rb_define_module("FBSDBot");
+	VALUE IRC     = rb_define_module_under(FBSDBot, "IRC");
+	VALUE Parser  = rb_define_module_under(IRC, "Parser");
+	
+	rb_define_module_function(Parser, "parse_message", parse_message, 1);
+	rb_define_module_function(Parser, "target_type", target_type, 1);
+}
