@@ -13,7 +13,7 @@ module FBSDBot
     def initialize(conn, opts = {})
       super
       @to, @message = opts[:params]
-      @message = @message[/\x01ACTION (.+)\x01/, 1]
+      @message = @message[/^\x01ACTION (.+)\x01$/, 1]
     end
   end
   
