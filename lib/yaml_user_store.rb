@@ -21,6 +21,14 @@ module FBSDBot
       @data[user_string]
     end
     
+    def fetch_all
+      @data.values
+    end
+    
+    def fetch_identified
+      fetch_all.select { |u| u.identified?  }
+    end
+    
     private
     
     def check_type(user)
