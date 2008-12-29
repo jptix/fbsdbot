@@ -28,39 +28,38 @@ module FBSDBot
     module Parser
     
       %% write data;
-    
-      class << self
-        def parse_message(data)
-        
-          result = {}
-          buf = ""
-        
-          %% write init;
-          %% write exec;
-        
-          if $DEBUG
-            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
-          end
-        
-          result
-        end
-        
-        def target_type(data)
-          result = nil
-          
-          %% write init;
-          cs = irc_en_message_type;
-          %% write exec;
 
-          if $DEBUG
-            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
-          end
-          
-          result
+      module_function
+
+      def parse_message(data)
+      
+        result = {}
+        buf = ""
+      
+        %% write init;
+        %% write exec;
+      
+        if $DEBUG
+          Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
+        end
+      
+        result
+      end
+      
+      def target_type(data)
+        result = nil
+        
+        %% write init;
+        cs = irc_en_message_type;
+        %% write exec;
+
+        if $DEBUG
+          Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
         end
         
-      
-      end # class << self
+        result
+      end
+        
     end # Parser
   end # IRC
 end # FBSDBot

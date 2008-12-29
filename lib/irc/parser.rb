@@ -1026,222 +1026,24 @@ end
 self.irc_en_message_type = 124;
 
 # line 31 "rb_parser.rl"
-    
-      class << self
-        def parse_message(data)
+
+      module_function
+
+      def parse_message(data)
+      
+        result = {}
+        buf = ""
+      
         
-          result = {}
-          buf = ""
-        
-          
-# line 1038 "parser.rb"
+# line 1039 "parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = irc_start
 end
-# line 39 "rb_parser.rl"
-          
-# line 1046 "parser.rb"
-begin
-	_klen, _trans, _keys, _acts, _nacts = nil
-	_goto_level = 0
-	_resume = 10
-	_eof_trans = 15
-	_again = 20
-	_test_eof = 30
-	_out = 40
-	while true
-	_trigger_goto = false
-	if _goto_level <= 0
-	if p == pe
-		_goto_level = _test_eof
-		next
-	end
-	if cs == 0
-		_goto_level = _out
-		next
-	end
-	end
-	if _goto_level <= _resume
-	_keys = _irc_key_offsets[cs]
-	_trans = _irc_index_offsets[cs]
-	_klen = _irc_single_lengths[cs]
-	_break_match = false
-	
-	begin
-	  if _klen > 0
-	     _lower = _keys
-	     _upper = _keys + _klen - 1
-
-	     loop do
-	        break if _upper < _lower
-	        _mid = _lower + ( (_upper - _lower) >> 1 )
-
-	        if data[p] < _irc_trans_keys[_mid]
-	           _upper = _mid - 1
-	        elsif data[p] > _irc_trans_keys[_mid]
-	           _lower = _mid + 1
-	        else
-	           _trans += (_mid - _keys)
-	           _break_match = true
-	           break
-	        end
-	     end # loop
-	     break if _break_match
-	     _keys += _klen
-	     _trans += _klen
-	  end
-	  _klen = _irc_range_lengths[cs]
-	  if _klen > 0
-	     _lower = _keys
-	     _upper = _keys + (_klen << 1) - 2
-	     loop do
-	        break if _upper < _lower
-	        _mid = _lower + (((_upper-_lower) >> 1) & ~1)
-	        if data[p] < _irc_trans_keys[_mid]
-	          _upper = _mid - 2
-	        elsif data[p] > _irc_trans_keys[_mid+1]
-	          _lower = _mid + 2
-	        else
-	          _trans += ((_mid - _keys) >> 1)
-	          _break_match = true
-	          break
-	        end
-	     end # loop
-	     break if _break_match
-	     _trans += _klen
-	  end
-	end while false
-	_trans = _irc_indicies[_trans]
-	cs = _irc_trans_targs[_trans]
-	if _irc_trans_actions[_trans] != 0
-		_acts = _irc_trans_actions[_trans]
-		_nacts = _irc_actions[_acts]
-		_acts += 1
-		while _nacts > 0
-			_nacts -= 1
-			_acts += 1
-			case _irc_actions[_acts - 1]
-when 0 then
-# line 6 "rb_parser.rl"
-		begin
- buf = "" 		end
-# line 6 "rb_parser.rl"
-when 1 then
-# line 7 "rb_parser.rl"
-		begin
- buf << data[p] 		end
-# line 7 "rb_parser.rl"
-when 2 then
-# line 8 "rb_parser.rl"
-		begin
- result[:command] = buf 		end
-# line 8 "rb_parser.rl"
-when 3 then
-# line 9 "rb_parser.rl"
-		begin
- result[:server] = buf 		end
-# line 9 "rb_parser.rl"
-when 4 then
-# line 10 "rb_parser.rl"
-		begin
- result[:nick] = buf 		end
-# line 10 "rb_parser.rl"
-when 5 then
-# line 11 "rb_parser.rl"
-		begin
- result[:user] = buf 		end
-# line 11 "rb_parser.rl"
-when 6 then
-# line 12 "rb_parser.rl"
-		begin
- result[:host] = buf 		end
-# line 12 "rb_parser.rl"
-when 7 then
-# line 13 "rb_parser.rl"
-		begin
- params = [] 		end
-# line 13 "rb_parser.rl"
-when 8 then
-# line 14 "rb_parser.rl"
-		begin
- params << "" 		end
-# line 14 "rb_parser.rl"
-when 9 then
-# line 15 "rb_parser.rl"
-		begin
- params.last << data[p] 		end
-# line 15 "rb_parser.rl"
-when 10 then
-# line 16 "rb_parser.rl"
-		begin
-		end
-# line 16 "rb_parser.rl"
-when 11 then
-# line 17 "rb_parser.rl"
-		begin
- result[:params] = params 		end
-# line 17 "rb_parser.rl"
-when 12 then
-# line 18 "rb_parser.rl"
-		begin
- result = :channel 		end
-# line 18 "rb_parser.rl"
-when 13 then
-# line 19 "rb_parser.rl"
-		begin
- result = :user 		end
-# line 19 "rb_parser.rl"
-# line 1197 "parser.rb"
-			end # action switch
-		end
-	end
-	if _trigger_goto
-		next
-	end
-	end
-	if _goto_level <= _again
-	if cs == 0
-		_goto_level = _out
-		next
-	end
-	p += 1
-	if p != pe
-		_goto_level = _resume
-		next
-	end
-	end
-	if _goto_level <= _test_eof
-	end
-	if _goto_level <= _out
-		break
-	end
-	end
-	end
 # line 40 "rb_parser.rl"
         
-          if $DEBUG
-            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
-          end
-        
-          result
-        end
-        
-        def target_type(data)
-          result = nil
-          
-          
-# line 1236 "parser.rb"
-begin
-	p ||= 0
-	pe ||= data.length
-	cs = irc_start
-end
-# line 52 "rb_parser.rl"
-          cs = irc_en_message_type;
-          
-# line 1245 "parser.rb"
+# line 1047 "parser.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -1392,7 +1194,7 @@ when 13 then
 		begin
  result = :user 		end
 # line 19 "rb_parser.rl"
-# line 1396 "parser.rb"
+# line 1198 "parser.rb"
 			end # action switch
 		end
 	end
@@ -1418,17 +1220,214 @@ when 13 then
 	end
 	end
 	end
-# line 54 "rb_parser.rl"
+# line 41 "rb_parser.rl"
+      
+        if $DEBUG
+          Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
+        end
+      
+        result
+      end
+      
+      def target_type(data)
+        result = nil
+        
+        
+# line 1237 "parser.rb"
+begin
+	p ||= 0
+	pe ||= data.length
+	cs = irc_start
+end
+# line 53 "rb_parser.rl"
+        cs = irc_en_message_type;
+        
+# line 1246 "parser.rb"
+begin
+	_klen, _trans, _keys, _acts, _nacts = nil
+	_goto_level = 0
+	_resume = 10
+	_eof_trans = 15
+	_again = 20
+	_test_eof = 30
+	_out = 40
+	while true
+	_trigger_goto = false
+	if _goto_level <= 0
+	if p == pe
+		_goto_level = _test_eof
+		next
+	end
+	if cs == 0
+		_goto_level = _out
+		next
+	end
+	end
+	if _goto_level <= _resume
+	_keys = _irc_key_offsets[cs]
+	_trans = _irc_index_offsets[cs]
+	_klen = _irc_single_lengths[cs]
+	_break_match = false
+	
+	begin
+	  if _klen > 0
+	     _lower = _keys
+	     _upper = _keys + _klen - 1
 
-          if $DEBUG
-            Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
-          end
-          
-          result
+	     loop do
+	        break if _upper < _lower
+	        _mid = _lower + ( (_upper - _lower) >> 1 )
+
+	        if data[p] < _irc_trans_keys[_mid]
+	           _upper = _mid - 1
+	        elsif data[p] > _irc_trans_keys[_mid]
+	           _lower = _mid + 1
+	        else
+	           _trans += (_mid - _keys)
+	           _break_match = true
+	           break
+	        end
+	     end # loop
+	     break if _break_match
+	     _keys += _klen
+	     _trans += _klen
+	  end
+	  _klen = _irc_range_lengths[cs]
+	  if _klen > 0
+	     _lower = _keys
+	     _upper = _keys + (_klen << 1) - 2
+	     loop do
+	        break if _upper < _lower
+	        _mid = _lower + (((_upper-_lower) >> 1) & ~1)
+	        if data[p] < _irc_trans_keys[_mid]
+	          _upper = _mid - 2
+	        elsif data[p] > _irc_trans_keys[_mid+1]
+	          _lower = _mid + 2
+	        else
+	          _trans += ((_mid - _keys) >> 1)
+	          _break_match = true
+	          break
+	        end
+	     end # loop
+	     break if _break_match
+	     _trans += _klen
+	  end
+	end while false
+	_trans = _irc_indicies[_trans]
+	cs = _irc_trans_targs[_trans]
+	if _irc_trans_actions[_trans] != 0
+		_acts = _irc_trans_actions[_trans]
+		_nacts = _irc_actions[_acts]
+		_acts += 1
+		while _nacts > 0
+			_nacts -= 1
+			_acts += 1
+			case _irc_actions[_acts - 1]
+when 0 then
+# line 6 "rb_parser.rl"
+		begin
+ buf = "" 		end
+# line 6 "rb_parser.rl"
+when 1 then
+# line 7 "rb_parser.rl"
+		begin
+ buf << data[p] 		end
+# line 7 "rb_parser.rl"
+when 2 then
+# line 8 "rb_parser.rl"
+		begin
+ result[:command] = buf 		end
+# line 8 "rb_parser.rl"
+when 3 then
+# line 9 "rb_parser.rl"
+		begin
+ result[:server] = buf 		end
+# line 9 "rb_parser.rl"
+when 4 then
+# line 10 "rb_parser.rl"
+		begin
+ result[:nick] = buf 		end
+# line 10 "rb_parser.rl"
+when 5 then
+# line 11 "rb_parser.rl"
+		begin
+ result[:user] = buf 		end
+# line 11 "rb_parser.rl"
+when 6 then
+# line 12 "rb_parser.rl"
+		begin
+ result[:host] = buf 		end
+# line 12 "rb_parser.rl"
+when 7 then
+# line 13 "rb_parser.rl"
+		begin
+ params = [] 		end
+# line 13 "rb_parser.rl"
+when 8 then
+# line 14 "rb_parser.rl"
+		begin
+ params << "" 		end
+# line 14 "rb_parser.rl"
+when 9 then
+# line 15 "rb_parser.rl"
+		begin
+ params.last << data[p] 		end
+# line 15 "rb_parser.rl"
+when 10 then
+# line 16 "rb_parser.rl"
+		begin
+		end
+# line 16 "rb_parser.rl"
+when 11 then
+# line 17 "rb_parser.rl"
+		begin
+ result[:params] = params 		end
+# line 17 "rb_parser.rl"
+when 12 then
+# line 18 "rb_parser.rl"
+		begin
+ result = :channel 		end
+# line 18 "rb_parser.rl"
+when 13 then
+# line 19 "rb_parser.rl"
+		begin
+ result = :user 		end
+# line 19 "rb_parser.rl"
+# line 1397 "parser.rb"
+			end # action switch
+		end
+	end
+	if _trigger_goto
+		next
+	end
+	end
+	if _goto_level <= _again
+	if cs == 0
+		_goto_level = _out
+		next
+	end
+	p += 1
+	if p != pe
+		_goto_level = _resume
+		next
+	end
+	end
+	if _goto_level <= _test_eof
+	end
+	if _goto_level <= _out
+		break
+	end
+	end
+	end
+# line 55 "rb_parser.rl"
+
+        if $DEBUG
+          Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
         end
         
-      
-      end # class << self
+        result
+      end
+        
     end # Parser
   end # IRC
 end # FBSDBot

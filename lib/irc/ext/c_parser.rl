@@ -1,4 +1,4 @@
-// IRC Ragel parser - compile with `ragel -C rfc2812.rl -o ext/parser.c`
+// IRC Ragel parser - compile with `ragel -C c_parser.rl -o parser.c`
 
 #include <ruby.h>
 
@@ -17,10 +17,10 @@
     action param_add { }
 	action param_finish { rb_ary_push(params, rb_str_new(buf, p - buf)); }
 	action params_finish { hash_insert(result, "params", params); }
-    action msgto_channel_finish { result = ID2SYM(rb_intern("channel")); }
-    action msgto_user_finish { result = ID2SYM(rb_intern("user")); }
     action msgto_begin { result = Qnil; }
-    action msgto_mask_finish { ID2SYM(rb_intern("targetmask")); }
+    action msgto_channel_finish { result = ID2SYM(rb_intern("channel")); }
+    action msgto_mask_finish { result = ID2SYM(rb_intern("targetmask")); }
+    action msgto_user_finish { result = ID2SYM(rb_intern("user")); }
     
 	include "../rfc2812.rl";
     

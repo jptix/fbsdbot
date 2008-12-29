@@ -1,5 +1,5 @@
 #line 1 "c_parser.rl"
-// IRC Ragel parser - compile with `ragel -C rfc2812.rl -o ext/parser.c`
+// IRC Ragel parser - compile with `ragel -C c_parser.rl -o parser.c`
 
 #include <ruby.h>
 
@@ -1123,11 +1123,11 @@ _match:
 	{ hash_insert(result, "params", params); }
 	break;
 	case 12:
-#line 20 "c_parser.rl"
+#line 21 "c_parser.rl"
 	{ result = ID2SYM(rb_intern("channel")); }
 	break;
 	case 13:
-#line 21 "c_parser.rl"
+#line 23 "c_parser.rl"
 	{ result = ID2SYM(rb_intern("user")); }
 	break;
 #line 1134 "parser.c"
@@ -1287,11 +1287,11 @@ _match:
 	{ hash_insert(result, "params", params); }
 	break;
 	case 12:
-#line 20 "c_parser.rl"
+#line 21 "c_parser.rl"
 	{ result = ID2SYM(rb_intern("channel")); }
 	break;
 	case 13:
-#line 21 "c_parser.rl"
+#line 23 "c_parser.rl"
 	{ result = ID2SYM(rb_intern("user")); }
 	break;
 #line 1298 "parser.c"
