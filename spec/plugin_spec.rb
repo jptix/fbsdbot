@@ -1,6 +1,8 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "Plugin" do
+  include SpecHelpers
+  
   after(:each) do
     Plugin.reset!
   end

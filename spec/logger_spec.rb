@@ -1,6 +1,7 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "Logger" do
+  include SpecHelpers
 
   before(:each) do
     @log = Logger.new

@@ -2,6 +2,8 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 require "#{File.dirname(__FILE__)}/../lib/corecommands"
 
 describe "corecommands" do
+  include SpecHelpers
+  
   before(:all) do
     @plugin = Plugin.registered_plugins[:corecommands]
   end
@@ -26,11 +28,14 @@ describe "corecommands" do
   describe "!commands" do
     it "should reply with a list of all the registered bot commands" do
       event = mock('event')
+      
+      args = []
       event.should_receive(:reply) do |arg|
-        arg.should include(@plugin.commands.join(', '))
-      end
+        args << arg
+      end.at_least(:once)
       
       @plugin.on_cmd_commands(event)
+      args.any? { |arg| arg.include?(@plugin.commands.join(', ')) }.should be_true
     end
   end
 

@@ -3,7 +3,7 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 describe "YAMLUserStore" do
   
   before(:each) do
-    @file = 'fbsdbot-userstore.yml'
+    @file = 'test-fbsdbot-userstore.yml'
     @ds = YAMLUserStore.new(@file)
   end
   
