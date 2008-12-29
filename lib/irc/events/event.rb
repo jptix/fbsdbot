@@ -49,11 +49,9 @@ module FBSDBot
     
     def fetch_user(nick, user, host)
       string = "#{nick}!#{user}@#{host}"
+      
       if u = User.datastore.fetch(:hostmask => string)
-        unless u.nick
-          u.nick, u.host, u.user = nick, host, user
-          u.save
-        end
+        u.update(nick, user, host)
         return u
       else
        User.cache[string]
