@@ -9,6 +9,7 @@ manager = FBSDBot::IRC::NetworkHandler.new($config)
 
 EventMachine::run {  
   require 'lib/corecommands'
+  require 'lib/partyline'
   Log.info "Loaded plugins:"
   FBSDBot::Plugin.list_plugins
   

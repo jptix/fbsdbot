@@ -1,4 +1,10 @@
 class String
+
+  
+  # todo, implement for IPv6 ips too
+  def inet_aton ip
+    split(/\./).map{|c| c.to_i}.pack("C*").unpack("N").first
+  end
   #
   # Convert from camel case to snake case
   #
