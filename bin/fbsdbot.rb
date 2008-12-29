@@ -7,10 +7,6 @@ require 'lib/irc/event_machine'
 
 Log.level = $DEBUG ? :debug : :info
 
-module FBSDBot
-  VERSION = "0.1"
-end
-
 EventMachine::run {  
   require 'lib/corecommands'
   Log.info "Loaded plugins:"

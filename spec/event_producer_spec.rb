@@ -106,5 +106,13 @@ describe "EventProducer" do
     event.message.should == "bye"
   end
   
+  it "should create the correct event when MOTD starts" do
+    event = @ep.parse_line ":irc.homelien.no 375 testbot20 :- irc.homelien.no Message of the Day - \r\n"
+    event.should be_instance_of(MotdStartEvent)
+    event.message.should == '- irc.homelien.no Message of the Day - '
+    event.to.should == "testbot20"
+    event.server.should == "irc.homelien.no"
+  end
+  
 end
 

@@ -16,3 +16,8 @@ require 'lib/irc/parser'
 require 'lib/irc/event_producer'
 
 Log = FBSDBot::Logger.new
+
+module FBSDBot
+  VERSION = "0.1"
+end
+
