@@ -5,8 +5,6 @@ require 'lib/boot'
 require 'lib/options_parser'
 
 
-Log.level = $DEBUG ? :debug : :info
-
 manager = FBSDBot::IRC::NetworkHandler.new($config)
 
 EventMachine::run {  

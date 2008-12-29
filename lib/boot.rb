@@ -21,6 +21,7 @@ require 'lib/irc/parser'
 
 
 Log = FBSDBot::Logger.new
+Log.level = $DEBUG ? :debug : :info
 
 module FBSDBot
   VERSION = "0.1"
