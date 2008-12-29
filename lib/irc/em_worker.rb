@@ -1,22 +1,22 @@
-require 'lib/irc/event_commands'
-require 'lib/irc/event_constants'
+require 'lib/irc/commands'
+require 'lib/irc/constants'
 
 module FBSDBot
   module IRC
-    class EMCore < EventMachine::Connection
-      attr_reader :args, :start_time
+    class EMWorker < EventMachine::Connection
+      attr_accessor :handler
+      attr_reader :start_time
       include EventMachine::Deferrable
       include Commands
       include Constants
 
-      def self.connect(args = {})
-        args[:port]     ||= 6667
-        args[:username] ||= args[:nick]
-        args[:realname] ||= args[:nick]
-         
-        EventMachine::connect( args[:host], args[:port], self) do |instance| 
+      def self.connect(handler, network, instance_data)
+
+        EventMachine::connect( instance_data[:servers].pick, handler.port, self) do |instance|
           instance.instance_eval {
-            @args = args
+            @handler = handler
+            @servers = instance_data[:servers]
+            @channels = instance_data[:channels] || Array.new
             @event_producer = EventProducer.new(self)
             Log.info("Connecting to server", self)
           }
@@ -24,7 +24,7 @@ module FBSDBot
       end
       
       def to_s
-        "Worker:#{@args[:host]}[c#{connected?.tiny_s}:r#{reconnect?.tiny_s}]"
+        "#<EMWorker:#%x[c#{connected?.tiny_s}:r#{reconnect?.tiny_s}]>" % object_id
       end
       
       def post_init
@@ -68,9 +68,9 @@ module FBSDBot
         
         case(event)
         when EndOfMotdEvent
-          send_join(*@args[:channels])
+          send_join(*@channels)
         when NicknameInUseEvent
-          send_nick Helpers.obfuscate_nick(@args[:nick])
+          send_nick Helpers.obfuscate_nick(@handler.nick)
         else
           ## CREATE cases above for events we don't want plugins to be able to handle
           Plugin.run_event event
@@ -80,7 +80,7 @@ module FBSDBot
       def unbind
         @connected = false
         Log.info("Disconnected", self)
-        reconnect(@args[:host], @args[:port]) unless(@shutdown)
+        reconnect(@servers.pick, @handler.port) unless(@shutdown)
         succeed(self) # send status to handle if this is good or bad, this might not allways be a good thing.. 
       end
     end

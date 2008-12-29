@@ -8,6 +8,3 @@ TODO:
 * write more tests
 * Make bot FiSH ( http://fish.sekure.us ) -Compatible so users can use bot securely.
 * Plugins should have an easy way to check if the user has special privileges.
-
-EVENTS:
-

@@ -1,8 +1,11 @@
 :nick: WorkBond
-:host: irc.homelien.no
-:port: 6667
-:channels:
-  - "#bot-test.no"
+:networks:
+  :EFnet:
+    :servers:
+      - irc.homelien.no
+      - irc.daxnet.no
+    :channels:
+      - "#bot-test.no"
 :master: 
   :user: foo
   :nick: bar
