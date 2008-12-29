@@ -2,9 +2,13 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "Plugin" do
   include SpecHelpers
+
+  before(:each) do
+    @default_plugins = Plugin.registered_plugins
+  end
   
   after(:each) do
-    Plugin.reset!
+    Plugin.instance_variable_set("@registered_plugins", @default_plugins)
   end
 
   describe "#define" do
