@@ -1,4 +1,5 @@
 require "rubygems"
+require "rake/clean"
 require "spec/rake/spectask"
 
 $stdout.sync = true
@@ -31,5 +32,8 @@ namespace :compile_parser do
     sh "make"
   end
 end
+
+CLEAN.include("lib/irc/ext/parser.bundle", "lib/irc/ext/parser.o",
+              "lib/irc/ext/Makefile")
 
 task :default => :spec
