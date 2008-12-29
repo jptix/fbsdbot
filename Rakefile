@@ -16,3 +16,5 @@ task :compile_parser do
   sh "ragel -R rfc2812 -o parser.rb"
   puts "done!"
 end
+
+task :default => :spec

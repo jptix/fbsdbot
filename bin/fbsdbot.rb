@@ -10,7 +10,9 @@ module FBSDBot
   VERSION = "0.1"
 end
 
+
 manager = FBSDBot::IRC::NetworkHandler.new($config)
+
 
 EventMachine::run {  
   require 'lib/corecommands'

@@ -4,6 +4,7 @@ require "lib/irc/events/private_message_event"
 require "lib/irc/events/ctcp_events"
 require "lib/irc/events/disconnect_event"
 require "lib/irc/events/motd_event"
+require "lib/irc/events/motd_start_event"
 require "lib/irc/events/end_of_motd_event"
 require "lib/irc/events/join_event"
 require "lib/irc/events/names_event"
@@ -20,28 +21,29 @@ module FBSDBot
     class EventProducer
 
       COMMANDS = {
-        'PING'   => PingEvent,
-        'JOIN'   => JoinEvent,
-        'PART'   => PartEvent,
-        'NOTICE' => NoticeEvent,
-        'QUIT'   => QuitEvent,
-        '372'    => MotdEvent,
-        '376'    => EndOfMotdEvent,
         '353'    => NamesEvent,
-        '433'    => NicknameInUseEvent,
         '366'    => EndOfNamesEvent,
+        '372'    => MotdEvent,
+        '375'    => MotdStartEvent,
+        '376'    => EndOfMotdEvent,
+        '433'    => NicknameInUseEvent,
+        'JOIN'   => JoinEvent,
+        'NOTICE' => NoticeEvent,
+        'PART'   => PartEvent,
+        'PING'   => PingEvent,
+        'QUIT'   => QuitEvent,
       }
 
       CTCP_COMMANDS = {
-        'VERSION'    => CTCPVersionEvent,
-        'PING'       => CTCPPingEvent,
-        'CLIENTINFO' => CTCPClientInfoEvent,
         'ACTION'     => CTCPActionEvent,
-        'FINGER'     => CTCPFingerEvent,
-        'TIME'       => CTCPTimeEvent,
+        'CLIENTINFO' => CTCPClientInfoEvent,
         'DCC'        => CTCPDccEvent,
         'ERRMSG'     => CTCPErrorMessageEvent,
-        'PLAY'       => CTCPPlayEvent
+        'FINGER'     => CTCPFingerEvent,
+        'PING'       => CTCPPingEvent,
+        'PLAY'       => CTCPPlayEvent,
+        'TIME'       => CTCPTimeEvent,
+        'VERSION'    => CTCPVersionEvent,
       }
 
       def initialize(worker)

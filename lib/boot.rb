@@ -21,3 +21,8 @@ require 'lib/irc/parser'
 
 
 Log = FBSDBot::Logger.new
+
+module FBSDBot
+  VERSION = "0.1"
+end
+
