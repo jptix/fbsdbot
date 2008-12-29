@@ -6,10 +6,6 @@ require 'lib/options_parser'
 
 Log.level = $DEBUG ? :debug : :info
 
-module FBSDBot
-  VERSION = "0.1"
-end
-
 
 manager = FBSDBot::IRC::NetworkHandler.new($config)
 
