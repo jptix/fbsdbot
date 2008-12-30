@@ -25,7 +25,7 @@ module FBSDBot
     
       # Creates a new worker connection instance
       def create_worker(ircnetwork, ircnetwork_specific_data)
-        next unless @workers[ircnetwork].nil?
+        return if @workers[ircnetwork]
         raise Argument, "IRC-Network not a symbol" unless ircnetwork.is_a?(Symbol)
         raise ArgumentError, "IRC Network Data not a Hash" unless ircnetwork_specific_data.is_a?(Hash)
       

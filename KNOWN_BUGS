@@ -4,4 +4,4 @@ There are no known bugs. If you discover any, please email them to Daniel Bond, 
  	To compile and run with C-extension, use:
 
 		"rake parser:compile"
-		NOTE: If you have Ragel installed, you can use: parser:generate:c (or parser:generate for both Ruby and C parser)
+		NOTE: If you have Ragel installed, you can use: parser:generate:c (or parser:all for both Ruby and C parser)

@@ -39,9 +39,8 @@ namespace :parser do
     sh "make"
   end
   
-  desc 'Generate/compile both the ruby and C parser (requires ragel)'
+  desc 'Generate and compile both the ruby and C parser (requires ragel)'
   task :all => %w[generate:ruby generate:c compile]
-  
 end
 
 CLEAN.include("lib/irc/ext/parser.bundle", "lib/irc/ext/parser.o",

@@ -1,4 +1,4 @@
-class Numeric
+class Integer
   #
   # Convert IP from number to String form
   #
