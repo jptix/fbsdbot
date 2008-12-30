@@ -7,7 +7,4 @@
     :channels:
       - "#bot-test.no"
 :master: 
-  :user: foo
-  :nick: bar
-  :host: example.com
-  :password: foobar
+  :hostmask_exp: !ruby/regexp /^change me$/
