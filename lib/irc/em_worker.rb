@@ -16,10 +16,12 @@ module FBSDBot
           EventMachine::connect( server, handler.port, self) do |instance|
             instance.instance_eval {
               @handler = handler
-              @servers = instance_data[:servers]
+              @network = network
+              @server = server
+              @instance_data = instance_data
               @channels = instance_data[:channels] || Array.new
               @event_producer = EventProducer.new(self)
-              Log.info("Connecting to server", self)
+              Log.info("Connecting to server #{server}", self)
             }
           end
         rescue RuntimeError => e
@@ -29,7 +31,7 @@ module FBSDBot
       end
       
       def to_s
-        "#<EMWorker:#%x[c#{connected?.tiny_s}:r#{reconnect?.tiny_s}]>" % object_id
+        "#<EMWorker:#%x #{@network} [c#{connected?.tiny_s}:r#{reconnect?.tiny_s}]>" % object_id
       end
       
       def post_init
@@ -40,6 +42,7 @@ module FBSDBot
       end
       
       def connection_completed
+        Log.info "Connected.", self
         @connected = true
         login
       end
@@ -75,6 +78,7 @@ module FBSDBot
 
         case(event)
         when EndOfMotdEvent
+          Log.info "Joining channels: #{@channels.join(", ")}", self
           send_join(*@channels)
         when NicknameInUseEvent
           send_nick Helpers.obfuscate_nick(@handler.nick)
@@ -87,8 +91,10 @@ module FBSDBot
      
       def unbind
         @connected = false
-        Log.info("Disconnected", self)
-        reconnect(@servers.pick, @handler.port) unless(@shutdown)
+        Log.info("Disconnected from #{@server}", self)
+        next_server = @instance_data[:servers].pick
+        Log.info("Re-connecting, trying server: #{next_server}", self)
+        reconnect(next_server, @handler.port) unless(@shutdown)
         succeed(self) # send status to handle if this is good or bad, this might not allways be a good thing.. 
       end
     end
