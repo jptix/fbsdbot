@@ -36,6 +36,7 @@ namespace :parser do
     sh "ruby extconf.rb"
     sh "make clean"
     sh "make"
+    sh "make clean"
   end
   
 end

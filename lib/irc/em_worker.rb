@@ -11,15 +11,20 @@ module FBSDBot
       include Constants
 
       def self.connect(handler, network, instance_data)
-
-        EventMachine::connect( instance_data[:servers].pick, handler.port, self) do |instance|
-          instance.instance_eval {
-            @handler = handler
-            @servers = instance_data[:servers]
-            @channels = instance_data[:channels] || Array.new
-            @event_producer = EventProducer.new(self)
-            Log.info("Connecting to server", self)
-          }
+        server = instance_data[:servers].pick
+        begin
+          EventMachine::connect( server, handler.port, self) do |instance|
+            instance.instance_eval {
+              @handler = handler
+              @servers = instance_data[:servers]
+              @channels = instance_data[:channels] || Array.new
+              @event_producer = EventProducer.new(self)
+              Log.info("Connecting to server", self)
+            }
+          end
+        rescue RuntimeError => e
+          Log.warn "Could not connect to #{network}, #{server}:#{handler.port} (#{e.class} => #{e}) - sleeping #{handler.retry_in_seconds} seconds", self
+          EventMachine::add_timer(handler.retry_in_seconds) { connect(handler, network, instance_data) }
         end
       end
       

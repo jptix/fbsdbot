@@ -5,7 +5,7 @@ module FBSDBot
   module IRC
     class NetworkHandler
     
-      attr_reader :nick, :port, :realname, :username, :start_time
+      attr_reader :nick, :port, :realname, :username, :start_time, :retry_in_seconds
     
       def initialize(config)
         @config = config
@@ -14,6 +14,7 @@ module FBSDBot
         @nick = config[:nick]
         @realname = config[:realname] || "FBSDBot"
         @username = config[:username] || "fbsd"
+        @retry_in_seconds = config[:retry_in_seconds] || 5
         @start_time = Time.now
       end
     
