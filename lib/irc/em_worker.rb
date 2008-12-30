@@ -70,7 +70,9 @@ module FBSDBot
         Log.debug(:handle_event => event)
         return if event.nil?
         raise TypeError, "Not passed an Event.class" unless event.is_a?(Event)
-        
+
+        return if event.discard?
+
         case(event)
         when EndOfMotdEvent
           send_join(*@channels)
@@ -78,6 +80,7 @@ module FBSDBot
           send_nick Helpers.obfuscate_nick(@handler.nick)
         else
           ## CREATE cases above for events we don't want plugins to be able to handle
+          return if event.stop?
           Plugin.run_event event
         end
       end

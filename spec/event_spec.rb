@@ -6,10 +6,10 @@ describe "Event" do
     event = Event.new(mock('worker'))
     event.inspect.should_not include("worker")
   end
-  
+
   it "should show other instance variables for #inspect" do
     event = EndOfMotdEvent.new(mock('worker'), :server => 'irc.homelien.no') 
-    event.inspect.should =~ /^#<FBSDBot::EndOfMotdEvent\(:end_of_motd\):0x[0-9a-f]{6,7} @server=\"irc.homelien.no\">$/
+    event.inspect.should =~ /^#<FBSDBot::EndOfMotdEvent\(:end_of_motd\):0x[0-9a-f]{6,7} @discard=false @server=\"irc.homelien.no\" @stop=false>$/
   end
 
 end

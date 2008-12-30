@@ -58,6 +58,7 @@ module FBSDBot
         event_type = event.command? ? "cmd_#{event.command}".to_sym : event.type
 
         @event_handlers[event_type].each do |handler|
+          break if(event.stop?)
           handler.send "on_#{event_type}", event
         end
       end
