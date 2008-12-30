@@ -28,9 +28,6 @@ op.parse!(ARGV)
 config = YAML.load_file(ARGV.first || "#{File.dirname(__FILE__)}/../bin/bot.conf.example")
 $config = config.merge(opts)
 
-raise ConfigurationError, "No nick defined in configuration file" if config[:nick].nil?
-raise ConfigurationError, "No network defined in configuration file, or not a Hash-class." unless config[:networks].is_a?(Hash)
-
 Log.info "Loaded config."
 
 
