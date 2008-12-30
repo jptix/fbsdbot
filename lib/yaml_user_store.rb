@@ -77,7 +77,7 @@ module FBSDBot
       return unless $config && $config[:master]
       rx = $config[:master][:hostmask_exp]
       
-      return if fetch(:regexp => rx)
+      return if fetch_all.any? { |e| e.master? }
       
       master = User.new(:hostmask_exp => rx)
       master.set_flag(:master)
