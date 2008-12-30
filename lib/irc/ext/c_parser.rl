@@ -6,21 +6,21 @@
 	machine irc;
 
 	action strbegin { buf = p; }
-    action stradd {}
-    action command_finish { hash_insert(result, "command", rb_str_new(buf, p - buf)); }
+	action stradd {}
+	action command_finish { hash_insert(result, "command", rb_str_new(buf, p - buf)); }
 	action servername_finish { hash_insert(result, "server", rb_str_new(buf, p - buf)); }
-    action nickname_finish { hash_insert(result, "nick", rb_str_new(buf, p - buf)); }
-    action user_finish { hash_insert(result, "user", rb_str_new(buf, p - buf)); }
-    action host_finish { hash_insert(result, "host", rb_str_new(buf, p - buf)); }
+	action nickname_finish { hash_insert(result, "nick", rb_str_new(buf, p - buf)); }
+	action user_finish { hash_insert(result, "user", rb_str_new(buf, p - buf)); }
+	action host_finish { hash_insert(result, "host", rb_str_new(buf, p - buf)); }
 	action params_begin { params = rb_ary_new(); }
 	action param_begin { buf = p; }
-    action param_add { }
+	action param_add { }
 	action param_finish { rb_ary_push(params, rb_str_new(buf, p - buf)); }
 	action params_finish { hash_insert(result, "params", params); }
-    action msgto_begin { result = Qnil; }
-    action msgto_channel_finish { result = ID2SYM(rb_intern("channel")); }
-    action msgto_mask_finish { result = ID2SYM(rb_intern("targetmask")); }
-    action msgto_user_finish { result = ID2SYM(rb_intern("user")); }
+	action msgto_begin { result = Qnil; }
+	action msgto_channel_finish { result = ID2SYM(rb_intern("channel")); }
+	action msgto_mask_finish { result = ID2SYM(rb_intern("targetmask")); }
+	action msgto_user_finish { result = ID2SYM(rb_intern("user")); }
 
 	include "../rfc2812.rl";
 
@@ -75,7 +75,7 @@ VALUE target_type(VALUE self, VALUE data)
 
 void Init_parser() {
 	VALUE FBSDBot = rb_define_module("FBSDBot");
-	VALUE IRC     = rb_define_module_under(FBSDBot, "IRC");
+	VALUE IRC	  = rb_define_module_under(FBSDBot, "IRC");
 	VALUE Parser  = rb_define_module_under(IRC, "Parser");
 
 	rb_define_module_function(Parser, "parse_message", parse_message, 1);

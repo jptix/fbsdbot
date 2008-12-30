@@ -1,7 +1,7 @@
 # ruby parser - compile with `ragel -R rb_parser.rl -o parser.rb`
 
 %%{
-	machine irc;
+    machine irc;
 
     action strbegin { buf = "" }
     action stradd { buf << fc }
@@ -20,7 +20,7 @@
     action msgto_begin { result = nil }
     action msgto_mask_finish { result = :targetmask }
 
-	include "rfc2812.rl";
+    include "rfc2812.rl";
 }%%
 
 module FBSDBot
@@ -32,9 +32,9 @@ module FBSDBot
       module_function
 
       def parse_message(data)
-		unless String === data
-		  raise TypeError, "wrong argument type #{data.class} (expected String)"
-		end
+        unless String === data
+          raise TypeError, "wrong argument type #{data.class} (expected String)"
+        end
 
         result = {}
         buf = ""
@@ -50,9 +50,9 @@ module FBSDBot
       end
 
       def target_type(data)
-		unless String === data
-		  raise TypeError, "wrong argument type #{data.class} (expected String)"
-		end
+        unless String === data
+          raise TypeError, "wrong argument type #{data.class} (expected String)"
+        end
 
         result = nil
 
