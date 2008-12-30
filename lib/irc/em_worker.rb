@@ -11,15 +11,20 @@ module FBSDBot
       include Constants
 
       def self.connect(handler, network, instance_data)
-
-        EventMachine::connect( instance_data[:servers].pick, handler.port, self) do |instance|
-          instance.instance_eval {
-            @handler = handler
-            @servers = instance_data[:servers]
-            @channels = instance_data[:channels] || Array.new
-            @event_producer = EventProducer.new(self)
-            Log.info("Connecting to server", self)
-          }
+        server = instance_data[:servers].pick
+        begin
+          EventMachine::connect( server, handler.port, self) do |instance|
+            instance.instance_eval {
+              @handler = handler
+              @servers = instance_data[:servers]
+              @channels = instance_data[:channels] || Array.new
+              @event_producer = EventProducer.new(self)
+              Log.info("Connecting to server", self)
+            }
+          end
+        rescue RuntimeError => e
+          Log.warn "Could not connect to #{network}, #{server}:#{handler.port} (#{e.class} => #{e}) - sleeping #{handler.retry_in_seconds} seconds", self
+          EventMachine::add_timer(handler.retry_in_seconds) { connect(handler, network, instance_data) }
         end
       end
       
@@ -65,7 +70,9 @@ module FBSDBot
         Log.debug(:handle_event => event)
         return if event.nil?
         raise TypeError, "Not passed an Event.class" unless event.is_a?(Event)
-        
+
+        return if event.discard?
+
         case(event)
         when EndOfMotdEvent
           send_join(*@channels)
@@ -73,6 +80,7 @@ module FBSDBot
           send_nick Helpers.obfuscate_nick(@handler.nick)
         else
           ## CREATE cases above for events we don't want plugins to be able to handle
+          return if event.stop?
           Plugin.run_event event
         end
       end

@@ -16,6 +16,24 @@ module FBSDBot
     
     def initialize(worker)
       @worker = worker
+      @discard = false
+      @stop = false
+    end
+    
+    def discard?
+      @discard
+    end
+    
+    def stop
+      @stop = true
+    end
+    
+    def continue
+      @stop = false
+    end
+    
+    def stop?
+      @stop
     end
     
     def type
@@ -46,6 +64,10 @@ module FBSDBot
     end
     
     private
+    
+    def discard # only allowed from within event.. use stop-metod to prevent further plugins beeing run for this event
+      @discard = true
+    end
     
     def fetch_user(nick, user, host)
       string = "#{nick}!#{user}@#{host}"

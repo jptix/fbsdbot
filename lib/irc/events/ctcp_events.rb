@@ -13,7 +13,7 @@ module FBSDBot
     def initialize(conn, opts = {})
       super
       @to, @message = opts[:params]
-      @message = @message[/^\x01ACTION (.+)\x01$/, 1]
+      @message = @message[/^\x01ACTION (.+)\x01$/, 1] || discard
     end
   end
   
@@ -38,8 +38,10 @@ module FBSDBot
       @to, @message = opts[:params]
       @ip = @port = nil
       if @message =~ /^\x01DCC CHAT CHAT (\d+) (\d+)\x01$/
-          @ip = opts[:host]
-          @port = $2.to_i
+        @ip = opts[:host] # use $1.to_i.inet_ntoa, when this supports IPv6
+        @port = $2.to_i
+      else
+        discard
       end
     end
   end

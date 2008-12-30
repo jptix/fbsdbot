@@ -1,6 +1,8 @@
 # ignore config-files (call them .conf.example with good default values)
 *.conf
-# ignore logfiles (future use?)
-
 # ignore data
 fbsdbot-userstore.yml
+Makefile
+# ignore binaries
+*.[oa]
+*.bundle
