@@ -1030,9 +1030,9 @@ self.irc_en_message_type = 124;
       module_function
 
       def parse_message(data)
-		unless String === data
-		  raise TypeError, "wrong argument type #{data.class} (expected String)"
-		end
+        unless String === data
+          raise TypeError, "wrong argument type #{data.class} (expected String)"
+        end
 
         result = {}
         buf = ""
@@ -1130,57 +1130,57 @@ begin
 when 0 then
 # line 6 "rb_parser.rl"
 		begin
- buf = "" 		end
+ buf = ""                 		end
 # line 6 "rb_parser.rl"
 when 1 then
 # line 7 "rb_parser.rl"
 		begin
- buf << data[p] 		end
+ buf << data[p]                		end
 # line 7 "rb_parser.rl"
 when 2 then
 # line 8 "rb_parser.rl"
 		begin
- result[:command] = buf 		end
+ result[:command] = buf   		end
 # line 8 "rb_parser.rl"
 when 3 then
 # line 9 "rb_parser.rl"
 		begin
- result[:server] = buf 		end
+ result[:server] = buf    		end
 # line 9 "rb_parser.rl"
 when 4 then
 # line 10 "rb_parser.rl"
 		begin
- result[:nick] = buf 		end
+ result[:nick] = buf      		end
 # line 10 "rb_parser.rl"
 when 5 then
 # line 11 "rb_parser.rl"
 		begin
- result[:user] = buf 		end
+ result[:user] = buf      		end
 # line 11 "rb_parser.rl"
 when 6 then
 # line 12 "rb_parser.rl"
 		begin
- result[:host] = buf 		end
+ result[:host] = buf      		end
 # line 12 "rb_parser.rl"
 when 7 then
 # line 13 "rb_parser.rl"
 		begin
- params = [] 		end
+ params = []              		end
 # line 13 "rb_parser.rl"
 when 8 then
 # line 14 "rb_parser.rl"
 		begin
- params << "" 		end
+ params << ""             		end
 # line 14 "rb_parser.rl"
 when 9 then
 # line 15 "rb_parser.rl"
 		begin
- params.last << data[p] 		end
+ params.last << data[p]        		end
 # line 15 "rb_parser.rl"
 when 10 then
 # line 16 "rb_parser.rl"
 		begin
-		end
+                          		end
 # line 16 "rb_parser.rl"
 when 11 then
 # line 17 "rb_parser.rl"
@@ -1190,12 +1190,12 @@ when 11 then
 when 12 then
 # line 18 "rb_parser.rl"
 		begin
- result = :channel 		end
+ result = :channel        		end
 # line 18 "rb_parser.rl"
 when 13 then
 # line 19 "rb_parser.rl"
 		begin
- result = :user 		end
+ result = :user           		end
 # line 19 "rb_parser.rl"
 # line 1201 "parser.rb"
 			end # action switch
@@ -1233,9 +1233,9 @@ when 13 then
       end
 
       def target_type(data)
-		unless String === data
-		  raise TypeError, "wrong argument type #{data.class} (expected String)"
-		end
+        unless String === data
+          raise TypeError, "wrong argument type #{data.class} (expected String)"
+        end
 
         result = nil
 
@@ -1247,7 +1247,7 @@ begin
 	cs = irc_start
 end
 # line 60 "rb_parser.rl"
-        cs = irc_en_message_type;
+        cs = irc_en_message_type
         
 # line 1253 "parser.rb"
 begin
@@ -1333,57 +1333,57 @@ begin
 when 0 then
 # line 6 "rb_parser.rl"
 		begin
- buf = "" 		end
+ buf = ""                 		end
 # line 6 "rb_parser.rl"
 when 1 then
 # line 7 "rb_parser.rl"
 		begin
- buf << data[p] 		end
+ buf << data[p]                		end
 # line 7 "rb_parser.rl"
 when 2 then
 # line 8 "rb_parser.rl"
 		begin
- result[:command] = buf 		end
+ result[:command] = buf   		end
 # line 8 "rb_parser.rl"
 when 3 then
 # line 9 "rb_parser.rl"
 		begin
- result[:server] = buf 		end
+ result[:server] = buf    		end
 # line 9 "rb_parser.rl"
 when 4 then
 # line 10 "rb_parser.rl"
 		begin
- result[:nick] = buf 		end
+ result[:nick] = buf      		end
 # line 10 "rb_parser.rl"
 when 5 then
 # line 11 "rb_parser.rl"
 		begin
- result[:user] = buf 		end
+ result[:user] = buf      		end
 # line 11 "rb_parser.rl"
 when 6 then
 # line 12 "rb_parser.rl"
 		begin
- result[:host] = buf 		end
+ result[:host] = buf      		end
 # line 12 "rb_parser.rl"
 when 7 then
 # line 13 "rb_parser.rl"
 		begin
- params = [] 		end
+ params = []              		end
 # line 13 "rb_parser.rl"
 when 8 then
 # line 14 "rb_parser.rl"
 		begin
- params << "" 		end
+ params << ""             		end
 # line 14 "rb_parser.rl"
 when 9 then
 # line 15 "rb_parser.rl"
 		begin
- params.last << data[p] 		end
+ params.last << data[p]        		end
 # line 15 "rb_parser.rl"
 when 10 then
 # line 16 "rb_parser.rl"
 		begin
-		end
+                          		end
 # line 16 "rb_parser.rl"
 when 11 then
 # line 17 "rb_parser.rl"
@@ -1393,12 +1393,12 @@ when 11 then
 when 12 then
 # line 18 "rb_parser.rl"
 		begin
- result = :channel 		end
+ result = :channel        		end
 # line 18 "rb_parser.rl"
 when 13 then
 # line 19 "rb_parser.rl"
 		begin
- result = :user 		end
+ result = :user           		end
 # line 19 "rb_parser.rl"
 # line 1404 "parser.rb"
 			end # action switch

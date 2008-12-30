@@ -33,6 +33,8 @@ namespace :compile_parser do
   end
 end
 
+task :compile_parser => %w[compile_parser:ruby compile_parser:c]
+
 CLEAN.include("lib/irc/ext/parser.bundle", "lib/irc/ext/parser.o",
               "lib/irc/ext/Makefile")
 

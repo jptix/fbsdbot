@@ -3,7 +3,12 @@
 
 #include <ruby.h>
 
-#line 27 "c_parser.rl"
+#define hash_set_string(key, ptr, len)\
+	rb_hash_aset(result, ID2SYM(rb_intern(key)), rb_str_new(ptr, len));
+#define hash_set_value(key, val)\
+	rb_hash_aset(result, ID2SYM(rb_intern(key)), val);
+
+#line 31 "c_parser.rl"
 
 
 
@@ -14,7 +19,7 @@ void hash_insert(VALUE hash, char* key, VALUE val)
 
 
 
-#line 18 "parser.c"
+#line 23 "parser.c"
 static const char _irc_actions[] = {
 	0, 1, 1, 1, 3, 1, 4, 1, 
 	5, 1, 6, 1, 9, 1, 10, 1, 
@@ -979,7 +984,7 @@ static const int irc_error = 0;
 static const int irc_en_main = 1;
 static const int irc_en_message_type = 124;
 
-#line 37 "c_parser.rl"
+#line 41 "c_parser.rl"
 
 
 VALUE parse_message(VALUE self, VALUE data)
@@ -995,13 +1000,13 @@ VALUE parse_message(VALUE self, VALUE data)
 	char *buf = 0;
 
 	
-#line 999 "parser.c"
+#line 1004 "parser.c"
 	{
 	cs = irc_start;
 	}
-#line 52 "c_parser.rl"
+#line 56 "c_parser.rl"
 	
-#line 1005 "parser.c"
+#line 1010 "parser.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -1076,62 +1081,62 @@ _match:
 		switch ( *_acts++ )
 		{
 	case 0:
-#line 8 "c_parser.rl"
-	{ buf = p; }
+#line 13 "c_parser.rl"
+	{ buf = p; 											}
 	break;
 	case 1:
-#line 9 "c_parser.rl"
-	{}
+#line 14 "c_parser.rl"
+	{													}
 	break;
 	case 2:
-#line 10 "c_parser.rl"
-	{ hash_insert(result, "command", rb_str_new(buf, p - buf)); }
+#line 15 "c_parser.rl"
+	{ hash_set_string("command", buf, p - buf); 		}
 	break;
 	case 3:
-#line 11 "c_parser.rl"
-	{ hash_insert(result, "server", rb_str_new(buf, p - buf)); }
+#line 16 "c_parser.rl"
+	{ hash_set_string("server", buf, p - buf); 			}
 	break;
 	case 4:
-#line 12 "c_parser.rl"
-	{ hash_insert(result, "nick", rb_str_new(buf, p - buf)); }
+#line 17 "c_parser.rl"
+	{ hash_set_string("nick", buf, p - buf); 			}
 	break;
 	case 5:
-#line 13 "c_parser.rl"
-	{ hash_insert(result, "user", rb_str_new(buf, p - buf)); }
+#line 18 "c_parser.rl"
+	{ hash_set_string("user", buf, p - buf); 			}
 	break;
 	case 6:
-#line 14 "c_parser.rl"
-	{ hash_insert(result, "host", rb_str_new(buf, p - buf)); }
+#line 19 "c_parser.rl"
+	{ hash_set_string("host", buf, p - buf); 			}
 	break;
 	case 7:
-#line 15 "c_parser.rl"
-	{ params = rb_ary_new(); }
+#line 20 "c_parser.rl"
+	{ params = rb_ary_new(); 							}
 	break;
 	case 8:
-#line 16 "c_parser.rl"
-	{ buf = p; }
+#line 21 "c_parser.rl"
+	{ buf = p; 											}
 	break;
 	case 9:
-#line 17 "c_parser.rl"
-	{ }
+#line 22 "c_parser.rl"
+	{ 													}
 	break;
 	case 10:
-#line 18 "c_parser.rl"
-	{ rb_ary_push(params, rb_str_new(buf, p - buf)); }
+#line 23 "c_parser.rl"
+	{ rb_ary_push(params, rb_str_new(buf, p - buf));	}
 	break;
 	case 11:
-#line 19 "c_parser.rl"
-	{ hash_insert(result, "params", params); }
+#line 24 "c_parser.rl"
+	{ hash_set_value("params", params); 				}
 	break;
 	case 12:
-#line 21 "c_parser.rl"
-	{ result = ID2SYM(rb_intern("channel")); }
+#line 26 "c_parser.rl"
+	{ result = ID2SYM(rb_intern("channel")); 			}
 	break;
 	case 13:
-#line 23 "c_parser.rl"
-	{ result = ID2SYM(rb_intern("user")); }
+#line 28 "c_parser.rl"
+	{ result = ID2SYM(rb_intern("user")); 				}
 	break;
-#line 1135 "parser.c"
+#line 1140 "parser.c"
 		}
 	}
 
@@ -1143,7 +1148,7 @@ _again:
 	_test_eof: {}
 	_out: {}
 	}
-#line 53 "c_parser.rl"
+#line 57 "c_parser.rl"
 
 	return result;
 }
@@ -1159,15 +1164,9 @@ VALUE target_type(VALUE self, VALUE data)
 	char *buf = 0;
 	VALUE result, params = Qnil;
 
-	
-#line 1164 "parser.c"
-	{
-	cs = irc_start;
-	}
-#line 69 "c_parser.rl"
 	cs = irc_en_message_type;
 	
-#line 1171 "parser.c"
+#line 1170 "parser.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -1242,62 +1241,62 @@ _match:
 		switch ( *_acts++ )
 		{
 	case 0:
-#line 8 "c_parser.rl"
-	{ buf = p; }
+#line 13 "c_parser.rl"
+	{ buf = p; 											}
 	break;
 	case 1:
-#line 9 "c_parser.rl"
-	{}
+#line 14 "c_parser.rl"
+	{													}
 	break;
 	case 2:
-#line 10 "c_parser.rl"
-	{ hash_insert(result, "command", rb_str_new(buf, p - buf)); }
+#line 15 "c_parser.rl"
+	{ hash_set_string("command", buf, p - buf); 		}
 	break;
 	case 3:
-#line 11 "c_parser.rl"
-	{ hash_insert(result, "server", rb_str_new(buf, p - buf)); }
+#line 16 "c_parser.rl"
+	{ hash_set_string("server", buf, p - buf); 			}
 	break;
 	case 4:
-#line 12 "c_parser.rl"
-	{ hash_insert(result, "nick", rb_str_new(buf, p - buf)); }
+#line 17 "c_parser.rl"
+	{ hash_set_string("nick", buf, p - buf); 			}
 	break;
 	case 5:
-#line 13 "c_parser.rl"
-	{ hash_insert(result, "user", rb_str_new(buf, p - buf)); }
+#line 18 "c_parser.rl"
+	{ hash_set_string("user", buf, p - buf); 			}
 	break;
 	case 6:
-#line 14 "c_parser.rl"
-	{ hash_insert(result, "host", rb_str_new(buf, p - buf)); }
+#line 19 "c_parser.rl"
+	{ hash_set_string("host", buf, p - buf); 			}
 	break;
 	case 7:
-#line 15 "c_parser.rl"
-	{ params = rb_ary_new(); }
+#line 20 "c_parser.rl"
+	{ params = rb_ary_new(); 							}
 	break;
 	case 8:
-#line 16 "c_parser.rl"
-	{ buf = p; }
+#line 21 "c_parser.rl"
+	{ buf = p; 											}
 	break;
 	case 9:
-#line 17 "c_parser.rl"
-	{ }
+#line 22 "c_parser.rl"
+	{ 													}
 	break;
 	case 10:
-#line 18 "c_parser.rl"
-	{ rb_ary_push(params, rb_str_new(buf, p - buf)); }
+#line 23 "c_parser.rl"
+	{ rb_ary_push(params, rb_str_new(buf, p - buf));	}
 	break;
 	case 11:
-#line 19 "c_parser.rl"
-	{ hash_insert(result, "params", params); }
+#line 24 "c_parser.rl"
+	{ hash_set_value("params", params); 				}
 	break;
 	case 12:
-#line 21 "c_parser.rl"
-	{ result = ID2SYM(rb_intern("channel")); }
+#line 26 "c_parser.rl"
+	{ result = ID2SYM(rb_intern("channel")); 			}
 	break;
 	case 13:
-#line 23 "c_parser.rl"
-	{ result = ID2SYM(rb_intern("user")); }
+#line 28 "c_parser.rl"
+	{ result = ID2SYM(rb_intern("user")); 				}
 	break;
-#line 1301 "parser.c"
+#line 1300 "parser.c"
 		}
 	}
 
@@ -1309,15 +1308,16 @@ _again:
 	_test_eof: {}
 	_out: {}
 	}
-#line 71 "c_parser.rl"
+#line 74 "c_parser.rl"
 
 	return result;
 }
 
 
-void Init_parser() {
+void Init_parser() 
+{
 	VALUE FBSDBot = rb_define_module("FBSDBot");
-	VALUE IRC     = rb_define_module_under(FBSDBot, "IRC");
+	VALUE IRC	  = rb_define_module_under(FBSDBot, "IRC");
 	VALUE Parser  = rb_define_module_under(IRC, "Parser");
 
 	rb_define_module_function(Parser, "parse_message", parse_message, 1);
