@@ -31,12 +31,6 @@
 }%%
 
 
-void hash_insert(VALUE hash, char* key, VALUE val)
-{
-	rb_hash_aset(hash, ID2SYM(rb_intern(key)), val);
-}
-
-
 %% write data;
 
 

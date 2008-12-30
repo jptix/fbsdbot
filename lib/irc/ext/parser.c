@@ -12,14 +12,8 @@
 
 
 
-void hash_insert(VALUE hash, char* key, VALUE val)
-{
-	rb_hash_aset(hash, ID2SYM(rb_intern(key)), val);
-}
 
-
-
-#line 23 "parser.c"
+#line 17 "parser.c"
 static const char _irc_actions[] = {
 	0, 1, 1, 1, 3, 1, 4, 1, 
 	5, 1, 6, 1, 9, 1, 10, 1, 
@@ -984,7 +978,7 @@ static const int irc_error = 0;
 static const int irc_en_main = 1;
 static const int irc_en_message_type = 124;
 
-#line 41 "c_parser.rl"
+#line 35 "c_parser.rl"
 
 
 VALUE parse_message(VALUE self, VALUE data)
@@ -1000,13 +994,13 @@ VALUE parse_message(VALUE self, VALUE data)
 	char *buf = 0;
 
 	
-#line 1004 "parser.c"
+#line 998 "parser.c"
 	{
 	cs = irc_start;
 	}
-#line 56 "c_parser.rl"
+#line 50 "c_parser.rl"
 	
-#line 1010 "parser.c"
+#line 1004 "parser.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -1136,7 +1130,7 @@ _match:
 #line 28 "c_parser.rl"
 	{ result = ID2SYM(rb_intern("user")); 				}
 	break;
-#line 1140 "parser.c"
+#line 1134 "parser.c"
 		}
 	}
 
@@ -1148,7 +1142,7 @@ _again:
 	_test_eof: {}
 	_out: {}
 	}
-#line 57 "c_parser.rl"
+#line 51 "c_parser.rl"
 
 	return result;
 }
@@ -1166,7 +1160,7 @@ VALUE target_type(VALUE self, VALUE data)
 
 	cs = irc_en_message_type;
 	
-#line 1170 "parser.c"
+#line 1164 "parser.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -1296,7 +1290,7 @@ _match:
 #line 28 "c_parser.rl"
 	{ result = ID2SYM(rb_intern("user")); 				}
 	break;
-#line 1300 "parser.c"
+#line 1294 "parser.c"
 		}
 	}
 
@@ -1308,7 +1302,7 @@ _again:
 	_test_eof: {}
 	_out: {}
 	}
-#line 74 "c_parser.rl"
+#line 68 "c_parser.rl"
 
 	return result;
 }
