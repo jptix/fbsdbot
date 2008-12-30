@@ -10,9 +10,9 @@ Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
-desc 'Compile the Ragel parser'
-
 namespace :compile_parser do
+  
+  desc 'Compile the Ruby parser to lib/irc/parser.rb'
   task :ruby do
     chdir "#{File.dirname(__FILE__)}/lib/irc" 
     print "Compiling..."
@@ -20,6 +20,7 @@ namespace :compile_parser do
     puts "done!"
   end
   
+  desc 'Compile the C parser to lib/irc/ext/parser.{bundle,so}'
   task :c do
     chdir "#{File.dirname(__FILE__)}/lib/irc/ext" 
     sh "ruby extconf.rb"
@@ -33,6 +34,7 @@ namespace :compile_parser do
   end
 end
 
+desc 'Compile both parsers (Ruby and C extension)'
 task :compile_parser => %w[compile_parser:ruby compile_parser:c]
 
 CLEAN.include("lib/irc/ext/parser.bundle", "lib/irc/ext/parser.o",
