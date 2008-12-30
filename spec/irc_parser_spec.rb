@@ -52,6 +52,11 @@ describe "FBSDBot::IRC::Parser" do
     val = parse_message(":jptix!markus@81.167.229.37 PRIVMSG #bot-test.no : :)\r\n")
   end
   
+  it "should raise TypeError if passed a non-string argument" do
+    lambda { parse_message(1234) }.should raise_error(TypeError, "wrong argument type Fixnum (expected String)")
+    lambda { IRC::Parser.target_type(1234) }.should raise_error(TypeError, "wrong argument type Fixnum (expected String)")
+  end
+  
   it "should should return the correct target type for the specified target" do
     IRC::Parser.target_type("#foobar").should == :channel
     IRC::Parser.target_type("+foobar").should == :channel

@@ -32,6 +32,9 @@ module FBSDBot
       module_function
 
       def parse_message(data)
+		unless String === data
+		  raise TypeError, "wrong argument type #{data.class} (expected String)"
+		end
 
         result = {}
         buf = ""
@@ -47,6 +50,10 @@ module FBSDBot
       end
 
       def target_type(data)
+		unless String === data
+		  raise TypeError, "wrong argument type #{data.class} (expected String)"
+		end
+
         result = nil
 
         %% write init;

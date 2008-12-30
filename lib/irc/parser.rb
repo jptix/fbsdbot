@@ -7,7 +7,7 @@
 module FBSDBot
   module IRC
     module Parser
-    
+
       
 # line 13 "parser.rb"
 class << self
@@ -1030,20 +1030,23 @@ self.irc_en_message_type = 124;
       module_function
 
       def parse_message(data)
-      
+		unless String === data
+		  raise TypeError, "wrong argument type #{data.class} (expected String)"
+		end
+
         result = {}
         buf = ""
-      
+
         
-# line 1039 "parser.rb"
+# line 1042 "parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = irc_start
 end
-# line 40 "rb_parser.rl"
+# line 43 "rb_parser.rl"
         
-# line 1047 "parser.rb"
+# line 1050 "parser.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -1194,7 +1197,7 @@ when 13 then
 		begin
  result = :user 		end
 # line 19 "rb_parser.rl"
-# line 1198 "parser.rb"
+# line 1201 "parser.rb"
 			end # action switch
 		end
 	end
@@ -1220,29 +1223,33 @@ when 13 then
 	end
 	end
 	end
-# line 41 "rb_parser.rl"
-      
+# line 44 "rb_parser.rl"
+
         if $DEBUG
           Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
         end
-      
+
         result
       end
-      
+
       def target_type(data)
+		unless String === data
+		  raise TypeError, "wrong argument type #{data.class} (expected String)"
+		end
+
         result = nil
+
         
-        
-# line 1237 "parser.rb"
+# line 1244 "parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = irc_start
 end
-# line 53 "rb_parser.rl"
+# line 60 "rb_parser.rl"
         cs = irc_en_message_type;
         
-# line 1246 "parser.rb"
+# line 1253 "parser.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -1393,7 +1400,7 @@ when 13 then
 		begin
  result = :user 		end
 # line 19 "rb_parser.rl"
-# line 1397 "parser.rb"
+# line 1404 "parser.rb"
 			end # action switch
 		end
 	end
@@ -1419,15 +1426,15 @@ when 13 then
 	end
 	end
 	end
-# line 55 "rb_parser.rl"
+# line 62 "rb_parser.rl"
 
         if $DEBUG
           Kernel.p :finished => cs, :consumed => p, :total => pe, :result => result
         end
-        
+
         result
       end
-        
+
     end # Parser
   end # IRC
 end # FBSDBot
