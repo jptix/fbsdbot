@@ -9,13 +9,12 @@
 
 void hash_insert(VALUE hash, char* key, VALUE val)
 {
-	VALUE key_sym = ID2SYM(rb_intern(key));
-	rb_hash_aset(hash, key_sym, val);
+	rb_hash_aset(hash, ID2SYM(rb_intern(key)), val);
 }
 
 
 
-#line 19 "parser.c"
+#line 18 "parser.c"
 static const char _irc_actions[] = {
 	0, 1, 1, 1, 3, 1, 4, 1, 
 	5, 1, 6, 1, 9, 1, 10, 1, 
@@ -980,27 +979,29 @@ static const int irc_error = 0;
 static const int irc_en_main = 1;
 static const int irc_en_message_type = 124;
 
-#line 38 "c_parser.rl"
+#line 37 "c_parser.rl"
 
 
 VALUE parse_message(VALUE self, VALUE data)
 {
+	Check_Type(data, T_STRING);
+
 	int cs = 0;
 	char *p = RSTRING_PTR(data);
 	char *pe = p + RSTRING_LEN(data);
-	
+
 	VALUE result = rb_hash_new();
 	VALUE params = Qnil;
 	char *buf = 0;
+
 	
-	
-#line 998 "parser.c"
+#line 999 "parser.c"
 	{
 	cs = irc_start;
 	}
-#line 51 "c_parser.rl"
+#line 52 "c_parser.rl"
 	
-#line 1004 "parser.c"
+#line 1005 "parser.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -1130,7 +1131,7 @@ _match:
 #line 23 "c_parser.rl"
 	{ result = ID2SYM(rb_intern("user")); }
 	break;
-#line 1134 "parser.c"
+#line 1135 "parser.c"
 		}
 	}
 
@@ -1142,29 +1143,31 @@ _again:
 	_test_eof: {}
 	_out: {}
 	}
-#line 52 "c_parser.rl"
-	
+#line 53 "c_parser.rl"
+
 	return result;
 }
 
 VALUE target_type(VALUE self, VALUE data)
 {
+	Check_Type(data, T_STRING);
+
 	int cs = 0;
 	char *p = RSTRING_PTR(data);
 	char *pe = p + RSTRING_LEN(data);
-	
+
 	char *buf = 0;
 	VALUE result, params = Qnil;
+
 	
-	
-#line 1161 "parser.c"
+#line 1164 "parser.c"
 	{
 	cs = irc_start;
 	}
-#line 66 "c_parser.rl"
+#line 69 "c_parser.rl"
 	cs = irc_en_message_type;
 	
-#line 1168 "parser.c"
+#line 1171 "parser.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -1294,7 +1297,7 @@ _match:
 #line 23 "c_parser.rl"
 	{ result = ID2SYM(rb_intern("user")); }
 	break;
-#line 1298 "parser.c"
+#line 1301 "parser.c"
 		}
 	}
 
@@ -1306,8 +1309,8 @@ _again:
 	_test_eof: {}
 	_out: {}
 	}
-#line 68 "c_parser.rl"
-	
+#line 71 "c_parser.rl"
+
 	return result;
 }
 
@@ -1316,7 +1319,7 @@ void Init_parser() {
 	VALUE FBSDBot = rb_define_module("FBSDBot");
 	VALUE IRC     = rb_define_module_under(FBSDBot, "IRC");
 	VALUE Parser  = rb_define_module_under(IRC, "Parser");
-	
+
 	rb_define_module_function(Parser, "parse_message", parse_message, 1);
 	rb_define_module_function(Parser, "target_type", target_type, 1);
 }
