@@ -1,1 +1,7 @@
-* Possible error if bot cannot reach server it's connecting to.
+There are no known bugs. If you discover any, please email them to Daniel Bond, or jptix.
+
+  - The ragel parser in Ruby is slow compared to C. On a simple test, Ruby parser calls approximately 90x more ruby function calls.
+ 	To compile and run with C-extension, use:
+
+		"rake parser:compile"
+		NOTE: If you have Ragel installed, you can use: parser:generate:c (or parser:generate for both Ruby and C parser)

@@ -4,8 +4,9 @@ REQUESTS:
 
 TODO:
 
-* Fix the stuff that used to work.. plugins etc..
+* Rewrite the old plugins (useful ones), to the EventMachine framework. Delete the rest of them.
 * write more tests
 * Make bot FiSH ( http://fish.sekure.us ) -Compatible so users can use bot securely.
 * DCC partyline
 * DTrace with http://svn.joyent.com/opensource/dtrace/ruby/examples/function-calls.d to see what is going on
+* Make Number.inet_ntoa support IPv4 and IPv6
