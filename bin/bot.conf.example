@@ -6,3 +6,8 @@
       - irc.daxnet.no
     :channels:
       - "#bot-test.no"
+:master: 
+  :user: foo
+  :nick: bar
+  :host: example.com
+  :password: foobar

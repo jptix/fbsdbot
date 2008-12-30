@@ -1,6 +1,7 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "Logger" do
+  include SpecHelpers
 
   before(:each) do
     @log = Logger.new
@@ -15,18 +16,27 @@ describe "Logger" do
   end
   
   it "should print to $stdout if level is below :warn" do
-    out = capture(:stdout) { hit_logger }
-    out.split("\n").size.should == 2
+    stdout, stderr = capture(:both) { hit_logger }
+    stdout.split("\n").size.should == 2
   end
 
   it "should print to $stderr if level is above :warn" do
-    out = capture(:stderr) { hit_logger }
-    out.split("\n").size.should == 3
+    stdout, stderr = capture(:both) { hit_logger }
+    stderr.split("\n").size.should == 3
   end
   
   it "should not log anything if level is set to :off" do
     @log.level = :off
     out = capture(:stderr) { hit_logger }.should == ""
+  end
+  
+  it "should call inspect on the passed in object if it's not a string" do
+    obj = [1,2,3]
+    out = capture(:stdout) do
+      @log.debug(obj)
+    end
+    
+    out.should include(obj.inspect)
   end
 
   

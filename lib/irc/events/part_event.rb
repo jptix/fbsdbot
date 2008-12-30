@@ -1,14 +1,12 @@
 module FBSDBot
   class PartEvent < Event
 
-    attr_reader :nick, :host, :user, :channel, :message
+    attr_reader :user, :channel, :message
     
     def initialize(conn, opts = {})
       super(conn)
       @channel, @message = opts[:params]
-      @nick = opts[:nick]
-      @host = opts[:host]
-      @user = opts[:user]
+      @user = fetch_user(*opts.values_at(:nick, :user, :host))
     end
     
   end

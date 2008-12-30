@@ -1,6 +1,8 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "FBSDBot::IRC::Parser" do
+  include SpecHelpers
+  
   it "should parse a private message from user to user" do
     result = parse_message(":freenode-connect!freenode@freenode/bot/connect PRIVMSG utf82bot :hello\r\n")
     val    = result #.value

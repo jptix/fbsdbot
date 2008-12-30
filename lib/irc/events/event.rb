@@ -1,6 +1,5 @@
 module FBSDBot
   
-  # abstract superclass 
   class Event
 
     attr_reader :worker
@@ -46,5 +45,18 @@ module FBSDBot
       str << '>'
     end
     
-  end
-end
+    private
+    
+    def fetch_user(nick, user, host)
+      string = "#{nick}!#{user}@#{host}"
+      
+      if u = User.datastore.fetch(:hostmask => string)
+        u.update(nick, user, host)
+        return u
+      else
+       User.cache[string]
+     end
+    end
+    
+  end # class User
+end # module FBSDBot

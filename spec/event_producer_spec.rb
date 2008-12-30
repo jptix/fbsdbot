@@ -34,8 +34,12 @@ describe "EventProducer" do
   
   it "should create the correct event for ctcp version" do
     event = @ep.parse_line ":jptix!markus@nextgentel.com PRIVMSG testbot20 :\001VERSION\001\r\n"
+    
     event.should be_instance_of(CTCPVersionEvent)
-    event.nick.should == 'jptix'
+    
+    event.user.nick.should == 'jptix'
+    event.user.user.should == 'markus'
+    event.user.host.should == 'nextgentel.com'
     
     event.should respond_to(:reply)
     @conn.should_receive(:send_notice).with("\001VERSION hello\001", "jptix")
@@ -52,9 +56,14 @@ describe "EventProducer" do
   
   it "should create the correct event for a notice" do
     event = @ep.parse_line ":jptix!markus@nextgentel.com NOTICE testbot20 :foo\r\n"
+    
     event.should be_instance_of(NoticeEvent)
     event.should be_kind_of(Replyable)
-    event.nick.should == 'jptix'
+    
+    event.user.nick.should == 'jptix'
+    event.user.user.should == 'markus'
+    event.user.host.should == 'nextgentel.com'
+    
     event.to.should == 'testbot20'
     event.message.should == 'foo'
   end
@@ -90,18 +99,18 @@ describe "EventProducer" do
   it "should create the correct event when someone quits" do
     event = @ep.parse_line ":tesvbot20!~FBSDBot@nextgentel.com QUIT :Remote host closed the connection\r\n"
     event.should be_instance_of(QuitEvent)
-    event.nick.should == "tesvbot20"
-    event.user.should == "~FBSDBot"
-    event.host.should == "nextgentel.com"
+    event.user.nick.should == "tesvbot20"
+    event.user.user.should == "~FBSDBot"
+    event.user.host.should == "nextgentel.com"
     event.message.should == "Remote host closed the connection"
   end
   
   it "should create the correct event when someone joins a channel" do
     event = @ep.parse_line ":jptix!markus@nextgentel.com PART #bot-test.no :bye\r\n"
     event.should be_instance_of(PartEvent)
-    event.nick.should == "jptix"
-    event.host.should == "nextgentel.com"
-    event.user.should == "markus"
+    event.user.nick.should == "jptix"
+    event.user.host.should == "nextgentel.com"
+    event.user.user.should == "markus"
     event.channel.should == "#bot-test.no"
     event.message.should == "bye"
   end
@@ -113,6 +122,64 @@ describe "EventProducer" do
     event.to.should == "testbot20"
     event.server.should == "irc.homelien.no"
   end
+  
+  it "should create the correct event when receiving RPL_WHOISUSER" do
+    event = @ep.parse_line ":irc.homelien.no 311 testbot20 Mr_Bond ~db marvin.home.ip6.danielbond.org * :DB5868-RIPE\r\n"
+    event.should be_instance_of(WhoisUserEvent)
+    event.to.should == "testbot20"
+    event.server.should == "irc.homelien.no"
+    event.user.nick.should == "Mr_Bond"
+    event.user.user.should == "~db"
+    event.user.host.should == "marvin.home.ip6.danielbond.org"
+    event.real_name.should == "DB5868-RIPE"
+  end
+
+  it "should create the correct event when receiving RPL_WHOISSERVER (312)" do
+    event = @ep.parse_line ":irc.homelien.no 312 testbot20 Mr_Bond irc.homelien.no :Who Cares\r\n"
+    event.should be_instance_of(WhoisServerEvent)
+    event.to.should == "testbot20"
+    event.server.should == "irc.homelien.no"
+    event.nick.should == "Mr_Bond"
+    event.user_info.should == "Who Cares"
+  end
+  
+  it "should create the correct event when receiving RPL_WHOISOPERATOR (313)" do
+    event = @ep.parse_line ":irc.homelien.no 313 testbot20 Mr_Bond :is an IRC Operator\r\n"
+    event.should be_instance_of(WhoisOperatorEvent)
+    event.nick.should == "Mr_Bond"
+    event.to.should == "testbot20"
+    event.server.should == "irc.homelien.no"
+    event.message.should == "is an IRC Operator"
+  end
+  
+  it "should create the correct event when receiving RPL_WHOISIDLE (317)" do
+    event = @ep.parse_line ":irc.homelien.no 317 testbot20 Mr_Bond 70 1230158255 :seconds idle, signon time\r\n"
+    event.should be_instance_of(WhoisIdleEvent)
+    event.nick.should == "Mr_Bond"
+    event.seconds.should == "70"
+    event.server.should == "irc.homelien.no"
+    event.to.should == "testbot20"
+  end
+  
+  it "should create the correct event when receiving RPL_ENDOFWHOIS (318)" do
+    event = @ep.parse_line ":irc.homelien.no 318 testbot20 Mr_Bond :End of /WHOIS list.\r\n"
+    event.should be_instance_of(EndOfWhoisEvent)
+    event.server.should == "irc.homelien.no"
+    event.to.should == "testbot20"
+    event.nick.should == "Mr_Bond"
+    event.message.should == "End of /WHOIS list."
+  end
+  
+  it "should create the correct event when receiving RPL_WHOISCHANNELS (319)" do
+    event = @ep.parse_line(":irc.homelien.no 319 testbot20 Mr_Bond :#unixhelp @#bot-test.no \r\n")
+    event.should be_instance_of(WhoisChannelsEvent)
+    event.server.should == "irc.homelien.no"
+    event.to.should == "testbot20"
+    event.nick.should == "Mr_Bond"
+    event.channel_string.should == "#unixhelp @#bot-test.no "
+  end
+
+
   
 end
 

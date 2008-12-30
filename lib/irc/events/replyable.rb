@@ -1,18 +1,23 @@
 module FBSDBot
   module Replyable
 
-    attr_reader :to, :message, :nick, :user, :host
+    attr_reader :to, :message, :user
     
     def setup(opts)
       @to, @message  = opts[:params]
-      @nick          = opts[:nick]
-      @user          = opts[:user]
-      @host          = opts[:host]
+      
+      args = opts.values_at(:nick, :user, :host)
+      unless args.include?(nil)
+        @user = fetch_user(*args)
+      end
+    end
+
+    def reply_to
+      who = channel? ? @to : @user.nick
     end
 
     def reply(string)
-      who = self.channel? ? @to : @nick
-      @worker.send_privmsg string.to_s, who
+      @worker.send_privmsg string.to_s, reply_to
     end
     
   end

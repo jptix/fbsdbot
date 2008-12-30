@@ -14,6 +14,12 @@ require "lib/irc/events/end_of_names_event"
 require "lib/irc/events/notice_event"
 require "lib/irc/events/quit_event"
 require "lib/irc/events/part_event"
+require "lib/irc/events/end_of_whois_event"
+require "lib/irc/events/whois_user_event"
+require "lib/irc/events/whois_server_event"
+require "lib/irc/events/whois_idle_event"
+require "lib/irc/events/whois_channels_event"
+require "lib/irc/events/whois_operator_event"
 
 
 module FBSDBot
@@ -21,6 +27,12 @@ module FBSDBot
     class EventProducer
 
       COMMANDS = {
+        '311'    => WhoisUserEvent,
+        '312'    => WhoisServerEvent,
+        '313'    => WhoisOperatorEvent,
+        '317'    => WhoisIdleEvent,
+        '318'    => EndOfWhoisEvent,
+        '319'    => WhoisChannelsEvent,
         '353'    => NamesEvent,
         '366'    => EndOfNamesEvent,
         '372'    => MotdEvent,
