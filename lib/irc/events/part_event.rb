@@ -5,7 +5,8 @@ module FBSDBot
     
     def initialize(conn, opts = {})
       super(conn)
-      @channel, @message = opts[:params]
+      @channel = opts[:params].first
+      @message = opts[:params].last.to_s # will be nil if no message was given
       @user = fetch_user(*opts.values_at(:nick, :user, :host))
     end
     
