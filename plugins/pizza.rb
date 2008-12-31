@@ -14,7 +14,7 @@ FBSDBot::Plugin.define "PizzaHighlight" do
       a.reply "#{a.nick}: ok, ticket ##{a.object_id}"
       
       EventMachine::add_timer(time) {
-        a.reply("#{a.nick}: #{what} is ready! (ticket: ##{a.object_id})")
+        a.reply("#{a.nick}: it is time to #{what}! (ticket: ##{a.object_id})")
       }
     end
   end
