@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/..')
-require 'lib/boot'
 require 'lib/options_parser'
+require 'lib/boot'
 
 
 manager = FBSDBot::IRC::NetworkHandler.new($config)
