@@ -24,7 +24,6 @@ require 'lib/yaml_user_store'
 require (ENV['BOT_C_EXT'] == "1" ? 'lib/irc/ext/parser' : 'lib/irc/parser')
 
 Log = FBSDBot::Logger.new
-Log.level = $DEBUG ? :debug : :info
 
 module FBSDBot
   VERSION = "0.1"
