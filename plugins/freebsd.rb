@@ -116,18 +116,18 @@ FBSDBot::Plugin.define("freebsd") {
   # ==================
 
   def on_cmd_whatis(action)
-    action.reply @freebsd.whatis(action.message)
+    action.reply @freebsd.whatis(action.message.sub(/^!whatis /, ''))
   end
 
   def on_cmd_man(action)
-    @freebsd.man(action, action.message)
+    @freebsd.man(action, action.message.sub(/^!man /, ''))
   end
 
   def on_cmd_ports(action)
-    @freebsd.ports(action, action.message)
+    @freebsd.ports(action, action.message.sub(/^!ports /, ''))
   end
 
   def on_cmd_doc(action)
-    @freebsd.doc(action, action.message)
+    @freebsd.doc(action, action.message.sub(/^!doc /, ''))
   end
 }
