@@ -8,6 +8,7 @@ FBSDBot::Plugin.define("corecommands") {
 
   def on_cmd_commands(event)
     FBSDBot::Plugin.registered_plugins.each do |name,plugin|
+      next if plugin.commands.empty?
       event.reply "#{plugin} available commands: #{plugin.commands.join(", ")}"
     end
   end
