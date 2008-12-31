@@ -70,7 +70,7 @@ module FBSDBot
       # into multiple messages.
 
       def send_privmsg(message, *recipients)
-        Log.info("sending privmsg '#{message}' to '#{recipients}'")
+        Log.debug("sending privmsg '#{message}' to '#{recipients}'")
         normalize_message(message) { |message|
           recipients.each { |recipient|
             send_raw(PRIVMSG, recipient, message)
