@@ -3,6 +3,7 @@
 :nick: WorkBond
 :color: yes
 :c-parser: yes
+
 :networks:
   :EFnet:
     :servers:
@@ -10,5 +11,6 @@
       - irc.daxnet.no
     :channels:
       - "#bot-test.no"
+
 :master: 
   :hostmask_exp: !ruby/regexp /^change me$/

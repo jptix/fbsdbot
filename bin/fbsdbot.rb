@@ -14,7 +14,6 @@ at_exit { FBSDBot::Plugin.run_event(FBSDBot::ShutdownEvent.new) }
 
 EventMachine::run {  
   require 'lib/corecommands'
-  require 'plugins/freebsd'
   require 'lib/partyline'
   require 'lib/authentication'
   Log.info "Loaded plugins:"
