@@ -7,19 +7,15 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 
   def on_private_message(a)
 
-    if a.message.match(/^(.+?) in (\d+)([msh])$/)
+    if a.message.match(/^#{a.worker.handler.nick}[:,]\s+(.+?) in (\d+)([mh])$/)
       what = $1
-      time = $2.to_i
-      if $3 == "h"
-        time = $2.to_i * 60 * 60
-      elsif $3 == "m"
-        time = $2.to_i * 60
-      end
+      time = ($3 == "m") ? $2.to_i * 60 : $2.to_i * 60^2
+      
+      a.reply "#{a.nick}: ok, ticket ##{a.object_id}"
       
       EventMachine::add_timer(time) {
-        a.reply("#{a.to}: #{what} is ready!")        
+        a.reply("#{a.nick}: #{what} is ready! (ticket: ##{a.object_id})")
       }
     end
-    
   end
 end
