@@ -1,4 +1,8 @@
+# this config MUST be valid YAML syntax, see http://yaml.org/spec/1.2
+
 :nick: WorkBond
+:color: yes
+:c-parser: yes
 :networks:
   :EFnet:
     :servers:
