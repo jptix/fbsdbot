@@ -20,6 +20,7 @@ require "lib/irc/events/whois_server_event"
 require "lib/irc/events/whois_idle_event"
 require "lib/irc/events/whois_channels_event"
 require "lib/irc/events/whois_operator_event"
+require "lib/irc/events/shutdown_event"
 
 
 module FBSDBot

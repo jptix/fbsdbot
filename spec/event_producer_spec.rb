@@ -179,7 +179,5 @@ describe "EventProducer" do
     event.channel_string.should == "#unixhelp @#bot-test.no "
   end
 
-
-  
 end
 
