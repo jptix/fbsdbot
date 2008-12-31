@@ -36,55 +36,55 @@ FBSDBot::Plugin.define("web") {
 
     end # method google
 
-    def calc(line)
+    # def calc(line)
+    # 
+    #   if !line or line.empty?
+    #     return 'USAGE: calc <expression>'
+    #   end
+    # 
+    #   Net::HTTP.start('www.google.com') do |http|
+    #     search = line.gsub(/[^a-zA-Z0-9_\.\-]/) { |s| sprintf('%%%02x', s[0]) }
+    #     re = http.get("/search?ie=utf8&oe=utf8&q=#{search}", { 'User-Agent' => 'FBSDBot' })
+    #     if re.code == '200'
+    #       if re.body =~ /<b>#{Regex.escape(exp)} = (.+?)<\/b>/
+    #         result = $1
+    #         result = result.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub("&#215;","x").gsub("<sup>","^").gsub("</sup>", "").gsub(/<.+?>/, '')
+    #         return CGI.unescapeHTML(result)
+    #       else
+    #         return "Not found."
+    #       end
+    #     else
+    #       return "Google returned an error: #{re.code} #{re.message}"
+    #     end
+    #   end
+    # 
+    # end # method calc
 
-      if !line or line.empty?
-        return 'USAGE: calc <expression>'
-      end
-
-      Net::HTTP.start('www.google.com') do |http|
-        search = line.gsub(/[^a-zA-Z0-9_\.\-]/) { |s| sprintf('%%%02x', s[0]) }
-        re = http.get("/search?ie=utf8&oe=utf8&q=#{search}", { 'User-Agent' => 'FBSDBot' })
-        if re.code == '200'
-          if re.body =~ /<div id=res>.+?<b>(.+?)<\/b>/
-            result = $1
-            result = result.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub("&#215;","x").gsub("<sup>","^").gsub("</sup>", "").gsub(/<.+?>/, '')
-            return CGI.unescapeHTML(result)
-          else
-            return "Not found."
-          end
-        else
-          return "Google returned an error: #{re.code} #{re.message}"
-        end
-      end
-
-    end # method calc
-
-    def wp(line)
-
-      if !line or line.empty?
-        return 'USAGE: wp <search string>'
-      end
-
-      Net::HTTP.start('www.google.com') do |http|
-        re = http.get("/search?ie=utf8&oe=utf8&q=site%3Awikipedia.org+#{CGI.escape(line.strip)}", { 'User-Agent' => 'FBSDBot' })
-        if re.code == '200'
-          if re.body =~ /<td class="j">(.+?)<br><span class=a>(.+?) -/
-            desc, link = $1, $2
-            desc = desc.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '')
-            link = link.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '')
-            return CGI.unescapeHTML("#{desc} ( #{link.gsub(%r[^(?!http://)], 'http://')} )")
-          elsif re.body =~ /did not match any documents/
-            reply(event, 'No definition found.')
-          else
-            reply(event, "Error parsing Google output.")
-          end
-        else
-          reply(event, "Google returned an error: #{re.code} #{re.message}")
-        end
-      end
-
-    end # method wp
+    # def wp(line)
+    # 
+    #   if !line or line.empty?
+    #     return 'USAGE: wp <search string>'
+    #   end
+    # 
+    #   Net::HTTP.start('www.google.com') do |http|
+    #     re = http.get("/search?ie=utf8&oe=utf8&q=site%3Awikipedia.org+#{CGI.escape(line.strip)}", { 'User-Agent' => 'FBSDBot' })
+    #     if re.code == '200'
+    #       if re.body =~ /<td class="j">(.+?)<br><span class=a>(.+?) -/
+    #         desc, link = $1, $2
+    #         desc = desc.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '')
+    #         link = link.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '')
+    #         return CGI.unescapeHTML("#{desc} ( #{link.gsub(%r[^(?!http://)], 'http://')} )")
+    #       elsif re.body =~ /did not match any documents/
+    #         return 'No definition found.'
+    #       else
+    #         return "Error parsing Google output."
+    #       end
+    #     else
+    #       return "Google returned an error: #{re.code} #{re.message}"
+    #     end
+    #   end
+    # 
+    # end # method wp
 
   end # class Web
 
