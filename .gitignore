@@ -6,3 +6,6 @@ Makefile
 # ignore binaries
 *.[oa]
 *.bundle
+*.so
+# other
+.autotest
