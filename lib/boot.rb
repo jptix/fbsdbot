@@ -21,7 +21,7 @@ require 'lib/irc/event_producer'
 require 'lib/bitmask'
 require 'lib/user'
 require 'lib/yaml_user_store'
-require (ENV['BOT_C_EXT'] == '1' ? 'lib/irc/ext/parser' : 'lib/irc/parser')
+require (ENV['BOT_C_EXT'] == "1" ? 'lib/irc/ext/parser' : 'lib/irc/parser')
 
 Log = FBSDBot::Logger.new
 Log.level = $DEBUG ? :debug : :info
