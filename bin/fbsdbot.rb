@@ -13,6 +13,7 @@ at_exit { FBSDBot::Plugin.run_event(FBSDBot::ShutdownEvent.new) }
 
 
 EventMachine::run {  
+  $config[:plugins].each {|p| require "plugins/#{p}.rb" }
   require 'lib/corecommands'
   require 'lib/partyline'
   require 'lib/authentication'
