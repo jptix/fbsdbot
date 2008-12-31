@@ -1,11 +1,5 @@
-install dependencies with ruby-gems:
-
-	gem install ruby-irc	 ?remove this?
-	gem install sqlite3-ruby
-	gem install activerecord ?remove this?
-	gem install treetop
-
+install dependencies with ruby-gems: sudo gem install eventmachine
 
 edit bin/bot.conf.example, and save it to file bot.conf
 
-put the bin-folder in path, or type: bin/fbsdbot.rb
+to run: bin/fbsdbot.rb /path/to/config/fbsdbot.conf

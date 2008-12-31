@@ -4,9 +4,10 @@ $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/..')
 require 'lib/boot'
 require 'lib/options_parser'
 
-at_exit { FBSDBot::Plugin.run_event(FBSDBot::ShutdownEvent.new) }
 
 manager = FBSDBot::IRC::NetworkHandler.new($config)
+at_exit { FBSDBot::Plugin.run_event(FBSDBot::ShutdownEvent.new) }
+
 
 EventMachine::run {  
   require 'lib/corecommands'
