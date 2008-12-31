@@ -1,4 +1,5 @@
 FBSDBot::Plugin.define(:authentication) do
+  author "jptix"
   version "0.1"
 
   RX_FLAGS = {
