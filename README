@@ -1,4 +1,9 @@
-install dependencies with ruby-gems: sudo gem install eventmachine
+install dependencies with ruby-gems: 
+
+sudo gem install eventmachine
+sudo gem install rspec
+
+rake spec # to run tests
 
 edit bin/bot.conf.example, and save it to file bot.conf
 
