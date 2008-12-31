@@ -4,11 +4,11 @@ require 'cgi'
 # =====================================
 # = Plugin for FreeBSD-specific stuff =
 # =====================================
+# This plugin requires freebsd.
 
 FBSDBot::Plugin.define("freebsd") {
   author "jp_tix"
   version "0.0.2"
-  commands %w{whatis man ports doc}
 
   class FreeBSD
     # display output from the whatis shell command
@@ -16,7 +16,7 @@ FBSDBot::Plugin.define("freebsd") {
       if !line or line.empty?
         return 'USAGE: whatis <search string>'
       else
-        return %x{whatis "#{FBSDBot::e_sh(line)}"}
+        return %x{whatis "#{FBSDBot::Helpers::e_sh(line)}"}
       end
     end # method whatis
 
@@ -29,7 +29,7 @@ FBSDBot::Plugin.define("freebsd") {
       end
 
       line = line.strip
-      man_html = %x{man '#{FBSDBot::e_sh(line)}' | groff -man -Thtml 2>/dev/null}
+      man_html = %x{man '#{FBSDBot::Helpers::e_sh(line)}' | groff -man -Thtml 2>/dev/null}
       if man_html =~ /<p.*>NAME(.+?)<\/p>.+?<p.*>SYNOPSIS(.+?)<\/p>/m
         name, synop = $1, $2
         name = name.gsub('<b>', "\x02").gsub('</b>', "\x0f").gsub(/<.+?>/, '').gsub("\n", '').strip

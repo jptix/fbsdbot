@@ -2,9 +2,7 @@ FBSDBot::Plugin.define("partyline") {
   author "Daniel Bond"
   version "0.0.1"
   
-  module PartyLineHandler
-    
-    EOL = "\n"
+  class PartyLineHandler < EventMachine::Connection
     
     def receive_data(data)
       reply data
