@@ -40,9 +40,9 @@ module FBSDBot
         (plugin.methods - Object.methods).each do |method|
           method = method.to_s # will be symbols in 1.9
           
-          if method =~ /on_(.+)/
+          if method =~ /^on_(.+)/
             @event_handlers[$1.to_sym] << plugin
-            commands << $1 if method =~ /on_cmd_(.+)/
+            commands << $1 if method =~ /^on_cmd_(.+)/
           end
         end
         
