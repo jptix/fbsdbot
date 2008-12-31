@@ -5,16 +5,17 @@ FBSDBot::Plugin.define "PizzaHighlight" do
 
   @timings = {}
 
-  def on_msg(a)
-    if a.message.match(/(.+?) now/)
-      t= Time.now
-      @timings[$1] = Time.now
-      a.reply("#{$1.sub(/^!/,'')} confirmed at #{t}")
-    end
+  def on_private_message(a)
 
-    if a.message.match(/(.+?) when\?/)
-      t = @timings[$1]
-      a.reply("#{$1.sub(/^!/,'')} was confirmed #{FBSDBot::seconds_to_s(Time.now.to_i - t.to_i)} ago") unless t.nil?
+    if a.message.match(/^#{a.worker.handler.nick}[:,]\s+(.+?) in (\d+)([mh])$/)
+      what = $1
+      time = ($3 == "m") ? $2.to_i * 60 : $2.to_i * 60^2
+      
+      a.reply "#{a.nick}: ok, ticket ##{a.object_id}"
+      
+      EventMachine::add_timer(time) {
+        a.reply("#{a.nick}: it is time to #{what}! (ticket: ##{a.object_id})")
+      }
     end
   end
 end
