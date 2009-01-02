@@ -111,19 +111,19 @@ FBSDBot::Plugin.define("seen") {
   @logger = Seen.new
 
   def on_msg(action)
-    @logger.log_event(action.nick, action.channel, :msg, action.message) unless action.type == :privmsg
+    @logger.log_event(action.user.nick, action.channel, :msg, action.message) unless action.type == :privmsg
   end
 
   def on_part(action)
-    @logger.log_event(action.nick, action.channel, :part, action.message)
+    @logger.log_event(action.user.nick, action.channel, :part, action.message)
   end
 
   def on_join(action)
-    @logger.log_event(action.nick, action.channel, :join)
+    @logger.log_event(action.user.nick, action.channel, :join)
   end
 
   def on_quit(action)
-    @logger.log_event(action.nick, nil, :quit, action.message)
+    @logger.log_event(action.user.nick, nil, :quit, action.message)
   end
 
   def on_cmd_seen(action)

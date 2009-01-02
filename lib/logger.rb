@@ -58,7 +58,7 @@ module FBSDBot
       out, red = this_level >= LOG_LEVELS[:warn] ? [$stderr,true] : [$stdout,false]
       msg = msg.inspect unless msg.respond_to?(:to_str)
       
-      if @color && out == $stdout
+      if @color && out.tty?
         out.puts "\e[90m#{Time.now.strftime("%F %T")}\e[0m (\e[#{red ? '31' : '33'}m#{type}\e[0m) #{obj} :: \e[1m#{msg}\e[0m"
       else
         out.puts "#{Time.now.strftime("%F %T")} (#{type}) #{obj} :: #{msg}"

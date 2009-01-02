@@ -5,7 +5,7 @@ require 'lib/options_parser'
 require 'lib/boot'
 
 Log.level = $DEBUG ? :debug : :info
-Log.color = $config[:color] && $stdout.tty?
+Log.color = $config[:color]
 
 
 manager = FBSDBot::IRC::NetworkHandler.new($config)
