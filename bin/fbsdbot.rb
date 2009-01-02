@@ -9,7 +9,10 @@ Log.color = $config[:color]
 
 
 manager = FBSDBot::IRC::NetworkHandler.new($config)
-at_exit { FBSDBot::Plugin.run_event(FBSDBot::ShutdownEvent.new) }
+at_exit do
+  FBSDBot::Plugin.run_event(FBSDBot::ShutdownEvent.new)
+  [$stdout, $stderr].each { |io| io.flush }
+end
 
 
 EventMachine::run {  
