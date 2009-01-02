@@ -42,8 +42,9 @@ module FBSDBot
       end
       
       def connection_completed
-        Log.info "Connected.", self
         @connected = true
+        Log.info "Connected.", self
+
         login
       end
       
