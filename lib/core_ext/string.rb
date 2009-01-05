@@ -5,10 +5,11 @@ class String
   def inet_aton ip
     split(/\./).map{|c| c.to_i}.pack("C*").unpack("N").first
   end
+
   #
   # Convert from camel case to snake case
   #
-  #     'FooBar'.snake_case # => "foo_bar"
+  #   'FooBar'.snake_case # => "foo_bar"
   #
 
   def snake_case
@@ -18,7 +19,7 @@ class String
   #
   # Convert from snake case to camel case
   #
-  #     'foo_bar'.snake_case # => "FooBar"
+  #   'foo_bar'.camel_case # => "FooBar"
   #
 
   def camel_case
