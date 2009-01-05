@@ -17,7 +17,7 @@ op = OptionParser.new do |o|
   end
 
   o.on "-C", "--c-parser", "Use the C parser extension" do
-    ENV['BOT_C_EXT'] = '1'
+    opts[:c_parser] = true
   end
   
   o.on "-c", "--color", "Add colors to the log output" do
@@ -38,3 +38,4 @@ op.parse!(ARGV)
 
 config = YAML.load_file(ARGV.first || "#{File.dirname(__FILE__)}/../bin/bot.conf")
 $config = config.merge(opts)
+ENV['BOT_C_EXT'] = '1' if $config[:c_parser] # keeping the env var for spec runs

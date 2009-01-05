@@ -2,7 +2,7 @@
 
 :nick: WorkBond
 :color: yes
-:c-parser: yes
+:c_parser: yes
 
 :plugins: # plugins/name (without extension)
   - pizza
