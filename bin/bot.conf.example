@@ -5,7 +5,7 @@
 :c-parser: yes
 
 :plugins: # plugins/name (without extension)
-  :pizza:
+  - pizza
 
 :networks:
   :EFnet:

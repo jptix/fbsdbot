@@ -35,4 +35,15 @@ class String
   def / obj
     File.join(self, obj.to_s)
   end
+
+  #
+  # Return the Integer ordinal of a one-character string.
+  #
+  # "a".ord         #=> 97
+  #
+  def ord
+    puts "hello"
+    self[0]
+  end unless ''.respond_to?(:ord)
+
 end

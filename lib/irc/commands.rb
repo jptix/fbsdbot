@@ -198,7 +198,7 @@ module FBSDBot
       end
 
       def send_raw(*arguments)
-        if arguments.last.include?(Space) || arguments.last[0] == ?: then
+        if arguments.last.include?(Space) || arguments.last[0,1] == ":"
           arguments[-1] = ":#{arguments.last}"
         end
         write_with_eol(arguments.join(Space))
