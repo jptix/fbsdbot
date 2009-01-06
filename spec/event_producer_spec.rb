@@ -74,6 +74,12 @@ describe "EventProducer" do
     event.server.should == "irc.homelien.no"
   end
   
+  it "should create the correct event when receiving no motd event (422)" do
+    event = @ep.parse_line ":irc2.tecknohost.com 422 mwsflive :MOTD File is missing\r\n"
+    event.should be_instance_of(NoMotdEvent)
+    event.server.should == "irc2.tecknohost.com"
+  end
+  
   it "should create the correct event when someone joins a channel" do
     event = @ep.parse_line ":testbot20!~FBSDBot@nextgentel.com JOIN :#bot-test.no\r\n"
     event.should be_instance_of(JoinEvent)

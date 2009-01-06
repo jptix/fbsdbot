@@ -78,7 +78,7 @@ module FBSDBot
         return if event.discard?
 
         case(event)
-        when EndOfMotdEvent
+        when EndOfMotdEvent, NoMotdEvent
           Log.info "Joining channels: #{@channels.join(", ")}", self
           send_join(*@channels)
         when NicknameInUseEvent
