@@ -43,7 +43,6 @@ class String
   # "a".ord         #=> 97
   #
   def ord
-    puts "hello"
     self[0]
   end unless ''.respond_to?(:ord)
 
