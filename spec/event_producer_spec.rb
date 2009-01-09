@@ -102,7 +102,7 @@ describe "EventProducer" do
     event.message.should == "Remote host closed the connection"
   end
   
-  it "should create the correct event when someone joins a channel" do
+  it "should create the correct event when someone leaves a channel" do
     event = @ep.parse_line ":jptix!markus@nextgentel.com PART #bot-test.no :bye\r\n"
     event.should be_instance_of(PartEvent)
     event.user.nick.should == "jptix"
@@ -111,6 +111,17 @@ describe "EventProducer" do
     event.channel.should == "#bot-test.no"
     event.message.should == "bye"
   end
+  
+  it "should create the correct event when someone joins a channel" do
+    event = @ep.parse_line ":testbot20!~FBSDBot@nextgentel.com JOIN :#bot-test.no\r\n"
+    event.should be_instance_of(JoinEvent)
+    
+    event.channel.should == "#bot-test.no"
+    event.user.nick.should == "testbot20"
+    event.user.host.should == 'nextgentel.com'
+    event.user.user.should == '~FBSDBot'
+  end
+  
   
   it "should create the correct event when someone changes their nick" do
     event = @ep.parse_line ":SoRaYa!~Kine@ti0077a340-1246.bb.online.no NICK :SoR|aw\r\n"
