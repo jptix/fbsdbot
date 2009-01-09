@@ -235,11 +235,11 @@ describe "EventProducer" do
   end
   
   it "should create the correct event when receiving RPL_TOPIC_INFO (333)" do
-    # :incoming=>":irc.daxnet.no 333 utf8 #mac1 iKick!somaen@horisont.pvv.ntnu.no 1231530178\r\n"}
-    # unknown event for {:params=>["utf8", "#mac1", "iKick!somaen@horisont.pvv.ntnu.no", "1231530178"], :command=>"333", :server=>"irc.daxnet.no"}
     now = Time.now
+    
     event = @ep.parse_line ":irc.daxnet.no 333 botname #foo iKick!somaen@horisont.pvv.ntnu.no #{now.to_i}\r\n"
     event.should be_instance_of(TopicInfoEvent)
+    
     event.to.should == "botname"
     event.channel.should == "#foo"
     event.set_by.should == "iKick!somaen@horisont.pvv.ntnu.no"
