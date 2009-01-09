@@ -10,6 +10,7 @@ require "lib/irc/events/no_motd_event"
 require "lib/irc/events/join_event"
 require "lib/irc/events/names_event"
 require "lib/irc/events/ping_event"
+require "lib/irc/events/nick_event"
 require "lib/irc/events/nickname_in_use_event"
 require "lib/irc/events/end_of_names_event"
 require "lib/irc/events/notice_event"
@@ -43,6 +44,7 @@ module FBSDBot
         '422'    => NoMotdEvent,
         '433'    => NicknameInUseEvent,
         'JOIN'   => JoinEvent,
+        'NICK'   => NickEvent,
         'NOTICE' => NoticeEvent,
         'PART'   => PartEvent,
         'PING'   => PingEvent,

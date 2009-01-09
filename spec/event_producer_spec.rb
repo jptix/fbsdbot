@@ -121,6 +121,17 @@ describe "EventProducer" do
     event.message.should == "bye"
   end
   
+  it "should create the correct event when someone changes their nick" do
+    event = @ep.parse_line ":SoRaYa!~Kine@ti0077a340-1246.bb.online.no NICK :SoR|aw\r\n"
+    event.should be_instance_of(NickEvent)
+    
+    event.user.nick.should == "SoRaYa"
+    event.user.host.should == "ti0077a340-1246.bb.online.no"
+    event.user.user.should == "~Kine"
+    
+    event.nick.should == "SoR|aw"
+  end
+  
   it "should create the correct event when MOTD starts" do
     event = @ep.parse_line ":irc.homelien.no 375 testbot20 :- irc.homelien.no Message of the Day - \r\n"
     event.should be_instance_of(MotdStartEvent)
