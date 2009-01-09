@@ -223,6 +223,28 @@ describe "EventProducer" do
     event.nick.should == "Mr_Bond"
     event.channel_string.should == "#unixhelp @#bot-test.no "
   end
+  
+  it "should create the correct event when receiving RPL_TOPIC (332)" do
+    event = @ep.parse_line ":irc.daxnet.no 332 botname #foo :Velkommen til #foo\r\n"
+    event.should be_instance_of(TopicEvent) 
+
+    event.to.should == "botname"
+    event.channel.should == "#foo"
+    event.topic.should == "Velkommen til #foo"
+    event.server.should == "irc.daxnet.no"
+  end
+  
+  it "should create the correct event when receiving RPL_TOPIC_INFO (333)" do
+    # :incoming=>":irc.daxnet.no 333 utf8 #mac1 iKick!somaen@horisont.pvv.ntnu.no 1231530178\r\n"}
+    # unknown event for {:params=>["utf8", "#mac1", "iKick!somaen@horisont.pvv.ntnu.no", "1231530178"], :command=>"333", :server=>"irc.daxnet.no"}
+    now = Time.now
+    event = @ep.parse_line ":irc.daxnet.no 333 botname #foo iKick!somaen@horisont.pvv.ntnu.no #{now.to_i}\r\n"
+    event.should be_instance_of(TopicInfoEvent)
+    event.to.should == "botname"
+    event.channel.should == "#foo"
+    event.set_by.should == "iKick!somaen@horisont.pvv.ntnu.no"
+    event.set_at.to_s.should == now.to_s
+  end
 
 end
 
