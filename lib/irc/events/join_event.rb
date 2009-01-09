@@ -6,10 +6,7 @@ module FBSDBot
     def initialize(conn, opts = {})
       super(conn)
       
-      args = opts.values_at(:nick, :user, :host)
-      unless args.include?(nil)
-        @user = fetch_user(*args)
-      end
+      @user = fetch_user(opts.values_at(:nick, :user, :host))
       @channel = opts[:params].first
     end
     

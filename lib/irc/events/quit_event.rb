@@ -1,7 +1,7 @@
 module FBSDBot
   class QuitEvent < Event
 
-    attr_reader :nick, :host, :user, :message
+    attr_reader :user, :message
     
     def initialize(conn, opts = {})
       super(conn)
