@@ -9,6 +9,7 @@ require "lib/irc/events/end_of_motd_event"
 require "lib/irc/events/no_motd_event"
 require "lib/irc/events/join_event"
 require "lib/irc/events/kick_event"
+require "lib/irc/events/mode_event"
 require "lib/irc/events/names_event"
 require "lib/irc/events/ping_event"
 require "lib/irc/events/nick_event"
@@ -47,6 +48,7 @@ module FBSDBot
         'JOIN'   => JoinEvent,
         'KICK'   => KickEvent,
         'NICK'   => NickEvent,
+        'MODE'   => ModeEvent,
         'NOTICE' => NoticeEvent,
         'PART'   => PartEvent,
         'PING'   => PingEvent,

@@ -147,6 +147,19 @@ describe "EventProducer" do
     event.message.should == "syns dette ble kjedelig"
   end
   
+  it "should create the correct event when on MODE change" do
+    event = @ep.parse_line ":iKick!somaen@horisont.pvv.ntnu.no MODE #mac1 -b *!*mort@*.79.3p.ntebredband.no\r\n"
+    event.should be_instance_of(ModeEvent)
+    
+    event.user.nick.should == "iKick"
+    event.user.host.should == "horisont.pvv.ntnu.no"
+    event.user.user.should == "somaen"
+    
+    event.channel.should == "#mac1"
+    event.mode.should == "-b"
+    event.arguments.should == "*!*mort@*.79.3p.ntebredband.no" # rename ivar?
+  end
+  
   it "should create the correct event when MOTD starts" do
     event = @ep.parse_line ":irc.homelien.no 375 testbot20 :- irc.homelien.no Message of the Day - \r\n"
     event.should be_instance_of(MotdStartEvent)
