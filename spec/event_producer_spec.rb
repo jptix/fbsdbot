@@ -80,15 +80,6 @@ describe "EventProducer" do
     event.server.should == "irc2.tecknohost.com"
   end
   
-  it "should create the correct event when someone joins a channel" do
-    event = @ep.parse_line ":testbot20!~FBSDBot@nextgentel.com JOIN :#bot-test.no\r\n"
-    event.should be_instance_of(JoinEvent)
-    event.nick.should == "testbot20"
-    event.channel.should == "#bot-test.no"
-    event.host.should == 'nextgentel.com'
-    event.user.should == '~FBSDBot'
-  end
-  
   it "should create the correct event when receiving the names list after joining a channel" do
     event = @ep.parse_line ":irc.homelien.no 353 testbot20 @ #bot-test.no :testbot20 @jptix @Mr_Bond\r\n"
     event.should be_instance_of(NamesEvent)

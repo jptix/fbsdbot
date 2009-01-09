@@ -1,13 +1,15 @@
 module FBSDBot
   class JoinEvent < Event
 
-    attr_reader :nick, :user, :host, :channel
+    attr_reader :user, :channel
     
     def initialize(conn, opts = {})
       super(conn)
-      @nick    = opts[:nick]
-      @user    = opts[:user]
-      @host    = opts[:host]
+      
+      args = opts.values_at(:nick, :user, :host)
+      unless args.include?(nil)
+        @user = fetch_user(*args)
+      end
       @channel = opts[:params].first
     end
     
