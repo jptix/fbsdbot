@@ -123,6 +123,19 @@ describe "EventProducer" do
     event.nick.should == "SoR|aw"
   end
   
+  it "should create the correct event when someone is kicked" do
+    event = @ep.parse_line ":Hakon|24!~hakon1@66.82-134-26.bkkb.no KICK #mac1 Mool :syns dette ble kjedelig\r\n"
+    event.should be_instance_of(KickEvent)
+    
+    event.user.nick.should == "Hakon|24"
+    event.user.host.should == "66.82-134-26.bkkb.no"
+    event.user.user.should == "~hakon1"
+    
+    event.channel.should == "#mac1"
+    event.nick.should == "Mool"
+    event.message.should == "syns dette ble kjedelig"
+  end
+  
   it "should create the correct event when MOTD starts" do
     event = @ep.parse_line ":irc.homelien.no 375 testbot20 :- irc.homelien.no Message of the Day - \r\n"
     event.should be_instance_of(MotdStartEvent)
