@@ -135,29 +135,39 @@ describe "EventProducer" do
   end
   
   it "should create the correct event when someone is kicked" do
-    event = @ep.parse_line ":Hakon|24!~hakon1@66.82-134-26.bkkb.no KICK #mac1 Mool :syns dette ble kjedelig\r\n"
+    event = @ep.parse_line ":Hakon|24!~hakon1@66.82-134-26.bkkb.no KICK #foo Mool :syns dette ble kjedelig\r\n"
     event.should be_instance_of(KickEvent)
     
     event.user.nick.should == "Hakon|24"
     event.user.host.should == "66.82-134-26.bkkb.no"
     event.user.user.should == "~hakon1"
     
-    event.channel.should == "#mac1"
+    event.channel.should == "#foo"
     event.nick.should == "Mool"
     event.message.should == "syns dette ble kjedelig"
   end
   
-  it "should create the correct event when on MODE change" do
-    event = @ep.parse_line ":iKick!somaen@horisont.pvv.ntnu.no MODE #mac1 -b *!*mort@*.79.3p.ntebredband.no\r\n"
+  it "should create the correct event on MODE change" do
+    event = @ep.parse_line ":iKick!somaen@horisont.pvv.ntnu.no MODE #foo -b *!*mort@*.79.3p.ntebredband.no\r\n"
     event.should be_instance_of(ModeEvent)
     
     event.user.nick.should == "iKick"
     event.user.host.should == "horisont.pvv.ntnu.no"
     event.user.user.should == "somaen"
     
-    event.channel.should == "#mac1"
+    event.channel.should == "#foo"
     event.mode.should == "-b"
     event.arguments.should == "*!*mort@*.79.3p.ntebredband.no" # rename ivar?
+  end
+  
+  it "should create the correct event on MODE change from netsplits" do
+    event = @ep.parse_line ":irc.blessed.net MODE #foo +o JuntaoZZ\r\n"
+    event.should be_instance_of(ModeEvent)
+    
+    event.server.should == "irc.blessed.net"
+    event.mode.should == "+o"
+    event.channel.should == "#foo"
+    event.arguments.should == "JuntaoZZ"
   end
   
   it "should create the correct event when MOTD starts" do
