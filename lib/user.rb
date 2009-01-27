@@ -8,8 +8,8 @@ module FBSDBot
     attr_accessor :nick, :user, :host, :hostmask_exp
 
     FLAGS = {
-      :master => 1,
-      :admin  => 2,
+      :master => 1 << 0,
+      :admin  => 1 << 1,
     }
     
     EMPTY_HOSTMASK = "!@"
