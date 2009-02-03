@@ -1,11 +1,14 @@
 module FBSDBot
   class TopicEvent < Event
 
-    attr_reader :to, :channel, :topic, :server
+    attr_reader :channel, :topic, :server
     
     def initialize(conn, opts = {})
       super(conn)
-      @to, @channel, @topic = opts[:params]
+      params = opts[:params] 
+      params.shift if opts[:command] == '332'
+
+      @channel, @topic = params
       @server = opts[:server]
     end
     

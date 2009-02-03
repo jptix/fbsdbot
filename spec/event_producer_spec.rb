@@ -238,10 +238,18 @@ describe "EventProducer" do
     event = @ep.parse_line ":irc.daxnet.no 332 botname #foo :Velkommen til #foo\r\n"
     event.should be_instance_of(TopicEvent) 
 
-    event.to.should == "botname"
     event.channel.should == "#foo"
     event.topic.should == "Velkommen til #foo"
     event.server.should == "irc.daxnet.no"
+  end
+
+  it "should create the correct event when receiving TOPIC" do
+    event = @ep.parse_line ":hub.se TOPIC #foo :Velkommen til #foo\r\n"
+    event.should be_instance_of(TopicEvent) 
+
+    event.channel.should == "#foo"
+    event.topic.should == "Velkommen til #foo"
+    event.server.should == "hub.se"
   end
   
   it "should create the correct event when receiving RPL_TOPIC_INFO (333)" do

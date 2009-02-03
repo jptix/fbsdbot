@@ -57,6 +57,7 @@ module FBSDBot
         'NOTICE' => NoticeEvent,
         'PART'   => PartEvent,
         'PING'   => PingEvent,
+        'TOPIC'  => TopicEvent,
         'QUIT'   => QuitEvent,
       }
 
