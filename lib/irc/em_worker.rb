@@ -83,6 +83,10 @@ module FBSDBot
           send_join(*@channels)
         when NicknameInUseEvent
           send_nick Helpers.obfuscate_nick(@handler.nick)
+        when UnavailableResourceEvent
+          if Parser.target_type(event.resource) == :channel
+            EventMachine.add_timer(30) { send_join(event.resource) }
+          end
         else
           ## CREATE cases above for events we don't want plugins to be able to handle
           return if event.stop?
@@ -98,6 +102,7 @@ module FBSDBot
         reconnect(next_server, @handler.port) unless(@shutdown)
         succeed(self) # send status to handle if this is good or bad, this might not allways be a good thing.. 
       end
-    end
-  end
-end
+
+    end # EMWorker
+  end # IRC
+end # FBSDBot
