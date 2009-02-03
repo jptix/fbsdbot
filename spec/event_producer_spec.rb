@@ -255,6 +255,16 @@ describe "EventProducer" do
     event.set_by.should == "iKick!somaen@horisont.pvv.ntnu.no"
     event.set_at.to_s.should == now.to_s
   end
+  
+  it "should create the correct event when receiving ERR_UNAVAILRESOURCE (437)" do
+    event = @ep.parse_line ":irc.daxnet.no 437 botname #foo :Nick/channel is temporarily unavailable\r\n"
+    event.should be_instance_of(UnavailableResourceEvent)
+    
+    event.to.should == "botname"
+    event.resource.should == "#foo"
+    event.message.should == "Nick/channel is temporarily unavailable"
+    event.server.should == "irc.daxnet.no"
+  end
 
 end
 

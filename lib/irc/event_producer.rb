@@ -27,6 +27,7 @@ require "lib/irc/events/whois_operator_event"
 require "lib/irc/events/shutdown_event"
 require "lib/irc/events/topic_event"
 require "lib/irc/events/topic_info_event"
+require "lib/irc/events/unavailable_resource_event"
 
 module FBSDBot
   module IRC
@@ -48,6 +49,7 @@ module FBSDBot
         '376'    => EndOfMotdEvent,
         '422'    => NoMotdEvent,
         '433'    => NicknameInUseEvent,
+        '437'    => UnavailableResourceEvent,
         'JOIN'   => JoinEvent,
         'KICK'   => KickEvent,
         'NICK'   => NickEvent,
