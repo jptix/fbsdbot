@@ -1,4 +1,9 @@
-require "rubygems"
+begin
+  require "rubygems"
+  gem "rspec"
+rescue LoadError
+end
+
 require "spec"
 require "stringio"
 require "#{File.dirname(__FILE__)}/../lib/boot"
@@ -16,8 +21,8 @@ include FBSDBot
 Log.level = :fatal
 
 #
-# helpers 
-# 
+# helpers
+#
 module FBSDBot::SpecHelpers
   def mock_event_with_worker
     worker = mock('worker')
@@ -36,10 +41,10 @@ module FBSDBot::SpecHelpers
   def capture(io, &block)
     last_level = Log.level
     Log.level = :debug
-  
+
     out = StringIO.new
     old, reset = nil
-  
+
     case io
     when :stdout
       old = $stdout
@@ -60,14 +65,14 @@ module FBSDBot::SpecHelpers
     else
       raise "bad argument #{io.inspect}"
     end
-  
+
     begin
       yield
     ensure
       reset.call
       Log.level = last_level
     end
-  
+
     retval.call
   end
 end

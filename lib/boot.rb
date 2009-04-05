@@ -4,7 +4,12 @@ require 'pp'
 require 'yaml'
 
 # GEMS
-require 'rubygems'
+begin
+  require 'rubygems'
+  gem "eventmachine"
+rescue LoadError
+end
+
 require 'eventmachine'
 
 require 'lib/logger'
