@@ -73,7 +73,7 @@ module FBSDBot
       "%B"    => "\x02", # bold
       "%R"    => "\x16", # reverse
       "%U"    => "\x1F"  # underline
-    } 
+    }
 
     def format_string(string)
       IRCColors.each_pair { |fmt, code| string.gsub!(fmt, code) }
@@ -81,7 +81,7 @@ module FBSDBot
     end
 
     def e_sh(str)
-      str.to_s.gsub(/(?=[^a-zA-Z0-9_.\/\-\x7F-\xFF\n])/, '\\').gsub(/\n/, "'\n'").sub(/^$/, "''")
+      str.to_s.gsub(/(?=[^a-zA-Z0-9_.\/\-\x7F-\xFF\n])/n, '\\').gsub(/\n/, "'\n'").sub(/^$/, "''")
     end
 
   end
