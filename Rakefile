@@ -14,9 +14,25 @@ Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
+namespace :fix do
+  task :magic_comments do
+    encoding_comment = /^# encoding: utf-8/
+    
+    Dir['**/*.rb'].each do |file|
+      lines = File.read(file).split("\n")
+      
+      next if lines.first =~ encoding_comment
+      next if lines.first =~ /^#!/ && lines[1] =~ encoding_comment
+      
+      lines[0] = "# encoding: utf-8"
+      
+      File.open(file, "w") { |f| f.write(lines.join("\n"))}
+    end
+  end
+end
+
 
 namespace :parser do
-
   namespace :generate do
     desc 'Generate the Ruby parser to lib/irc/parser.rb (requires ragel)'
     task :ruby do
