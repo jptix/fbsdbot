@@ -1,5 +1,6 @@
-# encoding: utf-8
 #!/usr/bin/env ruby
+# encoding: utf-8
+
 
 $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/..')
 require 'lib/options_parser'
@@ -16,15 +17,15 @@ at_exit do
 end
 
 
-EventMachine::run {  
+EventMachine::run {
   ($config[:plugins] || []).each {|p| require "plugins/#{p}.rb" }
   require 'lib/corecommands'
   require 'lib/partyline'
   require 'lib/authentication'
   Log.info "Loaded plugins:"
   FBSDBot::Plugin.list_plugins
-  
+
   Log.info "Starting Workers:"
-  
+
   manager.create_workers
 }

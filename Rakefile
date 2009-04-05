@@ -16,18 +16,24 @@ end
 
 namespace :fix do
   task :magic_comments do
-    encoding_comment = /^# encoding: utf-8/
-    
+    encoding_comment = "# encoding: utf-8"
+
     Dir['**/*.rb'].each do |file|
+      shebang = nil
       lines = File.read(file).split("\n")
-      
-      next if lines.first =~ encoding_comment
-      next if lines.first =~ /^#!/ && lines[1] =~ encoding_comment
-      
+
+      next if lines.first =~ /^#{encoding_comment}/
+
+      if lines.first =~ /^#!/
+          next if lines[1] =~ /^#{encoding_comment}/
+          shebang = lines.shift
+      end
+
       puts "fixing : #{file}"
-      
-      lines.unshift "# encoding: utf-8"
-      
+
+      lines.unshift encoding_comment
+      lines.unshift(shebang) if shebang
+
       File.open(file, "w") { |f| f.puts(lines.join("\n"))}
     end
   end
