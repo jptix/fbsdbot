@@ -1,3 +1,4 @@
+# encoding: utf-8
 module FBSDBot
   class TopicInfoEvent < Event
     attr_reader :to, :channel, :set_by, :set_at

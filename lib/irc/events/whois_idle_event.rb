@@ -1,3 +1,4 @@
+# encoding: utf-8
 module FBSDBot
   class WhoisIdleEvent < Event
     attr_reader :nick, :seconds, :server, :to

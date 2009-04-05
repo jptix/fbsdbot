@@ -1,3 +1,4 @@
+# encoding: utf-8
 # line 1 "rb_parser.rl"
 # ruby parser - compile with `ragel -R rb_parser.rl -o parser.rb`
 

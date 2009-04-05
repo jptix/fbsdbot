@@ -1,3 +1,4 @@
+# encoding: utf-8
 # CORE
 require 'digest/sha1'
 require 'pp'
@@ -33,4 +34,3 @@ Log = FBSDBot::Logger.new
 module FBSDBot
   VERSION = "0.1"
 end
-

@@ -1,3 +1,4 @@
+# encoding: utf-8
 module FBSDBot
 
   # mix this in to a class that has a FLAGS hash of key => integer and

@@ -1,3 +1,4 @@
+# encoding: utf-8
 FBSDBot::Plugin.define("corecommands") {
   author "jp_tix"
   version "0.0.1"

@@ -1,3 +1,4 @@
+# encoding: utf-8
 #!/usr/bin/env ruby
 
 $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/..')
@@ -27,4 +28,3 @@ EventMachine::run {
   
   manager.create_workers
 }
-

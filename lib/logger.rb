@@ -1,3 +1,4 @@
+# encoding: utf-8
 module FBSDBot
   class Logger
     attr_reader :level

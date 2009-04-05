@@ -1,3 +1,4 @@
+# encoding: utf-8
 FBSDBot::Plugin.define "PizzaHighlight" do
 
   author "Daniel Bond"

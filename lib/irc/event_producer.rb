@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "lib/irc/events/event"
 require "lib/irc/events/replyable"
 require "lib/irc/events/private_message_event"

@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe "EventProducer" do
@@ -275,4 +276,3 @@ describe "EventProducer" do
   end
 
 end
-

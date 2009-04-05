@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Array
   def pick
     @item.nil? ? self[@item = rand(size)] : next_item

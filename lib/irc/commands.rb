@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'lib/irc/constants'
 
 module FBSDBot

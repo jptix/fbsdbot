@@ -1,3 +1,4 @@
+# encoding: utf-8
 module FBSDBot
   class WhoisChannelsEvent < Event
     attr_reader :server, :to, :nick, :channel_string

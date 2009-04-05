@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "enumerator"
 
 FBSDBot::Plugin.define('todo') {

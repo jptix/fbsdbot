@@ -1,3 +1,4 @@
+# encoding: utf-8
 FBSDBot::Plugin.define(:authentication) do
   author "jptix"
   version "0.1"

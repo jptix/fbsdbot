@@ -1,3 +1,4 @@
+# encoding: utf-8
 FBSDBot::Plugin.define("partyline") {
   author "Daniel Bond"
   version "0.0.1"

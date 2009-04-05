@@ -24,9 +24,11 @@ namespace :fix do
       next if lines.first =~ encoding_comment
       next if lines.first =~ /^#!/ && lines[1] =~ encoding_comment
       
+      puts "fixing : #{file}"
+      
       lines.unshift "# encoding: utf-8"
       
-      File.open(file, "w") { |f| f.write(lines.join("\n"))}
+      File.open(file, "w") { |f| f.puts(lines.join("\n"))}
     end
   end
 end

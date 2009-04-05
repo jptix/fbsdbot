@@ -1,3 +1,4 @@
+# encoding: utf-8
 module FBSDBot
   class WhoisServerEvent < Event
     attr_reader :to, :nick, :server, :user_info

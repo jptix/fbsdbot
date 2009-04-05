@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "#{File.dirname(__FILE__)}/spec_helper"
 require 'lib/irc/em_worker'
 

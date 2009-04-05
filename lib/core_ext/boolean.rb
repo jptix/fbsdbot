@@ -1,3 +1,4 @@
+# encoding: utf-8
 module FBSDBot
   module Boolean
     def tiny_s
