@@ -41,6 +41,9 @@ module FBSDBot
           Log.warn "can't reload #{plugin.inspect}"
           false
         end
+      rescue LoadError => e
+        Log.error "could not find plugin source: #{e.message}"
+        false
       end
 
       def reset!
