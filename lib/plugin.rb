@@ -3,7 +3,7 @@ module FBSDBot
 
   class Plugin
     include FBSDBot::Helpers
-    
+
     class << self
       attr_reader :registered_plugins
       private :new
@@ -22,7 +22,17 @@ module FBSDBot
           end
         end
       end
-      
+
+      # experimental
+      def reload(name)
+        plugin = @registered_plugins[name.to_sym]
+        if plugin and plugin.file
+          load plugin.file
+        else
+          Log.warn "can't reload #{plugin.inspect}"
+        end
+      end
+
       def reset!
         @registered_plugins = {}
         @event_handlers = Hash.new { |h, k| h[k] = [] }
@@ -35,23 +45,26 @@ module FBSDBot
       def define(name, &block)
         plugin = new
         plugin.instance_eval(&block)
-        
+
         commands = []
-        
+
         (plugin.methods - Object.methods).each do |method|
           method = method.to_s # will be symbols in 1.9
-          
+
           if method =~ /^on_(.+)/
             @event_handlers[$1.to_sym] << plugin
             commands << $1 if method =~ /^on_cmd_(.+)/
           end
         end
-        
+
+        file = caller[0].split(":").first
+
         plugin.instance_eval do
-           name(name) 
+           name(name)
            commands(commands)
+           file(file) if File.exist?(file)
          end
-        
+
         @registered_plugins[name.to_sym] = plugin
       end
 
@@ -71,7 +84,7 @@ module FBSDBot
     end
 
     reset!
-    def_field :name, :author, :version, :commands
+    def_field :name, :author, :version, :commands, :file
   end
 
 end

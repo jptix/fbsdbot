@@ -14,8 +14,18 @@ FBSDBot::Plugin.define("corecommands") {
     end
   end
 
+  def on_cmd_reload(event)
+    return unless event.user.admin?
+
+    if FBSDBot::Plugin.reload(event.command_args.first)
+      event.reply "ok"
+    else
+      event.reply "nope"
+    end
+  end
+
   def on_ctcp_version(event)
     event.reply "running FBSDBot v#{FBSDBot::VERSION} - on Ruby v#{RUBY_VERSION}"
   end
-  
+
 }
