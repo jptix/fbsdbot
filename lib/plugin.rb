@@ -29,8 +29,10 @@ module FBSDBot
         if plugin and plugin.file
           load plugin.file
           Log.info "reloaded plugin: #{plugin.name} from #{plugin.file}"
+          true
         else
           Log.warn "can't reload #{plugin.inspect}"
+          false
         end
       end
 
