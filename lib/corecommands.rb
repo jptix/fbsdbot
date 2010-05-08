@@ -17,7 +17,13 @@ FBSDBot::Plugin.define("corecommands") {
   def on_cmd_reload(event)
     return unless event.user.admin?
 
-    if FBSDBot::Plugin.reload(event.command_args.first)
+    name = event.command_args.first
+    unless name
+      event.reply "must provide a plugin name"
+      return
+    end
+
+    if FBSDBot::Plugin.reload(name)
       event.reply "ok"
     else
       event.reply "nope"

@@ -28,6 +28,7 @@ module FBSDBot
         plugin = @registered_plugins[name.to_sym]
         if plugin and plugin.file
           load plugin.file
+          Log.info "reloaded plugin: #{plugin.name} from #{plugin.file}"
         else
           Log.warn "can't reload #{plugin.inspect}"
         end
