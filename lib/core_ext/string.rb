@@ -1,7 +1,7 @@
 # encoding: utf-8
 class String
 
-  
+
   # todo, implement for IPv6 ips too
   def inet_aton ip
     split(/\./).map{|c| c.to_i}.pack("C*").unpack("N").first
@@ -16,7 +16,7 @@ class String
   def snake_case
     gsub(/\B[A-Z][^A-Z]/, '_\&').downcase.gsub(' ', '_')
   end
-  
+
   #
   # Convert from snake case to camel case
   #
@@ -26,8 +26,8 @@ class String
   def camel_case
    split('_').map{|e| e.capitalize}.join
   end
-  
-  
+
+
   #
   # A convenient way to do File.join
   #
@@ -46,5 +46,14 @@ class String
   def ord
     self[0]
   end unless ''.respond_to?(:ord)
+
+  #
+  # Returns true if the string only contains ASCII characters
+  #
+  #
+  def ascii?
+    split(//).all? { |c| (32..126).include?(c.ord) }
+  end
+
 
 end

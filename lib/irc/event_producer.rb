@@ -76,12 +76,13 @@ module FBSDBot
 
       def initialize(worker)
         @worker = worker
+        @chardet = ICU::CharDet::Detector.new
       end
 
       def parse_line(line)
         Log.debug :incoming => line
         result = Parser.parse_message(line)
-        
+
         return hash_to_event(result) if result
         return nil
       end
@@ -94,6 +95,9 @@ module FBSDBot
 
       def hash_to_event(hash)
         command = hash[:command]
+
+        # need to detect the correct input encoding
+        hash.each_value { |v| fix_encoding(v) }
 
         if event_class = COMMANDS[command]
           return create(event_class, hash)
@@ -127,6 +131,35 @@ module FBSDBot
 
       def create(type, opts = {})
         type.new(@worker, opts)
+      end
+
+      ICU_TO_RUBY      = {
+        "ISO-8859-8-I" => "ISO-8859-1",
+        "ISO-2022-KR"  => "stateless-ISO-2022-JP", # no idea if this is correct
+        "ISO-2022-CN"  => "stateless-ISO-2022-JP" # no idea if this is correct
+      }
+
+      def fix_encoding(data)
+        #
+        # this would ideally happen in the C parser, using ICU directly
+        #
+        case data
+        when String
+          if data.ascii?
+            data.force_encoding("US-ASCII")
+          elsif match = @chardet.detect(data)
+            force_to = ICU_TO_RUBY[match.name] || match.name
+            Log.info :name => match.name, :data => data, :forcing_to => force_to
+            data.force_encoding(force_to)
+            Log.info :encoding_is_now => data.encoding.name
+          end
+        when Array
+          data.each { |e| fix_encoding(e) }
+        when NilClass
+          # ignored
+        else
+          raise "can't fix_encoding for: #{data.inspect}"
+        end
       end
 
     end # EventProducer

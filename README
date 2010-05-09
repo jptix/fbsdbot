@@ -1,10 +1,12 @@
-install dependencies with ruby-gems: 
+install dependencies with ruby-gems:
 
 sudo gem install eventmachine
 sudo gem install rspec
 
+# on the 1.9 branch, you need this gem to detect encodings from irc users
+sudo gem install icu-chardet-ffi
+
 rake spec # to run tests
 
 edit bin/bot.conf.example, and save it to file bot.conf
-
 to run: bin/fbsdbot.rb /path/to/config/fbsdbot.conf
