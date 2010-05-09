@@ -5,6 +5,9 @@ module FBSDBot
 
     attr_reader :worker
 
+    COMMAND_CHAR = "!"
+    COMMAND_EXP = /^#{COMMAND_CHAR}(\S+)/
+
     def self.type
       return @type if defined?(@type)
 
@@ -42,7 +45,7 @@ module FBSDBot
     end
 
     def command?
-      defined?(@message) && @message[0,1] == "!"
+      defined?(@message) && @message[0,1] == COMMAND_CHAR
     end
 
     def command

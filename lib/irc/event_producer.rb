@@ -82,9 +82,15 @@ module FBSDBot
       def parse_line(line)
         Log.debug :incoming => line
         result = Parser.parse_message(line)
+        return unless result
 
-        return hash_to_event(result) if result
-        return nil
+        # need to detect the correct input encoding, and convert to UTF-8
+        result.each_value { |v| fix_encoding(v) }
+
+        # we might need the raw input though, so store that as well
+        result[:raw] = line
+
+        return hash_to_event(result)
       end
 
       def disconnect_event
@@ -95,9 +101,6 @@ module FBSDBot
 
       def hash_to_event(hash)
         command = hash[:command]
-
-        # need to detect the correct input encoding
-        hash.each_value { |v| fix_encoding(v) }
 
         if event_class = COMMANDS[command]
           return create(event_class, hash)
@@ -139,6 +142,9 @@ module FBSDBot
         "ISO-2022-CN"  => "stateless-ISO-2022-JP" # no idea if this is correct
       }
 
+
+      INTERNAL_ENCODING = "UTF-8"
+
       def fix_encoding(data)
         #
         # this would ideally happen in the C parser, using ICU directly
@@ -146,12 +152,10 @@ module FBSDBot
         case data
         when String
           if data.ascii?
-            data.force_encoding("US-ASCII")
+            data.force_encoding(INTERNAL_ENCODING)
           elsif match = @chardet.detect(data)
-            force_to = ICU_TO_RUBY[match.name] || match.name
-            Log.info :name => match.name, :data => data, :forcing_to => force_to
-            data.force_encoding(force_to)
-            Log.info :encoding_is_now => data.encoding.name
+            input_encoding = ICU_TO_RUBY[match.name] || match.name
+            data.force_encoding(input_encoding).encode!(INTERNAL_ENCODING)
           end
         when Array
           data.each { |e| fix_encoding(e) }
