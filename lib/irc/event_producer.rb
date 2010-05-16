@@ -153,7 +153,6 @@ module FBSDBot
             data.force_encoding(INTERNAL_ENCODING)
           elsif match = @chardet.detect(data)
             input_encoding = ICU_TO_RUBY[match.name] || match.name
-            Log.warn [match, input_encoding].inspect
             data.force_encoding(input_encoding).encode!(INTERNAL_ENCODING)
           else
             # try some common encodings
