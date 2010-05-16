@@ -26,6 +26,7 @@ module FBSDBot
       # experimental
       def reload(name)
         plugin = @registered_plugins[name.to_sym]
+
         if plugin and plugin.file
           # delete event handlers
           @event_handlers.each do |name, plugins|
@@ -34,7 +35,13 @@ module FBSDBot
             plugins.delete plugin
           end
 
+          # delete from registered plugins
+
+          @registered_plugins.delete name.to_sym
           load plugin.file
+
+          # TODO: reset previous state if load fails
+
           Log.info "reloaded plugin: #{plugin.name} from #{plugin.file}"
           true
         else

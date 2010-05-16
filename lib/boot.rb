@@ -12,7 +12,7 @@ rescue LoadError
 end
 
 require 'eventmachine'
-require 'icu-chardet-ffi'
+require 'ffi-icu'
 
 require 'lib/logger'
 require 'lib/core_ext/array'

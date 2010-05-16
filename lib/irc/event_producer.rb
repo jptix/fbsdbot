@@ -146,16 +146,25 @@ module FBSDBot
       INTERNAL_ENCODING = "UTF-8"
 
       def fix_encoding(data)
-        #
         # this would ideally happen in the C parser, using ICU directly
-        #
         case data
         when String
-          if data.ascii?
+          if data.ascii? || data.dup.force_encoding(INTERNAL_ENCODING).valid_encoding?
             data.force_encoding(INTERNAL_ENCODING)
           elsif match = @chardet.detect(data)
             input_encoding = ICU_TO_RUBY[match.name] || match.name
+            Log.warn [match, input_encoding].inspect
             data.force_encoding(input_encoding).encode!(INTERNAL_ENCODING)
+          else
+            # try some common encodings
+            tmp = data.dup
+            if tmp.force_encoding("ISO-8859-1").valid_encoding?
+              data.force_encoding("ISO-8859-1").encode!(INTERNAL_ENCODING)
+            else
+              Log.warn "removing non-ASCII! #{data.inspect}"
+              data.gsub!(/[^A-z]/, '').force_encoding(INTERNAL_ENCODING)
+            end
+            Log.info "unknown charset: #{data.inspect}"
           end
         when Array
           data.each { |e| fix_encoding(e) }

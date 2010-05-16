@@ -24,7 +24,7 @@ class String
   #
 
   def camel_case
-   split('_').map{|e| e.capitalize}.join
+    split('_').map{|e| e.capitalize}.join
   end
 
 

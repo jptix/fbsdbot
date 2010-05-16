@@ -14,7 +14,7 @@ module FBSDBot
       def self.connect(handler, network, instance_data)
         server = instance_data[:servers].pick
         begin
-          EventMachine::connect( server, handler.port, self) do |instance|
+          EventMachine::connect(server, handler.port, self) do |instance|
             instance.instance_eval {
               @handler = handler
               @network = network
@@ -30,37 +30,37 @@ module FBSDBot
           EventMachine::add_timer(handler.retry_in_seconds) { connect(handler, network, instance_data) }
         end
       end
-      
+
       def to_s
         "#<EMWorker:#%x #{@network} [c#{connected?.tiny_s}:r#{reconnect?.tiny_s}]>" % object_id
       end
-      
+
       def post_init
         @start_time = Time.now
         @buffer = ""
         @connected = false
         @shutdown = false
       end
-      
+
       def connection_completed
         @connected = true
         Log.info "Connected.", self
 
         login
       end
-      
+
       def receive_data(data)
         lines = 0
         data.each_line(EOL) do |line|
           next if line == EOL
-          if line =~ EXP_EOL 
-            lines += 1 
-            produce_event(line) 
+          if line =~ EXP_EOL
+            lines += 1
+            produce_event(line)
           else
             @buffer << line
           end
         end
-        
+
         lines
       end
 
@@ -70,7 +70,7 @@ module FBSDBot
 
         handle_event(@event_producer.parse_line(message))
       end
-      
+
       def handle_event(event)
         Log.debug(:handle_event => event)
         return if event.nil?
@@ -94,14 +94,18 @@ module FBSDBot
           Plugin.run_event event
         end
       end
-     
+
       def unbind
         @connected = false
         Log.info("Disconnected from #{@server}", self)
-        next_server = @instance_data[:servers].pick
-        Log.info("Re-connecting, trying server: #{next_server}", self)
-        reconnect(next_server, @handler.port) unless(@shutdown)
-        succeed(self) # send status to handle if this is good or bad, this might not allways be a good thing.. 
+
+        unless @shutdown
+          next_server = @instance_data[:servers].pick
+          Log.info("Re-connecting, trying server: #{next_server}", self)
+          reconnect(next_server, @handler.port)
+        end
+
+        succeed(self) # send status to handle if this is good or bad, this might not allways be a good thing..
       end
 
     end # EMWorker
